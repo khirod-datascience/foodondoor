@@ -1,0 +1,279 @@
+ERROR 2025-04-02 11:52:08,268 utils 11948 4676 Error generating OTP: AbstractConnection.__init__() got an unexpected keyword argument 'CLIENT_CLASS'
+ERROR 2025-04-02 12:32:10,201 utils 11948 1460 Error generating OTP: AbstractConnection.__init__() got an unexpected keyword argument 'CLIENT_CLASS'
+ERROR 2025-04-02 12:32:34,289 utils 11948 2148 Error generating OTP: AbstractConnection.__init__() got an unexpected keyword argument 'CLIENT_CLASS'
+INFO 2025-04-02 12:38:02,332 views 3604 12988 OTP for 2596458623: 533198
+INFO 2025-04-02 13:17:35,738 views 3604 12892 OTP for 8569324886: 638758
+INFO 2025-04-02 13:34:30,325 views 12192 11692 OTP for 6952354125: 573624
+INFO 2025-04-02 13:47:13,874 views 9120 2580 OTP for 6995236223: 226444
+INFO 2025-04-02 13:53:41,277 views 9120 7228 OTP for 5266325668: 865968
+ERROR 2025-04-04 00:47:43,208 utils 5160 12996 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-04-04 00:48:41,741 views 5160 10408 OTP for 6655565666: 288546
+INFO 2025-04-04 00:54:20,839 views 5160 15120 OTP for 6665566666: 617172
+INFO 2025-04-04 00:58:44,276 views 5160 7832 OTP for 8566955333: 717056
+INFO 2025-04-08 16:43:59,263 views 14116 2512 OTP for 8908168688: 925152
+INFO 2025-04-08 18:07:41,973 views 14980 9892 Received POST data for food listing creation: {'name': 'Biriyani', 'description': 'famous food in india ', 'quantity': 1, 'price': 150.0, 'unit': 'kg', 'images': ['/media/vendor_images/V001/20250408_180727_scaled_scaled_1000428622.jpg']}
+INFO 2025-04-11 07:48:54,909 views 14740 14676 OTP for 8908168688: 206515
+INFO 2025-04-11 21:55:32,460 views 1508 7144 OTP for 8908168688: 692289
+INFO 2025-04-11 21:56:57,947 views 1508 4408 Received POST data for food listing creation: {'name': 'khichdi', 'description': 'odia dish ', 'quantity': 1, 'price': 100.0, 'unit': 'kg', 'images': ['/media/vendor_images/V001/20250411_215650_scaled_scaled_1000429047.jpg']}
+INFO 2025-04-11 22:44:39,933 views 1508 12144 OTP for 8908168688: 825148
+INFO 2025-04-11 23:04:11,985 views 6560 7640 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:04:37,776 views 4008 9564 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:05:12,115 views 4008 1128 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:05:47,627 views 4008 6132 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:06:10,865 views 4008 9228 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:06:37,622 views 4008 3344 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:07:07,630 views 4008 9180 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:07:38,605 views 4008 10204 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:08:07,608 views 4008 10044 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:08:37,638 views 4008 5688 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:09:10,424 views 4008 4296 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:10:10,610 views 4008 9260 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:10:12,727 views 4008 12028 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:10:13,106 views 4008 11852 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:10:21,277 views 4008 11328 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:10:45,695 views 4008 2124 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:11:15,604 views 4008 12224 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:11:46,666 views 4008 11640 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:12:15,856 views 4008 6580 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:12:47,898 views 4008 13184 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:13:16,106 views 4008 6772 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:13:48,975 views 4008 12484 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:14:18,260 views 4008 12504 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:14:46,891 views 4008 11296 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:15:16,417 views 4008 12156 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:15:46,723 views 4008 6456 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:16:19,225 views 4008 11736 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:21:20,177 views 14376 6320 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:21:21,399 views 14376 2960 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:21:45,714 views 14376 5996 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:21:50,938 views 14376 5716 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:22:15,722 views 14376 14128 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:22:21,443 views 14376 12788 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:22:46,671 views 14376 12324 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:23:27,798 views 14376 13668 OTP for 8908168688: 987870
+INFO 2025-04-11 23:23:46,024 views 14376 12904 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:23:57,200 views 14376 15200 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:24:15,057 views 14376 9288 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:24:45,217 views 14376 6392 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:25:17,667 views 14376 15168 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:25:44,916 views 8012 14112 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:25:46,198 views 8012 6948 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:26:15,090 views 8012 11336 Retrieved 17 orders for vendor V001
+ERROR 2025-04-12 00:17:34,829 utils 9256 12392 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-12 00:17:37,955 utils 9256 7232 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-04-12 00:17:58,787 views 9256 14656 OTP for 8909168688: 455123
+INFO 2025-04-12 00:19:52,281 views 9256 9868 Received POST data for food listing creation: {'name': 'Biriyani ', 'description': 'food', 'quantity': 1, 'price': 100.0, 'unit': 'kg', 'images': ['/media/vendor_images/V002/20250412_001949_scaled_scaled_1000428622.jpg']}
+INFO 2025-04-12 00:30:58,719 views 9256 1860 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:31:28,637 views 9256 6476 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:31:59,637 views 9256 13228 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:32:43,069 views 9256 1724 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:32:58,958 views 9256 2200 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:33:40,644 views 9256 6864 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:33:58,810 views 9256 12932 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:34:45,089 views 9256 13476 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:39:31,044 views 9256 12932 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:40:00,692 views 9256 1364 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:40:30,676 views 9256 1396 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:41:01,024 views 9256 9952 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:41:31,290 views 9256 15252 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:42:00,913 views 9256 6500 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:42:31,894 views 9256 9172 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:43:03,990 views 9256 4960 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:43:31,048 views 9256 2740 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:44:01,905 views 9256 3488 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:44:30,731 views 9256 11936 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:45:00,941 views 9256 11116 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:45:30,749 views 9256 14880 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:46:00,670 views 9256 15116 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:46:31,930 views 9256 1036 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:47:00,663 views 9256 13144 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:47:08,342 views 9256 10488 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:29:20,701 views 5772 5192 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:29:41,805 views 5772 4320 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:30:11,683 views 5772 9452 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:30:41,788 views 5772 108 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:31:13,675 views 5772 5792 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:31:41,740 views 5772 4604 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:32:11,757 views 5772 10836 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:32:41,799 views 5772 1124 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:33:11,902 views 5772 9140 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:33:41,661 views 5772 4868 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:34:11,956 views 5772 10524 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:34:41,770 views 5772 11100 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:35:15,953 views 5772 6492 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:35:42,940 views 5772 3136 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:36:12,269 views 5772 9420 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:36:42,109 views 5772 7104 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:37:41,913 views 5772 7960 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:38:41,887 views 5772 10340 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:39:11,872 views 5772 10824 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:39:41,919 views 5772 8772 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:40:11,990 views 5772 3224 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:40:41,997 views 5772 4180 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:41:23,057 views 5772 3480 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:41:41,918 views 5772 10328 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:42:12,953 views 5772 10036 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:42:42,146 views 5772 6444 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:43:12,437 views 5772 5528 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:43:42,011 views 5772 320 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:44:12,006 views 5772 6164 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:44:41,853 views 5772 7140 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:45:11,908 views 5772 1596 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:45:42,525 views 5772 5284 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:46:11,970 views 5772 1580 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:46:49,016 views 9984 8372 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:47:11,913 views 4832 5528 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:47:41,931 views 4832 4396 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:48:14,800 views 4832 10656 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:48:41,990 views 4832 7536 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:49:14,195 views 4832 3396 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:49:42,541 views 4832 9540 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:50:13,117 views 10700 11124 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:50:41,980 views 10700 5092 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:51:20,620 views 10700 3708 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:51:41,925 views 10700 3356 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:52:11,932 views 9564 4612 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:52:52,017 views 3092 5668 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:53:13,018 views 3092 8800 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:53:42,765 views 3092 5616 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:54:11,632 views 3092 11144 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:54:41,624 views 3092 1368 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:54:51,357 views 10072 7512 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:54:55,752 views 10072 9700 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:55:26,507 views 10072 2312 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:55:55,574 views 10072 3652 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:56:25,804 views 10072 11108 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:56:55,806 views 10072 1004 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:57:25,737 views 10072 2324 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:57:55,536 views 10072 10760 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:58:25,894 views 10072 9996 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:58:55,782 views 10072 1776 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:59:25,733 views 10072 5788 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:59:55,867 views 10072 8812 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:00:25,873 views 10072 5144 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:00:59,588 views 10072 3524 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:01:25,551 views 10072 2524 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:01:55,452 views 10072 8384 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:02:51,498 views 10072 7728 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:02:55,553 views 10072 7804 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:03:25,453 views 10072 10048 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:03:56,092 views 10072 3444 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:04:25,592 views 10072 10320 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:05:27,944 views 10072 10500 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:05:56,887 views 10072 3696 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:06:25,424 views 10072 7420 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:07:22,605 views 10072 1232 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:07:25,450 views 10072 8800 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:08:07,067 views 10072 11172 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:08:25,619 views 10072 640 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:09:55,728 views 9724 10380 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:09:58,467 views 9724 10416 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:10:25,530 views 9724 5400 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:15:44,953 views 5176 9664 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:16:09,002 views 5176 3908 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:16:25,691 views 5176 2312 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:18:06,449 views 5176 1124 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:18:25,968 views 5176 9480 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:20:07,051 views 5176 9188 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:20:26,693 views 5176 10320 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:21:18,600 views 5176 10908 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:21:25,604 views 5176 10972 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:21:55,683 views 5176 5572 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:22:25,455 views 5176 9956 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:22:55,377 views 5176 672 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:23:25,425 views 5176 5924 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:24:11,547 views 5176 11168 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:24:25,398 views 5176 6856 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:25:22,056 views 5176 11664 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:25:25,695 views 5176 11692 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:28:17,891 views 5176 4356 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:33:18,306 views 5176 9188 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:33:25,457 views 5176 5516 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:34:50,171 views 5176 1772 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:35:39,849 views 5176 11240 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:36:32,809 views 5176 1688 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:40:36,958 views 5176 9728 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:41:48,188 views 5176 772 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:44:09,825 views 5176 3032 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:44:25,609 views 5176 4364 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:46:31,147 views 5176 9424 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:49:55,003 views 5176 6320 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:49:55,462 views 5176 9948 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:50:25,499 views 5176 8028 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:51:00,752 views 5176 10688 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:51:26,465 views 5176 10740 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:51:56,367 views 5176 1144 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:52:25,612 views 5176 6408 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:55:17,933 views 5176 11944 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:55:25,386 views 5176 12208 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:56:31,740 views 5176 3648 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:57:34,945 views 5176 11236 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:01:06,802 views 5176 4472 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:03:41,646 views 5176 8152 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:03:41,646 views 5176 11632 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:04:28,054 views 5176 4816 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:06:06,367 views 5176 9200 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:06:37,873 views 5176 10180 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:06:58,617 views 5176 12240 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:07:25,813 views 5176 7864 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:07:56,459 views 5176 8144 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:08:55,399 views 5176 10352 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:09:37,461 views 5176 1368 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 11:30:16,595 views 5176 13000 OTP for 8908168688: 922051
+INFO 2025-04-12 11:31:30,668 views 5176 14656 OTP for 8908168688: 739132
+INFO 2025-04-12 11:35:45,162 views 5176 7584 OTP for 8908168688: 159638
+INFO 2025-04-12 11:36:03,010 views 5176 14460 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:36:32,930 views 5176 10556 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:37:07,602 views 5176 15052 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:37:33,144 views 5176 10120 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:38:06,421 views 5176 13120 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:38:32,774 views 5176 11220 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:40:08,885 views 5176 11164 Retrieved 20 orders for vendor V001
+INFO 2025-04-12 11:40:32,789 views 5176 228 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:41:02,766 views 5176 14056 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:41:32,742 views 5176 14668 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:42:03,126 views 5176 13936 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:42:32,981 views 5176 14268 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:43:03,839 views 5176 11332 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:43:32,986 views 5176 14036 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:44:02,718 views 5176 14320 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:44:32,866 views 5176 4184 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:45:15,442 views 5176 14364 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:45:58,302 views 5176 1112 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:46:31,968 views 5176 7004 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:47:26,446 views 5176 12160 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:48:52,304 views 5176 11120 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:49:45,886 views 5176 14420 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:49:47,588 views 5176 7256 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:50:36,910 views 5176 7728 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:51:26,628 views 5176 8208 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:51:34,502 views 5176 14952 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:54:56,433 views 5176 1052 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:55:26,077 views 5176 2548 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:56:00,050 views 5176 14180 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:34:48,822 views 5176 16276 OTP for 8908168688: 158785
+INFO 2025-04-12 12:35:04,086 views 5176 4312 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:35:33,922 views 5176 15692 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:36:03,945 views 5176 9820 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:36:35,742 views 5176 14440 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:37:04,650 views 5176 616 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:37:40,756 views 5176 3216 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:38:04,025 views 5176 15688 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:38:34,064 views 5176 15568 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:39:04,061 views 5176 9316 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:39:33,955 views 5176 1088 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:40:04,094 views 5176 1104 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:40:34,174 views 5176 7768 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:41:05,080 views 5176 10264 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:41:34,023 views 5176 13752 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:42:04,136 views 5176 14076 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 13:58:09,645 views 7404 11772 OTP for 8908168688: 253213
+INFO 2025-04-12 13:58:21,364 views 7404 10128 Retrieved 22 orders for vendor V001
+INFO 2025-04-12 13:58:51,266 views 7404 16044 Retrieved 22 orders for vendor V001
+INFO 2025-04-12 13:59:06,015 views 7404 16640 Retrieved 22 orders for vendor V001
+INFO 2025-04-12 13:59:14,835 views 7404 15092 Retrieved 22 orders for vendor V001
+INFO 2025-04-12 13:59:44,834 views 7404 14544 Retrieved 22 orders for vendor V001
+INFO 2025-04-12 13:59:54,197 views 7404 15176 Retrieved 23 orders for vendor V001
+INFO 2025-04-13 21:06:00,514 views 13208 2320 OTP for 8908168688: 308625
+INFO 2025-04-13 21:06:14,713 views 13208 10540 Retrieved 23 orders for vendor V001
+INFO 2025-04-13 21:06:32,979 views 13208 17304 Retrieved 23 orders for vendor V001
