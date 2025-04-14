@@ -11,6 +11,7 @@ import jwt # Import PyJWT
 from datetime import datetime, timedelta, timezone # Import datetime and timezone
 from .authentication import DeliveryUserJWTAuthentication # Import custom authentication
 from customer_app.models import Order # Assuming Order model is here
+from .permissions import IsAuthenticatedDeliveryUser # Import custom permission
 
 # Custom JWT generation for DeliveryUser
 def generate_delivery_jwt(user: DeliveryUser):
@@ -163,8 +164,16 @@ class RegisterView(generics.UpdateAPIView):
 
 class DeliveryOrderListView(generics.ListAPIView):
     serializer_class = OrderSerializer
-    authentication_classes = [DeliveryUserJWTAuthentication] # Use custom JWT auth
-    permission_classes = [IsAuthenticated] # Ensure user is authenticated
+    authentication_classes = [DeliveryUserJWTAuthentication]
+    permission_classes = [IsAuthenticatedDeliveryUser]
+
+    def list(self, request, *args, **kwargs):
+        print(f"--- DeliveryOrderListView reached! Request Path: {request.path} ---") # DEBUG
+        print(f"--- Authenticated User: {request.user} ({type(request.user)}) ---") # DEBUG
+        queryset = self.get_queryset()
+        print(f"--- Queryset Count: {queryset.count()} ---") # DEBUG
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def get_queryset(self):
         """
@@ -172,23 +181,28 @@ class DeliveryOrderListView(generics.ListAPIView):
         for the currently authenticated delivery user.
         It also supports filtering by status.
         """
-        user = self.request.user # request.user will be the DeliveryUser instance
+        print("--- DeliveryOrderListView.get_queryset called --- ") # DEBUG
+        user = self.request.user
 
         if not isinstance(user, DeliveryUser):
-             # Should not happen if authentication is working correctly
+             print("--- ERROR: request.user is NOT a DeliveryUser instance! ---") # DEBUG
              return Order.objects.none()
 
-        queryset = Order.objects.filter(delivery_partner=user)
+        print(f"--- Filtering orders for DeliveryUser ID: {user.id} ---") # DEBUG
+        queryset = Order.objects.filter(delivery_partner__id=str(user.id))
 
-        # Filter by status if provided in query parameters
         status_param = self.request.query_params.get('status', None)
         if status_param:
-            # Split comma-separated statuses
             statuses = [s.strip() for s in status_param.split(',') if s.strip()]
             if statuses:
+                print(f"--- Filtering by status: {statuses} ---") # DEBUG
                 queryset = queryset.filter(status__in=statuses)
+            else:
+                 print("--- Status parameter present but empty after processing. ---") # DEBUG
+        else:
+             print("--- No status filter applied. ---") # DEBUG
 
-        return queryset.order_by('-created_at') # Example ordering
+        return queryset.order_by('-created_at')
 
 # TODO: Implement custom Authentication Class (DeliveryUserJWTAuthentication)
 # This class will be responsible for validating the custom JWT and attaching

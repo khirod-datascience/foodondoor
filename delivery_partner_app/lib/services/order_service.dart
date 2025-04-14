@@ -7,7 +7,7 @@ class OrderService {
   // Fetch orders based on status (pending, ongoing, completed)
   Future<Map<String, dynamic>> fetchOrders({String status = 'pending'}) async {
     // Endpoint might look like /delivery/orders?status=pending
-    final response = await _apiHelper.get('/delivery/orders?status=$status');
+    final response = await _apiHelper.get('/orders?status=$status');
 
     if (response['success']) {
       try {
@@ -27,7 +27,7 @@ class OrderService {
 
   // Fetch a single order by ID
   Future<Map<String, dynamic>> fetchOrderDetails(String orderId) async {
-     final response = await _apiHelper.get('/delivery/orders/$orderId/');
+     final response = await _apiHelper.get('/orders/$orderId/');
      if (response['success']) {
         try {
            final Order order = Order.fromJson(response['data'] as Map<String, dynamic>);
@@ -44,7 +44,7 @@ class OrderService {
   // Accept an order
   Future<Map<String, dynamic>> acceptOrder(String orderId) async {
     // Endpoint might be /delivery/orders/{orderId}/accept/
-    final response = await _apiHelper.post('/delivery/orders/$orderId/accept/');
+    final response = await _apiHelper.post('/orders/$orderId/accept/');
     return response; // Return success/failure directly
   }
 
@@ -52,7 +52,7 @@ class OrderService {
   Future<Map<String, dynamic>> rejectOrder(String orderId, {String? reason}) async {
      // Endpoint might be /delivery/orders/{orderId}/reject/
      final response = await _apiHelper.post(
-        '/delivery/orders/$orderId/reject/',
+        '/orders/$orderId/reject/',
         body: reason != null ? {'reason': reason} : null,
      );
      return response;
@@ -67,7 +67,7 @@ class OrderService {
 
      // Example using a general status update endpoint (adapt as needed)
      final response = await _apiHelper.put(
-         '/delivery/orders/$orderId/status/', // Adjust endpoint if needed
+         '/orders/$orderId/status/', // Adjust endpoint if needed
          body: {'status': statusString}
      );
      return response;
@@ -77,14 +77,14 @@ class OrderService {
   Future<Map<String, dynamic>> markAsPickedUp(String orderId) async {
      // Could call updateOrderStatus or have a dedicated endpoint
      // return updateOrderStatus(orderId, OrderStatus.pickedUp);
-     final response = await _apiHelper.post('/delivery/orders/$orderId/pickup/'); // Example dedicated endpoint
+     final response = await _apiHelper.post('/orders/$orderId/pickup/'); // Example dedicated endpoint
      return response;
   }
 
   Future<Map<String, dynamic>> markAsDelivered(String orderId) async {
      // Could call updateOrderStatus or have a dedicated endpoint
      // return updateOrderStatus(orderId, OrderStatus.delivered);
-      final response = await _apiHelper.post('/delivery/orders/$orderId/deliver/'); // Example dedicated endpoint
+      final response = await _apiHelper.post('/orders/$orderId/deliver/'); // Example dedicated endpoint
      return response;
   }
 

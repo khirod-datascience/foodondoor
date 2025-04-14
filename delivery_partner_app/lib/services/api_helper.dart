@@ -3,6 +3,7 @@ import 'dart:io'; // For HttpStatus
 import 'package:http/http.dart' as http;
 import 'auth_service.dart'; // To access token methods
 import '../config/app_config.dart'; // <-- Ensure this import exists
+import 'package:flutter/foundation.dart'; // For debugPrint
 
 class ApiHelper {
   // Use the consolidated delivery API base URL from AppConfig
@@ -17,11 +18,14 @@ class ApiHelper {
         final token = await _authService.getAccessToken();
         if (token == null) throw Exception('Not authenticated');
 
+        final fullUrl = Uri.parse('$_apiBaseUrl$endpoint');
+        debugPrint("[ApiHelper] Making GET request to: $fullUrl"); // DEBUG
+
         final response = await http.get(
-          Uri.parse('$_apiBaseUrl$endpoint'), // Constructs full URL like http://IP:PORT/api/delivery/orders?status=...
+          fullUrl,
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token', // Assuming Bearer token auth
+            'Authorization': 'Bearer $token',
           },
         );
         return response;
