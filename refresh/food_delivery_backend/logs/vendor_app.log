@@ -1,0 +1,962 @@
+ERROR 2025-04-02 11:52:08,268 utils 11948 4676 Error generating OTP: AbstractConnection.__init__() got an unexpected keyword argument 'CLIENT_CLASS'
+ERROR 2025-04-02 12:32:10,201 utils 11948 1460 Error generating OTP: AbstractConnection.__init__() got an unexpected keyword argument 'CLIENT_CLASS'
+ERROR 2025-04-02 12:32:34,289 utils 11948 2148 Error generating OTP: AbstractConnection.__init__() got an unexpected keyword argument 'CLIENT_CLASS'
+INFO 2025-04-02 12:38:02,332 views 3604 12988 OTP for 2596458623: 533198
+INFO 2025-04-02 13:17:35,738 views 3604 12892 OTP for 8569324886: 638758
+INFO 2025-04-02 13:34:30,325 views 12192 11692 OTP for 6952354125: 573624
+INFO 2025-04-02 13:47:13,874 views 9120 2580 OTP for 6995236223: 226444
+INFO 2025-04-02 13:53:41,277 views 9120 7228 OTP for 5266325668: 865968
+ERROR 2025-04-04 00:47:43,208 utils 5160 12996 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-04-04 00:48:41,741 views 5160 10408 OTP for 6655565666: 288546
+INFO 2025-04-04 00:54:20,839 views 5160 15120 OTP for 6665566666: 617172
+INFO 2025-04-04 00:58:44,276 views 5160 7832 OTP for 8566955333: 717056
+INFO 2025-04-08 16:43:59,263 views 14116 2512 OTP for 8908168688: 925152
+INFO 2025-04-08 18:07:41,973 views 14980 9892 Received POST data for food listing creation: {'name': 'Biriyani', 'description': 'famous food in india ', 'quantity': 1, 'price': 150.0, 'unit': 'kg', 'images': ['/media/vendor_images/V001/20250408_180727_scaled_scaled_1000428622.jpg']}
+INFO 2025-04-11 07:48:54,909 views 14740 14676 OTP for 8908168688: 206515
+INFO 2025-04-11 21:55:32,460 views 1508 7144 OTP for 8908168688: 692289
+INFO 2025-04-11 21:56:57,947 views 1508 4408 Received POST data for food listing creation: {'name': 'khichdi', 'description': 'odia dish ', 'quantity': 1, 'price': 100.0, 'unit': 'kg', 'images': ['/media/vendor_images/V001/20250411_215650_scaled_scaled_1000429047.jpg']}
+INFO 2025-04-11 22:44:39,933 views 1508 12144 OTP for 8908168688: 825148
+INFO 2025-04-11 23:04:11,985 views 6560 7640 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:04:37,776 views 4008 9564 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:05:12,115 views 4008 1128 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:05:47,627 views 4008 6132 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:06:10,865 views 4008 9228 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:06:37,622 views 4008 3344 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:07:07,630 views 4008 9180 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:07:38,605 views 4008 10204 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:08:07,608 views 4008 10044 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:08:37,638 views 4008 5688 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:09:10,424 views 4008 4296 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:10:10,610 views 4008 9260 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:10:12,727 views 4008 12028 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:10:13,106 views 4008 11852 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:10:21,277 views 4008 11328 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:10:45,695 views 4008 2124 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:11:15,604 views 4008 12224 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:11:46,666 views 4008 11640 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:12:15,856 views 4008 6580 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:12:47,898 views 4008 13184 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:13:16,106 views 4008 6772 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:13:48,975 views 4008 12484 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:14:18,260 views 4008 12504 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:14:46,891 views 4008 11296 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:15:16,417 views 4008 12156 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:15:46,723 views 4008 6456 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:16:19,225 views 4008 11736 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:21:20,177 views 14376 6320 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:21:21,399 views 14376 2960 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:21:45,714 views 14376 5996 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:21:50,938 views 14376 5716 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:22:15,722 views 14376 14128 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:22:21,443 views 14376 12788 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:22:46,671 views 14376 12324 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:23:27,798 views 14376 13668 OTP for 8908168688: 987870
+INFO 2025-04-11 23:23:46,024 views 14376 12904 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:23:57,200 views 14376 15200 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:24:15,057 views 14376 9288 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:24:45,217 views 14376 6392 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:25:17,667 views 14376 15168 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:25:44,916 views 8012 14112 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:25:46,198 views 8012 6948 Retrieved 17 orders for vendor V001
+INFO 2025-04-11 23:26:15,090 views 8012 11336 Retrieved 17 orders for vendor V001
+ERROR 2025-04-12 00:17:34,829 utils 9256 12392 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-12 00:17:37,955 utils 9256 7232 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-04-12 00:17:58,787 views 9256 14656 OTP for 8909168688: 455123
+INFO 2025-04-12 00:19:52,281 views 9256 9868 Received POST data for food listing creation: {'name': 'Biriyani ', 'description': 'food', 'quantity': 1, 'price': 100.0, 'unit': 'kg', 'images': ['/media/vendor_images/V002/20250412_001949_scaled_scaled_1000428622.jpg']}
+INFO 2025-04-12 00:30:58,719 views 9256 1860 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:31:28,637 views 9256 6476 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:31:59,637 views 9256 13228 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:32:43,069 views 9256 1724 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:32:58,958 views 9256 2200 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:33:40,644 views 9256 6864 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:33:58,810 views 9256 12932 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:34:45,089 views 9256 13476 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:39:31,044 views 9256 12932 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:40:00,692 views 9256 1364 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:40:30,676 views 9256 1396 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:41:01,024 views 9256 9952 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:41:31,290 views 9256 15252 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:42:00,913 views 9256 6500 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:42:31,894 views 9256 9172 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:43:03,990 views 9256 4960 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:43:31,048 views 9256 2740 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:44:01,905 views 9256 3488 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:44:30,731 views 9256 11936 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:45:00,941 views 9256 11116 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:45:30,749 views 9256 14880 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:46:00,670 views 9256 15116 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:46:31,930 views 9256 1036 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:47:00,663 views 9256 13144 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 00:47:08,342 views 9256 10488 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:29:20,701 views 5772 5192 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:29:41,805 views 5772 4320 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:30:11,683 views 5772 9452 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:30:41,788 views 5772 108 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:31:13,675 views 5772 5792 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:31:41,740 views 5772 4604 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:32:11,757 views 5772 10836 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:32:41,799 views 5772 1124 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:33:11,902 views 5772 9140 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:33:41,661 views 5772 4868 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:34:11,956 views 5772 10524 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:34:41,770 views 5772 11100 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:35:15,953 views 5772 6492 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:35:42,940 views 5772 3136 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:36:12,269 views 5772 9420 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:36:42,109 views 5772 7104 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:37:41,913 views 5772 7960 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:38:41,887 views 5772 10340 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:39:11,872 views 5772 10824 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:39:41,919 views 5772 8772 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:40:11,990 views 5772 3224 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:40:41,997 views 5772 4180 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:41:23,057 views 5772 3480 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:41:41,918 views 5772 10328 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:42:12,953 views 5772 10036 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:42:42,146 views 5772 6444 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:43:12,437 views 5772 5528 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:43:42,011 views 5772 320 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:44:12,006 views 5772 6164 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:44:41,853 views 5772 7140 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:45:11,908 views 5772 1596 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:45:42,525 views 5772 5284 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:46:11,970 views 5772 1580 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:46:49,016 views 9984 8372 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:47:11,913 views 4832 5528 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:47:41,931 views 4832 4396 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:48:14,800 views 4832 10656 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:48:41,990 views 4832 7536 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:49:14,195 views 4832 3396 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:49:42,541 views 4832 9540 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:50:13,117 views 10700 11124 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:50:41,980 views 10700 5092 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:51:20,620 views 10700 3708 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:51:41,925 views 10700 3356 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:52:11,932 views 9564 4612 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:52:52,017 views 3092 5668 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:53:13,018 views 3092 8800 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:53:42,765 views 3092 5616 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:54:11,632 views 3092 11144 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:54:41,624 views 3092 1368 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:54:51,357 views 10072 7512 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:54:55,752 views 10072 9700 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:55:26,507 views 10072 2312 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:55:55,574 views 10072 3652 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:56:25,804 views 10072 11108 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:56:55,806 views 10072 1004 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:57:25,737 views 10072 2324 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:57:55,536 views 10072 10760 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:58:25,894 views 10072 9996 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:58:55,782 views 10072 1776 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:59:25,733 views 10072 5788 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 08:59:55,867 views 10072 8812 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:00:25,873 views 10072 5144 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:00:59,588 views 10072 3524 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:01:25,551 views 10072 2524 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:01:55,452 views 10072 8384 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:02:51,498 views 10072 7728 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:02:55,553 views 10072 7804 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:03:25,453 views 10072 10048 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:03:56,092 views 10072 3444 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:04:25,592 views 10072 10320 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:05:27,944 views 10072 10500 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:05:56,887 views 10072 3696 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:06:25,424 views 10072 7420 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:07:22,605 views 10072 1232 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:07:25,450 views 10072 8800 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:08:07,067 views 10072 11172 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:08:25,619 views 10072 640 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:09:55,728 views 9724 10380 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:09:58,467 views 9724 10416 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:10:25,530 views 9724 5400 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:15:44,953 views 5176 9664 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:16:09,002 views 5176 3908 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:16:25,691 views 5176 2312 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:18:06,449 views 5176 1124 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:18:25,968 views 5176 9480 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:20:07,051 views 5176 9188 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:20:26,693 views 5176 10320 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:21:18,600 views 5176 10908 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:21:25,604 views 5176 10972 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:21:55,683 views 5176 5572 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:22:25,455 views 5176 9956 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:22:55,377 views 5176 672 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:23:25,425 views 5176 5924 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:24:11,547 views 5176 11168 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:24:25,398 views 5176 6856 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:25:22,056 views 5176 11664 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:25:25,695 views 5176 11692 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:28:17,891 views 5176 4356 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:33:18,306 views 5176 9188 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:33:25,457 views 5176 5516 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:34:50,171 views 5176 1772 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:35:39,849 views 5176 11240 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:36:32,809 views 5176 1688 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:40:36,958 views 5176 9728 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:41:48,188 views 5176 772 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:44:09,825 views 5176 3032 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:44:25,609 views 5176 4364 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:46:31,147 views 5176 9424 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:49:55,003 views 5176 6320 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:49:55,462 views 5176 9948 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:50:25,499 views 5176 8028 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:51:00,752 views 5176 10688 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:51:26,465 views 5176 10740 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:51:56,367 views 5176 1144 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:52:25,612 views 5176 6408 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:55:17,933 views 5176 11944 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:55:25,386 views 5176 12208 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:56:31,740 views 5176 3648 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 09:57:34,945 views 5176 11236 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:01:06,802 views 5176 4472 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:03:41,646 views 5176 8152 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:03:41,646 views 5176 11632 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:04:28,054 views 5176 4816 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:06:06,367 views 5176 9200 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:06:37,873 views 5176 10180 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:06:58,617 views 5176 12240 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:07:25,813 views 5176 7864 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:07:56,459 views 5176 8144 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:08:55,399 views 5176 10352 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 10:09:37,461 views 5176 1368 Retrieved 1 orders for vendor V002
+INFO 2025-04-12 11:30:16,595 views 5176 13000 OTP for 8908168688: 922051
+INFO 2025-04-12 11:31:30,668 views 5176 14656 OTP for 8908168688: 739132
+INFO 2025-04-12 11:35:45,162 views 5176 7584 OTP for 8908168688: 159638
+INFO 2025-04-12 11:36:03,010 views 5176 14460 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:36:32,930 views 5176 10556 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:37:07,602 views 5176 15052 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:37:33,144 views 5176 10120 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:38:06,421 views 5176 13120 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:38:32,774 views 5176 11220 Retrieved 19 orders for vendor V001
+INFO 2025-04-12 11:40:08,885 views 5176 11164 Retrieved 20 orders for vendor V001
+INFO 2025-04-12 11:40:32,789 views 5176 228 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:41:02,766 views 5176 14056 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:41:32,742 views 5176 14668 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:42:03,126 views 5176 13936 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:42:32,981 views 5176 14268 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:43:03,839 views 5176 11332 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:43:32,986 views 5176 14036 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:44:02,718 views 5176 14320 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:44:32,866 views 5176 4184 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:45:15,442 views 5176 14364 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:45:58,302 views 5176 1112 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:46:31,968 views 5176 7004 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:47:26,446 views 5176 12160 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:48:52,304 views 5176 11120 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:49:45,886 views 5176 14420 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:49:47,588 views 5176 7256 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:50:36,910 views 5176 7728 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:51:26,628 views 5176 8208 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:51:34,502 views 5176 14952 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:54:56,433 views 5176 1052 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:55:26,077 views 5176 2548 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 11:56:00,050 views 5176 14180 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:34:48,822 views 5176 16276 OTP for 8908168688: 158785
+INFO 2025-04-12 12:35:04,086 views 5176 4312 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:35:33,922 views 5176 15692 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:36:03,945 views 5176 9820 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:36:35,742 views 5176 14440 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:37:04,650 views 5176 616 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:37:40,756 views 5176 3216 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:38:04,025 views 5176 15688 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:38:34,064 views 5176 15568 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:39:04,061 views 5176 9316 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:39:33,955 views 5176 1088 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:40:04,094 views 5176 1104 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:40:34,174 views 5176 7768 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:41:05,080 views 5176 10264 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:41:34,023 views 5176 13752 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 12:42:04,136 views 5176 14076 Retrieved 21 orders for vendor V001
+INFO 2025-04-12 13:58:09,645 views 7404 11772 OTP for 8908168688: 253213
+INFO 2025-04-12 13:58:21,364 views 7404 10128 Retrieved 22 orders for vendor V001
+INFO 2025-04-12 13:58:51,266 views 7404 16044 Retrieved 22 orders for vendor V001
+INFO 2025-04-12 13:59:06,015 views 7404 16640 Retrieved 22 orders for vendor V001
+INFO 2025-04-12 13:59:14,835 views 7404 15092 Retrieved 22 orders for vendor V001
+INFO 2025-04-12 13:59:44,834 views 7404 14544 Retrieved 22 orders for vendor V001
+INFO 2025-04-12 13:59:54,197 views 7404 15176 Retrieved 23 orders for vendor V001
+INFO 2025-04-13 21:06:00,514 views 13208 2320 OTP for 8908168688: 308625
+INFO 2025-04-13 21:06:14,713 views 13208 10540 Retrieved 23 orders for vendor V001
+INFO 2025-04-13 21:06:32,979 views 13208 17304 Retrieved 23 orders for vendor V001
+INFO 2025-04-22 01:00:00,966 views 6812 12368 Registration attempt for email: jhhhd@h.com
+INFO 2025-04-22 01:00:03,282 serializers 6812 12368 Vendor created: V001 - jhhhd@h.com
+INFO 2025-04-22 01:00:03,283 views 6812 12368 Vendor registered successfully: V001
+INFO 2025-04-22 07:47:24,125 views 4268 11204 Anonymous/Pre-Reg Image upload attempt, Filename: 1000430248.jpg
+INFO 2025-04-22 07:47:24,146 views 4268 11204 Image saved successfully at path: vendor_images/uploads/20250422021724138919_1000430248.jpg
+INFO 2025-04-22 07:47:24,467 views 4268 2104 Registration attempt for email: khirod@gmail.com
+INFO 2025-04-22 07:47:27,727 serializers 4268 2104 Vendor created: V002 - khirod@gmail.com
+INFO 2025-04-22 07:47:27,727 views 4268 2104 Vendor registered successfully: V002
+INFO 2025-04-22 19:18:14,388 views 1616 592 Anonymous/Pre-Reg Image upload attempt, Filename: 1000430248.jpg
+INFO 2025-04-22 19:18:14,407 views 1616 592 Image saved successfully at path: vendor_images/uploads/20250422134814398061_1000430248.jpg
+INFO 2025-04-22 19:18:15,010 views 1616 13716 Registration attempt for email: khirod@gmail.com
+INFO 2025-04-22 19:33:41,997 views 460 11024 Anonymous/Pre-Reg Image upload attempt, Filename: 1000430248.jpg
+INFO 2025-04-22 19:33:42,031 views 460 11024 Image saved successfully at path: vendor_images/uploads/20250422140342019115_1000430248.jpg
+INFO 2025-04-22 19:33:42,464 views 460 11472 Registration attempt for email: khirod@gmail.com
+INFO 2025-04-22 19:35:26,839 views 460 11548 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 19:35:28,540 views 460 11548 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 20:00:11,188 views 7620 588 Anonymous/Pre-Reg Image upload attempt, Filename: 1000430248.jpg
+INFO 2025-04-22 20:00:11,509 views 7620 588 Image saved successfully at path: vendor_images/uploads/20250422143011348057_1000430248.jpg
+INFO 2025-04-22 20:00:12,176 views 7620 9024 Registration attempt for email: khh@gm.com
+INFO 2025-04-22 20:00:14,927 serializers 7620 9024 Vendor created: V003 - khh@gm.com
+INFO 2025-04-22 20:00:14,928 views 7620 9024 Vendor registered successfully: V003
+INFO 2025-04-22 20:09:26,970 views 7620 6680 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 20:09:28,819 views 7620 6680 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 20:10:59,374 views 7620 1284 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 20:11:01,169 views 7620 1284 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 20:12:26,615 views 7620 6764 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 20:12:28,316 views 7620 6764 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 20:25:20,429 views 7620 7152 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 20:25:22,115 views 7620 7152 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 21:03:37,965 views 7620 9984 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 21:03:40,209 views 7620 9984 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 21:20:47,429 views 7620 5900 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 21:20:49,238 views 7620 5900 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 21:31:32,261 views 7620 2404 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 21:31:34,034 views 7620 2404 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 21:38:48,054 views 7620 460 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 21:38:48,160 views 7620 460 Image saved successfully at path: vendor_images/uploads/20250422160848054898_scaled_1000430248.jpg
+INFO 2025-04-22 21:45:09,565 views 7620 8640 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 21:45:09,617 views 7620 8640 Image saved successfully at path: vendor_images/uploads/20250422161509565117_scaled_1000430248.jpg
+INFO 2025-04-22 22:07:14,619 views 7620 5068 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 22:07:14,734 views 7620 5068 Image saved successfully at path: vendor_images/uploads/20250422163714620919_scaled_1000430248.jpg
+INFO 2025-04-22 22:44:37,281 views 6856 11076 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 22:44:37,322 views 6856 11076 Image saved successfully at path: vendor_images/uploads/20250422171437281534_scaled_1000430248.jpg
+INFO 2025-04-22 22:44:53,845 views 6856 6084 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 22:44:55,674 views 6856 6084 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 22:45:09,910 views 6856 2876 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 22:45:09,910 views 6856 2876 Image saved successfully at path: vendor_images/uploads/20250422171509910680_scaled_1000430248.jpg
+INFO 2025-04-22 22:51:03,324 views 6856 8652 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 22:51:05,035 views 6856 8652 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 22:51:21,727 views 6856 10632 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 22:51:21,727 views 6856 10632 Image saved successfully at path: vendor_images/uploads/20250422172121727649_scaled_1000430248.jpg
+INFO 2025-04-22 23:02:48,089 views 12412 6988 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 23:02:48,089 views 12412 6988 Image saved successfully at path: vendor_images/uploads/20250422173248089990_scaled_1000430248.jpg
+INFO 2025-04-22 23:03:23,439 views 12412 7092 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 23:03:25,219 views 12412 7092 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 23:05:01,321 views 12412 8940 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 23:05:03,005 views 12412 8940 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 23:08:10,041 views 8608 12308 Login attempt for email: khirod@gmail.com
+INFO 2025-04-22 23:08:11,840 views 8608 12308 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-22 23:08:30,233 views 8608 10776 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 23:08:30,248 views 8608 10776 Image saved successfully at path: vendor_images/uploads/20250422173830233029_scaled_1000430248.jpg
+INFO 2025-04-22 23:11:37,989 views 8608 10344 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 23:11:37,989 views 8608 10344 Image saved successfully at path: vendor_images/uploads/20250422174137989858_scaled_1000430248.jpg
+INFO 2025-04-22 23:11:38,137 views 8608 8636 Creating menu for vendor: V002 with data: {'name': 'phone', 'description': 'iphone'}
+INFO 2025-04-22 23:38:30,241 views 8608 11752 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 23:38:30,241 views 8608 11752 Image saved successfully at path: vendor_images/uploads/20250422180830241001_scaled_1000430248.jpg
+INFO 2025-04-22 23:38:30,418 views 8608 7192 Creating menu for vendor: V002 with data: {'name': 'hel9', 'description': 'hgh'}
+INFO 2025-04-22 23:51:44,930 views 8608 8212 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 23:51:44,930 views 8608 8212 Image saved successfully at path: vendor_images/uploads/20250422182144930608_scaled_1000430248.jpg
+INFO 2025-04-22 23:54:32,110 views 7468 8636 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 23:54:32,110 views 7468 8636 Image saved successfully at path: vendor_images/uploads/20250422182432110885_scaled_1000430248.jpg
+INFO 2025-04-22 23:55:59,289 views 6036 8340 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-22 23:55:59,305 views 6036 8340 Image saved successfully at path: vendor_images/uploads/20250422182559305058_scaled_1000430248.jpg
+INFO 2025-04-23 00:02:44,818 views 9820 6452 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-23 00:02:44,834 views 9820 6452 Image saved successfully at path: vendor_images/uploads/20250422183244834499_scaled_1000430248.jpg
+INFO 2025-04-23 00:09:20,651 views 9820 1284 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-23 00:09:20,651 views 9820 1284 Image saved successfully at path: vendor_images/uploads/20250422183920651858_scaled_1000430248.jpg
+INFO 2025-04-23 00:13:15,104 views 11432 3632 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-23 00:13:15,110 views 11432 3632 Image saved successfully at path: vendor_images/uploads/20250422184315107210_scaled_1000430248.jpg
+INFO 2025-04-23 00:14:52,344 views 11432 10384 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-23 00:14:52,344 views 11432 10384 Image saved successfully at path: vendor_images/uploads/20250422184452344602_scaled_1000430248.jpg
+INFO 2025-04-23 00:16:37,996 views 1144 3976 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-23 00:16:37,996 views 1144 3976 Image saved successfully at path: vendor_images/uploads/20250422184637996138_scaled_1000430248.jpg
+INFO 2025-04-23 00:17:49,369 views 1144 13928 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-23 00:17:49,369 views 1144 13928 Image saved successfully at path: vendor_images/uploads/20250422184749369102_scaled_1000430248.jpg
+INFO 2025-04-23 00:20:11,199 views 9024 9132 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-23 00:20:11,199 views 9024 9132 Image saved successfully at path: vendor_images/uploads/20250422185011199225_scaled_1000430248.jpg
+INFO 2025-04-23 00:25:41,173 views 12012 2072 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430446.jpg
+INFO 2025-04-23 00:25:41,173 views 12012 2072 Image saved successfully at path: vendor_images/uploads/20250422185541173576_scaled_1000430446.jpg
+INFO 2025-04-23 00:25:44,441 views 12012 5392 Creating item for menu: 1 (Vendor: V002) with data: {'name': 'kk', 'description': 'hh', 'price': Decimal('63.00'), 'is_available': True}
+INFO 2025-04-23 00:29:08,609 views 11012 7068 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430446.jpg
+INFO 2025-04-23 00:29:08,609 views 11012 7068 Image saved successfully at path: vendor_images/uploads/20250422185908609937_scaled_1000430446.jpg
+INFO 2025-04-23 00:29:09,301 views 11012 8044 Creating item for menu: 1 (Vendor: V002) with data: {'name': 'kk', 'description': 'hh', 'price': Decimal('63.00'), 'is_available': True}
+INFO 2025-04-23 00:29:09,316 serializers 11012 8044 Creating FoodListing via serializer create: {'name': 'kk', 'description': 'hh', 'price': Decimal('63.00'), 'is_available': True, 'menu': <Menu: phone (Khirod)>}
+INFO 2025-04-23 00:30:03,505 views 11012 10772 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-23 00:30:03,505 views 11012 10772 Image saved successfully at path: vendor_images/uploads/20250422190003505089_scaled_1000430248.jpg
+INFO 2025-04-23 00:30:03,694 views 11012 12668 Creating item for menu: 1 (Vendor: V002) with data: {'name': 'phone', 'description': 'iphone', 'price': Decimal('60000.00'), 'is_available': True}
+INFO 2025-04-23 00:30:03,951 serializers 11012 12668 Creating FoodListing via serializer create: {'name': 'phone', 'description': 'iphone', 'price': Decimal('60000.00'), 'is_available': True, 'menu': <Menu: phone (Khirod)>}
+INFO 2025-04-23 00:38:48,865 views 11012 12052 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-23 00:38:48,865 views 11012 12052 Image saved successfully at path: vendor_images/uploads/20250422190848865711_scaled_1000430248.jpg
+INFO 2025-04-23 00:38:49,491 views 11012 13972 Creating item for menu: 1 (Vendor: V002) with data: {'name': 'jkhj', 'description': 'ghh', 'price': Decimal('6266.00'), 'is_available': True}
+INFO 2025-04-23 00:38:49,494 serializers 11012 13972 Creating FoodListing via serializer create: {'name': 'jkhj', 'description': 'ghh', 'price': Decimal('6266.00'), 'is_available': True, 'menu': <Menu: phone (Khirod)>}
+WARNING 2025-04-23 01:10:08,373 authentication 11012 9976 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-23 01:10:08,742 authentication 11012 6084 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-23 01:24:28,704 authentication 12296 9844 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-23 01:24:29,377 authentication 12296 7072 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-23 01:24:43,056 authentication 12296 9384 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-23 01:24:44,753 authentication 12296 8620 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+INFO 2025-04-23 01:25:05,164 views 12296 8636 Login attempt for email: khirod@gmail.com
+INFO 2025-04-23 01:25:06,857 views 12296 8636 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-23 01:26:17,832 views 12296 9424 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-23 01:26:17,832 views 12296 9424 Image saved successfully at path: vendor_images/uploads/20250422195617832732_scaled_1000430248.jpg
+INFO 2025-04-23 01:26:18,004 views 12296 4276 Creating menu for vendor: V002 with data: {'name': 'hello', 'description': 'hello ji'}
+INFO 2025-04-23 01:26:57,540 views 12296 8956 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-23 01:26:57,540 views 12296 8956 Image saved successfully at path: vendor_images/uploads/20250422195657540620_scaled_1000430248.jpg
+INFO 2025-04-23 01:26:57,632 views 12296 1096 Creating item for menu: 3 (Vendor: V002) with data: {'name': 'hi', 'description': 'hola', 'price': Decimal('200.00'), 'is_available': True}
+INFO 2025-04-23 01:26:57,632 serializers 12296 1096 Creating FoodListing via serializer create: {'name': 'hi', 'description': 'hola', 'price': Decimal('200.00'), 'is_available': True, 'menu': <Menu: hello (Khirod)>}
+WARNING 2025-04-23 08:36:21,833 authentication 12296 12996 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+INFO 2025-04-23 08:36:47,492 views 12296 11980 Login attempt for email: khirod@gmail.com
+INFO 2025-04-23 08:36:50,147 views 12296 11980 Login successful for vendor: V002. Generating tokens.
+INFO 2025-04-23 08:37:37,370 views 12296 5836 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000429047.jpg
+INFO 2025-04-23 08:37:37,410 views 12296 5836 Image saved successfully at path: vendor_images/uploads/20250423030737371038_scaled_1000429047.jpg
+INFO 2025-04-23 08:37:37,737 views 12296 3492 Creating menu for vendor: V002 with data: {'name': 'Tiffins', 'description': 'tiffin'}
+INFO 2025-04-23 08:38:12,362 views 12296 8060 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000429047.jpg
+INFO 2025-04-23 08:38:12,365 views 12296 8060 Image saved successfully at path: vendor_images/uploads/20250423030812363106_scaled_1000429047.jpg
+INFO 2025-04-23 08:38:12,731 views 12296 6152 Creating item for menu: 4 (Vendor: V002) with data: {'name': 'kakra', 'description': 'odia dish', 'price': Decimal('200.00'), 'is_available': True}
+INFO 2025-04-23 08:38:12,735 serializers 12296 6152 Creating FoodListing via serializer create: {'name': 'kakra', 'description': 'odia dish', 'price': Decimal('200.00'), 'is_available': True, 'menu': <Menu: Tiffins (Khirod)>}
+WARNING 2025-04-23 22:55:26,318 authentication 11268 4524 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-23 22:55:26,572 authentication 11268 7776 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-24 15:39:37,146 authentication 6600 6572 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-24 15:39:37,634 authentication 6600 11868 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+INFO 2025-04-24 23:49:03,825 views 12524 8856 Vendor OTP for 8908168688: 140291
+INFO 2025-04-24 23:49:15,832 views 12524 3880 Vendor OTP verified, logging in vendor: V002
+INFO 2025-04-24 23:49:15,833 views 12524 3880 Updating FCM token for vendor V002 during OTP login
+INFO 2025-04-24 23:49:15,978 views 12524 3880 Generated tokens for vendor V002
+ERROR 2025-04-24 23:49:34,621 views 12524 8560 Vendor OTP generation failed for 8908168688: Please wait before requesting another OTP
+ERROR 2025-04-24 23:49:41,600 views 12524 8288 Vendor OTP generation failed for 8908168688: Please wait before requesting another OTP
+INFO 2025-04-24 23:50:31,355 views 12524 1232 Vendor OTP for 8908168688: 207296
+INFO 2025-04-24 23:50:48,763 views 12524 13060 Vendor OTP verified, logging in vendor: V002
+INFO 2025-04-24 23:50:48,763 views 12524 13060 Generated tokens for vendor V002
+INFO 2025-04-25 00:01:51,699 views 12524 7940 Vendor OTP for 8908168688: 444947
+INFO 2025-04-25 00:02:04,912 views 12524 12972 Vendor OTP verified, logging in vendor: V002
+INFO 2025-04-25 00:02:04,913 views 12524 12972 Generated tokens for vendor V002
+INFO 2025-04-25 00:14:40,521 views 12524 8580 Vendor OTP for 8908168688: 321615
+INFO 2025-04-25 00:14:55,060 views 12524 13260 Vendor OTP verified, logging in vendor: V002
+INFO 2025-04-25 00:14:55,091 views 12524 13260 Generated tokens for vendor V002
+ERROR 2025-04-25 00:15:16,703 views 12524 2252 Vendor OTP generation failed for 8908168688: Please wait before requesting another OTP
+INFO 2025-04-25 00:16:44,424 views 12524 8400 Vendor OTP for 8908168688: 798747
+INFO 2025-04-25 00:16:54,230 views 12524 10752 Vendor OTP verified, logging in vendor: V002
+INFO 2025-04-25 00:16:54,232 views 12524 10752 Generated tokens for vendor V002
+INFO 2025-04-25 00:45:57,836 views 12524 11692 Vendor OTP for 8908168688: 117054
+INFO 2025-04-25 00:46:08,169 views 12524 5056 Vendor OTP verified, logging in vendor: V002
+INFO 2025-04-25 00:46:08,252 views 12524 5056 Generated tokens for vendor V002
+INFO 2025-04-25 08:29:08,236 views 5084 11776 Vendor OTP for 8908168688: 671935
+INFO 2025-04-25 08:29:20,452 views 5084 11856 Vendor OTP verified, logging in vendor: V002
+INFO 2025-04-25 08:29:20,452 views 5084 11856 Generated tokens for vendor V002
+INFO 2025-04-25 08:35:18,125 views 5084 4624 Vendor OTP for 8908168688: 534584
+INFO 2025-04-25 08:35:27,809 views 5084 8560 Vendor OTP verified, logging in vendor: V002
+INFO 2025-04-25 08:35:27,809 views 5084 8560 Generated tokens for vendor V002
+INFO 2025-04-25 08:36:25,525 views 5084 8028 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430158.jpg
+INFO 2025-04-25 08:36:25,543 views 5084 8028 Image saved successfully at path: vendor_images/uploads/20250425030625525098_scaled_1000430158.jpg
+INFO 2025-04-25 08:36:26,417 views 5084 9504 Creating menu for vendor: V002 with data: {'name': 'none', 'description': 'nir'}
+INFO 2025-04-25 08:36:56,358 views 5084 2856 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-25 08:36:56,358 views 5084 2856 Image saved successfully at path: vendor_images/uploads/20250425030656358784_scaled_1000430248.jpg
+INFO 2025-04-25 08:36:57,252 views 5084 8344 Creating item for menu: 5 (Vendor: V002) with data: {'name': 'phone', 'description': 'phone', 'price': Decimal('60000.00'), 'is_available': True}
+INFO 2025-04-25 08:36:57,255 serializers 5084 8344 Creating FoodListing via serializer create: {'name': 'phone', 'description': 'phone', 'price': Decimal('60000.00'), 'is_available': True, 'menu': <Menu: none (Khirod)>}
+INFO 2025-04-25 08:40:46,917 views 5084 5408 Vendor OTP for 8908168688: 124678
+INFO 2025-04-25 08:40:54,509 views 5084 2236 Vendor OTP verified, logging in vendor: V002
+INFO 2025-04-25 08:40:54,509 views 5084 2236 Generated tokens for vendor V002
+WARNING 2025-04-25 11:18:23,899 authentication 10168 11204 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-25 11:18:25,573 authentication 10168 3748 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-25 11:51:49,169 authentication 10168 2840 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-25 11:51:50,758 authentication 10168 11556 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+INFO 2025-04-25 11:52:08,642 views 10168 9300 Vendor OTP for 8908168688: 259452
+INFO 2025-04-25 11:52:19,992 views 10168 7336 Vendor OTP verified, logging in vendor: V002
+INFO 2025-04-25 11:52:19,993 views 10168 7336 Generated tokens for vendor V002
+WARNING 2025-04-25 14:14:44,679 authentication 12904 12928 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-25 14:14:44,872 authentication 12904 2824 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+INFO 2025-04-25 14:14:56,622 views 12904 10588 Vendor OTP for 8908168688: 513509
+INFO 2025-04-25 14:15:04,728 views 12904 12596 Vendor OTP verified for 8908168688, signup required. Stored phone in session.
+INFO 2025-04-25 14:16:43,980 views 11568 7076 Anonymous/Pre-Reg Image upload attempt, Filename: 1000427713.jpg
+INFO 2025-04-25 14:16:43,980 views 11568 7076 Image saved successfully at path: vendor_images/uploads/20250425084643980388_1000427713.jpg
+INFO 2025-04-25 14:16:44,172 views 11568 7076 Vendor OTP Registration attempt.
+WARNING 2025-04-25 14:16:44,178 views 11568 7076 Vendor OTP Registration validation failed: {'password': [ErrorDetail(string='This field is required.', code='required')], 'phone': [ErrorDetail(string='This field is required.', code='required')]}
+INFO 2025-04-25 14:19:48,839 views 11568 12788 Vendor OTP for 8908168688: 954092
+INFO 2025-04-25 14:19:57,372 views 11568 1000 Vendor OTP verified for 8908168688, signup required. Stored phone in session.
+INFO 2025-04-25 14:21:06,266 views 11568 12448 Vendor OTP for 8908168688: 787506
+INFO 2025-04-25 14:21:12,744 views 11568 9576 Vendor OTP verified for 8908168688, signup required. Stored phone in session.
+INFO 2025-04-25 14:22:04,922 views 10312 5744 Anonymous/Pre-Reg Image upload attempt, Filename: 1000427713.jpg
+INFO 2025-04-25 14:22:04,922 views 10312 5744 Image saved successfully at path: vendor_images/uploads/20250425085204922125_1000427713.jpg
+INFO 2025-04-25 14:22:04,994 views 10312 5744 Vendor OTP Registration attempt.
+WARNING 2025-04-25 14:22:05,011 views 10312 5744 Vendor OTP Registration validation failed: {'password': [ErrorDetail(string='This field is required.', code='required')], 'phone': [ErrorDetail(string='This field is required.', code='required')]}
+INFO 2025-04-25 14:26:36,672 views 6800 5948 Vendor OTP for 8908168688: 118427
+INFO 2025-04-25 14:26:43,344 views 6800 2008 Vendor OTP verified for 8908168688, signup required. Stored phone in session.
+INFO 2025-04-25 14:27:13,944 views 6800 2644 Anonymous/Pre-Reg Image upload attempt, Filename: 1000427713.jpg
+INFO 2025-04-25 14:27:13,944 views 6800 2644 Image saved successfully at path: vendor_images/uploads/20250425085713944505_1000427713.jpg
+INFO 2025-04-25 14:27:16,396 views 6800 2644 Vendor OTP Registration attempt.
+ERROR 2025-04-25 14:27:16,546 views 6800 2644 Unexpected error during vendor OTP registration: The field 'password' was declared on serializer VendorRegistrationSerializer, but has not been included in the 'fields' option.
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\auth_app\views.py", line 78, in post
+    serializer.is_valid(raise_exception=True)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 444, in run_validation
+    value = self.to_internal_value(data)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 497, in to_internal_value
+    for field in fields:
+                 ^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 380, in _writable_fields
+    for field in self.fields.values():
+                 ^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 374, in fields
+    for key, value in self.get_fields().items():
+                      ^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 1081, in get_fields
+    field_names = self.get_field_names(declared_fields, info)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 1177, in get_field_names
+    assert field_name in fields, (
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: The field 'password' was declared on serializer VendorRegistrationSerializer, but has not been included in the 'fields' option.
+
+INFO 2025-04-25 14:30:22,094 views 10872 13300 Anonymous/Pre-Reg Image upload attempt, Filename: 1000427713.jpg
+INFO 2025-04-25 14:30:22,094 views 10872 13300 Image saved successfully at path: vendor_images/uploads/20250425090022094566_1000427713.jpg
+INFO 2025-04-25 14:36:08,460 views 12892 2644 Vendor OTP for 8908168688: 530547
+INFO 2025-04-25 14:36:16,256 views 12892 10560 Vendor OTP verified for 8908168688, signup required. Stored phone in session.
+INFO 2025-04-25 14:36:40,260 views 12892 9560 Anonymous/Pre-Reg Image upload attempt, Filename: 1000427713.jpg
+INFO 2025-04-25 14:36:40,272 views 12892 9560 Image saved successfully at path: vendor_images/uploads/20250425090640260238_1000427713.jpg
+INFO 2025-04-25 14:36:40,623 views 12892 9560 Vendor OTP Registration attempt.
+WARNING 2025-04-25 14:36:40,628 views 12892 9560 Vendor OTP Registration validation failed: {'longitude': [ErrorDetail(string='Ensure that there are no more than 6 decimal places.', code='max_decimal_places')]}
+INFO 2025-04-25 14:44:00,150 views 11568 12480 Vendor OTP for 8908168688: 551698
+INFO 2025-04-25 14:44:07,972 views 11568 12116 Vendor OTP verified for 8908168688, signup required. Stored phone in session.
+INFO 2025-04-25 14:44:30,910 views 11568 9648 Anonymous/Pre-Reg Image upload attempt, Filename: 1000427713.jpg
+INFO 2025-04-25 14:44:30,910 views 11568 9648 Image saved successfully at path: vendor_images/uploads/20250425091430910061_1000427713.jpg
+INFO 2025-04-25 14:44:31,172 views 11568 9648 Vendor OTP Registration attempt.
+WARNING 2025-04-25 14:44:31,182 views 11568 9648 Vendor OTP Registration validation failed: {'latitude': [ErrorDetail(string='Ensure that there are no more than 6 decimal places.', code='max_decimal_places')], 'longitude': [ErrorDetail(string='Ensure that there are no more than 6 decimal places.', code='max_decimal_places')]}
+INFO 2025-04-25 14:47:00,372 views 1940 6512 Vendor OTP for 8908168688: 458596
+INFO 2025-04-25 14:47:06,309 views 1940 10980 Vendor OTP verified for 8908168688, signup required. Stored phone in session.
+INFO 2025-04-25 14:47:26,262 views 1940 7248 Anonymous/Pre-Reg Image upload attempt, Filename: 1000427713.jpg
+INFO 2025-04-25 14:47:26,272 views 1940 7248 Image saved successfully at path: vendor_images/uploads/20250425091726262785_1000427713.jpg
+INFO 2025-04-25 14:47:26,422 views 1940 7248 Vendor OTP Registration attempt.
+INFO 2025-04-25 14:47:27,572 views 1940 7248 Geocoding successful for address '2nd Cross, Marathahalli, Bengaluru, Karnataka, India': Lat=12.9552952, Lon=77.699243
+INFO 2025-04-25 14:47:27,694 views 1940 7248 Vendor registered via OTP successfully: V20250425091727873
+INFO 2025-04-25 14:47:27,710 views 1940 7248 Generated tokens for vendor V20250425091727873
+ERROR 2025-04-25 14:47:43,119 views 1940 3180 Vendor OTP generation failed for 8908168688: Please wait before requesting another OTP
+INFO 2025-04-25 14:48:29,928 views 1940 2156 Vendor OTP for 8908168688: 538591
+INFO 2025-04-25 14:48:36,072 views 1940 5072 Vendor OTP verified, logging in vendor: V20250425091727873
+INFO 2025-04-25 14:48:36,072 views 1940 5072 Updating FCM token for vendor V20250425091727873 during OTP login
+INFO 2025-04-25 14:48:36,192 views 1940 5072 Generated tokens for vendor V20250425091727873
+INFO 2025-04-25 14:49:36,094 views 12596 5856 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-25 14:49:36,110 views 12596 5856 Image saved successfully at path: vendor_images/uploads/20250425091936094715_scaled_1000430248.jpg
+INFO 2025-04-25 14:49:36,591 views 12596 8576 Creating menu for vendor: V20250425091727873 with data: {'name': 'phone', 'description': 'iphone'}
+INFO 2025-04-25 14:50:09,279 views 12596 13168 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-25 14:50:09,295 views 12596 13168 Image saved successfully at path: vendor_images/uploads/20250425092009279364_scaled_1000430248.jpg
+INFO 2025-04-25 14:50:09,394 views 12596 12032 Creating item for menu: 1 (Vendor: V20250425091727873) with data: {'name': 'iphoen', 'description': 'phone', 'price': Decimal('60000.00'), 'is_available': True}
+INFO 2025-04-25 14:50:09,394 serializers 12596 12032 Creating FoodListing via serializer create: {'name': 'iphoen', 'description': 'phone', 'price': Decimal('60000.00'), 'is_available': True, 'menu': <Menu: phone (hello)>}
+INFO 2025-04-25 14:50:30,844 views 12596 5056 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000429047.jpg
+INFO 2025-04-25 14:50:30,844 views 12596 5056 Image saved successfully at path: vendor_images/uploads/20250425092030844944_scaled_1000429047.jpg
+INFO 2025-04-25 14:50:31,259 views 12596 11608 Creating menu for vendor: V20250425091727873 with data: {'name': 'food', 'description': 'food'}
+INFO 2025-04-25 14:51:12,109 views 12596 5664 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000429047.jpg
+INFO 2025-04-25 14:51:12,109 views 12596 5664 Image saved successfully at path: vendor_images/uploads/20250425092112109681_scaled_1000429047.jpg
+INFO 2025-04-25 14:51:12,178 views 12596 2720 Creating item for menu: 2 (Vendor: V20250425091727873) with data: {'name': 'pitha', 'description': 'delicious odia cakes', 'price': Decimal('30.00'), 'is_available': True}
+INFO 2025-04-25 14:51:12,178 serializers 12596 2720 Creating FoodListing via serializer create: {'name': 'pitha', 'description': 'delicious odia cakes', 'price': Decimal('30.00'), 'is_available': True, 'menu': <Menu: food (hello)>}
+INFO 2025-04-25 14:51:41,195 views 12596 13080 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000428622.jpg
+INFO 2025-04-25 14:51:41,195 views 12596 13080 Image saved successfully at path: vendor_images/uploads/20250425092141195042_scaled_1000428622.jpg
+INFO 2025-04-25 14:51:41,494 views 12596 10064 Creating item for menu: 2 (Vendor: V20250425091727873) with data: {'name': 'Biriyani', 'description': 'famous Indian food', 'price': Decimal('150.00'), 'is_available': True}
+INFO 2025-04-25 14:51:41,510 serializers 12596 10064 Creating FoodListing via serializer create: {'name': 'Biriyani', 'description': 'famous Indian food', 'price': Decimal('150.00'), 'is_available': True, 'menu': <Menu: food (hello)>}
+INFO 2025-04-25 14:56:28,294 views 6204 10460 Vendor OTP for 8946549469: 152876
+INFO 2025-04-25 14:56:34,983 views 6204 1316 Vendor OTP verified for 8946549469, signup required. Stored phone in session.
+INFO 2025-04-25 14:57:39,994 views 6204 12812 Anonymous/Pre-Reg Image upload attempt, Filename: 1000427716.jpg
+INFO 2025-04-25 14:57:40,001 views 6204 12812 Image saved successfully at path: vendor_images/uploads/20250425092739994467_1000427716.jpg
+INFO 2025-04-25 14:57:40,128 views 6204 12812 Vendor OTP Registration attempt.
+INFO 2025-04-25 14:57:41,272 views 6204 12812 Geocoding successful for address '7th Main Road, Marathahalli, Bengaluru, Karnataka, India': Lat=12.9537853, Lon=77.6967432
+ERROR 2025-04-25 14:57:41,385 views 6204 12812 Unexpected error during vendor OTP registration: UNIQUE constraint failed: auth_app_vendor.email
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: UNIQUE constraint failed: auth_app_vendor.email
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\auth_app\views.py", line 110, in post
+    vendor = Vendor.objects.create(
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 679, in create
+    obj.save(force_insert=True, using=self.db)
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\auth_app\models.py", line 45, in save
+    super().save(*args, **kwargs)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 892, in save
+    self.save_base(
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 998, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 1161, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 1202, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 1847, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\compiler.py", line 1836, in execute_sql
+    cursor.execute(sql, params)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: UNIQUE constraint failed: auth_app_vendor.email
+
+INFO 2025-04-25 14:58:17,794 views 6204 10916 Anonymous/Pre-Reg Image upload attempt, Filename: 1000427716.jpg
+INFO 2025-04-25 14:58:17,810 views 6204 10916 Image saved successfully at path: vendor_images/uploads/20250425092817810355_1000427716.jpg
+INFO 2025-04-25 14:58:17,878 views 6204 10916 Vendor OTP Registration attempt.
+INFO 2025-04-25 14:58:18,997 views 6204 10916 Geocoding successful for address '7th Main Road, Marathahalli, Bengaluru, Karnataka, India': Lat=12.9537853, Lon=77.6967432
+ERROR 2025-04-25 14:58:19,005 views 6204 10916 Unexpected error during vendor OTP registration: UNIQUE constraint failed: auth_app_vendor.phone
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: UNIQUE constraint failed: auth_app_vendor.phone
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\auth_app\views.py", line 110, in post
+    vendor = Vendor.objects.create(
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 679, in create
+    obj.save(force_insert=True, using=self.db)
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\auth_app\models.py", line 45, in save
+    super().save(*args, **kwargs)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 892, in save
+    self.save_base(
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 998, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 1161, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 1202, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 1847, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\compiler.py", line 1836, in execute_sql
+    cursor.execute(sql, params)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: UNIQUE constraint failed: auth_app_vendor.phone
+
+INFO 2025-04-25 14:58:55,545 views 6204 4016 Vendor OTP for 8946549469: 140880
+INFO 2025-04-25 14:59:04,019 views 6204 3172 Vendor OTP verified for 8946549469, signup required. Stored phone in session.
+INFO 2025-04-25 14:59:32,522 views 6204 13200 Anonymous/Pre-Reg Image upload attempt, Filename: 1000430248.jpg
+INFO 2025-04-25 14:59:32,529 views 6204 13200 Image saved successfully at path: vendor_images/uploads/20250425092932522186_1000430248.jpg
+INFO 2025-04-25 14:59:32,612 views 6204 13200 Vendor OTP Registration attempt.
+INFO 2025-04-25 14:59:33,537 views 6204 13200 Geocoding successful for address '2nd Cross, Marathahalli, Bengaluru, Karnataka, India': Lat=12.9552952, Lon=77.699243
+ERROR 2025-04-25 14:59:33,546 views 6204 13200 Unexpected error during vendor OTP registration: UNIQUE constraint failed: auth_app_vendor.phone
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: UNIQUE constraint failed: auth_app_vendor.phone
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\auth_app\views.py", line 110, in post
+    vendor = Vendor.objects.create(
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 679, in create
+    obj.save(force_insert=True, using=self.db)
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\auth_app\models.py", line 45, in save
+    super().save(*args, **kwargs)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 892, in save
+    self.save_base(
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 998, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 1161, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 1202, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 1847, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\compiler.py", line 1836, in execute_sql
+    cursor.execute(sql, params)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: UNIQUE constraint failed: auth_app_vendor.phone
+
+INFO 2025-04-25 15:01:41,379 views 7260 11180 Anonymous/Pre-Reg Image upload attempt, Filename: 1000430248.jpg
+INFO 2025-04-25 15:01:41,664 views 7260 11180 Image saved successfully at path: vendor_images/uploads/20250425093141379065_1000430248.jpg
+INFO 2025-04-25 15:01:41,879 views 7260 11180 Vendor OTP Registration attempt.
+INFO 2025-04-25 15:01:42,922 views 7260 11180 Geocoding successful for address '2nd Cross, Marathahalli, Bengaluru, Karnataka, India': Lat=12.9552952, Lon=77.699243
+ERROR 2025-04-25 15:01:42,939 views 7260 11180 Unexpected error during vendor OTP registration: UNIQUE constraint failed: auth_app_vendor.phone
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: UNIQUE constraint failed: auth_app_vendor.phone
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\auth_app\views.py", line 110, in post
+    vendor = Vendor.objects.create(
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 679, in create
+    obj.save(force_insert=True, using=self.db)
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\auth_app\models.py", line 45, in save
+    super().save(*args, **kwargs)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 892, in save
+    self.save_base(
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 998, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 1161, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\base.py", line 1202, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 1847, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\compiler.py", line 1836, in execute_sql
+    cursor.execute(sql, params)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: UNIQUE constraint failed: auth_app_vendor.phone
+
+INFO 2025-04-25 15:03:34,909 views 4352 3648 Anonymous/Pre-Reg Image upload attempt, Filename: 1000430248.jpg
+INFO 2025-04-25 15:03:34,909 views 4352 3648 Image saved successfully at path: vendor_images/uploads/20250425093334909666_1000430248.jpg
+INFO 2025-04-25 15:03:35,178 views 4352 3648 Vendor OTP Registration attempt.
+INFO 2025-04-25 15:03:36,222 views 4352 3648 Geocoding successful for address '2nd Cross, Marathahalli, Bengaluru, Karnataka, India': Lat=12.9552952, Lon=77.699243
+INFO 2025-04-25 15:03:36,329 views 4352 3648 Vendor registered via OTP successfully: V20250425093336838
+INFO 2025-04-25 15:03:36,329 views 4352 3648 Generated tokens for vendor V20250425093336838
+ERROR 2025-04-25 15:03:36,348 views 4352 3648 Unexpected error during vendor OTP registration: Field name `phone` is not valid for model `Vendor` in `auth_app.serializers.VendorProfileSerializer`.
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\auth_app\views.py", line 137, in post
+    'vendor': profile_serializer.data
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 573, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 251, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 525, in to_representation
+    for field in fields:
+                 ^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 386, in _readable_fields
+    for field in self.fields.values():
+                 ^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 374, in fields
+    for key, value in self.get_fields().items():
+                      ^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 1105, in get_fields
+    field_class, field_kwargs = self.build_field(
+                                ^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 1251, in build_field
+    return self.build_unknown_field(field_name, model_class)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\rest_framework\serializers.py", line 1369, in build_unknown_field
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Field name `phone` is not valid for model `Vendor` in `auth_app.serializers.VendorProfileSerializer`.
+
+INFO 2025-04-25 15:05:05,410 views 12076 12496 Anonymous/Pre-Reg Image upload attempt, Filename: 1000430248.jpg
+INFO 2025-04-25 15:05:05,410 views 12076 12496 Image saved successfully at path: vendor_images/uploads/20250425093505410461_1000430248.jpg
+INFO 2025-04-25 15:05:05,929 views 12076 12496 Vendor OTP Registration attempt.
+INFO 2025-04-25 15:05:53,209 views 12076 10196 Vendor OTP for 8946549469: 485449
+INFO 2025-04-25 15:06:00,737 views 12076 12060 Vendor OTP verified, logging in vendor: V20250425093336838
+INFO 2025-04-25 15:06:00,737 views 12076 12060 Updating FCM token for vendor V20250425093336838 during OTP login
+INFO 2025-04-25 15:06:00,872 views 12076 12060 Generated tokens for vendor V20250425093336838
+INFO 2025-04-25 15:06:43,128 views 12076 12980 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000422389.jpg
+INFO 2025-04-25 15:06:43,128 views 12076 12980 Image saved successfully at path: vendor_images/uploads/20250425093643128287_scaled_1000422389.jpg
+INFO 2025-04-25 15:06:43,261 views 12076 9528 Creating menu for vendor: V20250425093336838 with data: {'name': 'normal', 'description': 'normal'}
+INFO 2025-04-25 15:07:50,310 views 12076 11128 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000429821.jpg
+INFO 2025-04-25 15:07:50,322 views 12076 11128 Image saved successfully at path: vendor_images/uploads/20250425093750322323_scaled_1000429821.jpg
+INFO 2025-04-25 15:07:50,696 views 12076 12544 Creating item for menu: 3 (Vendor: V20250425093336838) with data: {'name': 'chai', 'description': 'love of india', 'price': Decimal('20.00'), 'is_available': True}
+INFO 2025-04-25 15:07:50,696 serializers 12076 12544 Creating FoodListing via serializer create: {'name': 'chai', 'description': 'love of india', 'price': Decimal('20.00'), 'is_available': True, 'menu': <Menu: normal (darling)>}
+INFO 2025-04-25 15:08:27,679 views 12076 9560 Vendor OTP for 9855836552: 870390
+INFO 2025-04-25 15:08:39,661 views 12076 10988 Vendor OTP verified for 9855836552, signup required. Stored phone in session.
+INFO 2025-04-25 15:09:25,379 views 12076 12884 Anonymous/Pre-Reg Image upload attempt, Filename: 1000430158.jpg
+INFO 2025-04-25 15:09:25,379 views 12076 12884 Image saved successfully at path: vendor_images/uploads/20250425093925379305_1000430158.jpg
+INFO 2025-04-25 15:09:25,490 views 12076 12884 Vendor OTP Registration attempt.
+INFO 2025-04-25 15:09:26,779 views 12076 12884 Geocoding successful for address '7th Main Road, Marathahalli, Bengaluru, Karnataka, India': Lat=12.9537853, Lon=77.6967432
+INFO 2025-04-25 15:09:26,928 views 12076 12884 Vendor registered via OTP successfully: V20250425093926705
+INFO 2025-04-25 15:09:26,928 views 12076 12884 Generated tokens for vendor V20250425093926705
+INFO 2025-04-25 15:09:46,394 views 12076 1216 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430158.jpg
+INFO 2025-04-25 15:09:46,394 views 12076 1216 Image saved successfully at path: vendor_images/uploads/20250425093946394867_scaled_1000430158.jpg
+INFO 2025-04-25 15:10:04,228 views 12076 7576 Vendor OTP for 9855836552: 301918
+INFO 2025-04-25 15:10:13,328 views 12076 10568 Vendor OTP verified, logging in vendor: V20250425093926705
+INFO 2025-04-25 15:10:13,328 views 12076 10568 Updating FCM token for vendor V20250425093926705 during OTP login
+INFO 2025-04-25 15:10:13,457 views 12076 10568 Generated tokens for vendor V20250425093926705
+INFO 2025-04-25 15:10:35,767 views 12076 2728 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430158.jpg
+INFO 2025-04-25 15:10:35,768 views 12076 2728 Image saved successfully at path: vendor_images/uploads/20250425094035768894_scaled_1000430158.jpg
+INFO 2025-04-25 15:10:35,956 views 12076 10796 Creating menu for vendor: V20250425093926705 with data: {'name': 'kuch bhi', 'description': 'kuch bhi'}
+INFO 2025-04-25 15:11:02,414 views 12076 7884 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430158.jpg
+INFO 2025-04-25 15:11:02,414 views 12076 7884 Image saved successfully at path: vendor_images/uploads/20250425094102414700_scaled_1000430158.jpg
+INFO 2025-04-25 15:11:02,745 views 12076 7324 Creating item for menu: 4 (Vendor: V20250425093926705) with data: {'name': 'kuch bhi', 'description': 'kuch bhi', 'price': Decimal('500.00'), 'is_available': True}
+INFO 2025-04-25 15:11:02,745 serializers 12076 7324 Creating FoodListing via serializer create: {'name': 'kuch bhi', 'description': 'kuch bhi', 'price': Decimal('500.00'), 'is_available': True, 'menu': <Menu: kuch bhi (hola)>}
+WARNING 2025-04-26 19:20:18,466 authentication 1700 14288 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-26 19:20:18,947 authentication 1700 9440 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-26 19:33:16,152 authentication 11420 10772 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+WARNING 2025-04-26 19:33:16,728 authentication 11420 5008 Token validation failed: {'detail': ErrorDetail(string='Given token not valid for any token type', code='token_not_valid'), 'code': ErrorDetail(string='token_not_valid', code='token_not_valid'), 'messages': [{'token_class': ErrorDetail(string='AccessToken', code='token_not_valid'), 'token_type': ErrorDetail(string='access', code='token_not_valid'), 'message': ErrorDetail(string='Token is expired', code='token_not_valid')}]}
+INFO 2025-04-26 19:33:56,043 views 11420 3012 Vendor OTP for 8908168688: 970297
+INFO 2025-04-26 19:34:19,085 views 11420 12944 Vendor OTP verified for 8908168688, signup required. Stored phone in session.
+INFO 2025-04-26 19:34:53,812 views 11420 15272 Anonymous/Pre-Reg Image upload attempt, Filename: 1000427713.jpg
+INFO 2025-04-26 19:34:53,861 views 11420 15272 Image saved successfully at path: vendor_images/uploads/20250426140453812839_1000427713.jpg
+INFO 2025-04-26 19:34:54,182 views 11420 15272 Vendor OTP Registration attempt.
+INFO 2025-04-26 19:34:55,432 views 11420 15272 Geocoding successful for address '2nd Cross, Marathahalli, Bengaluru, Karnataka, India': Lat=12.9552952, Lon=77.699243
+INFO 2025-04-26 19:34:55,560 views 11420 15272 Vendor registered via OTP successfully: V20250426140455161
+INFO 2025-04-26 19:34:55,561 views 11420 15272 Generated tokens for vendor V20250426140455161
+INFO 2025-04-26 19:35:34,527 views 11420 14376 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430756.jpg
+INFO 2025-04-26 19:35:34,531 views 11420 14376 Image saved successfully at path: vendor_images/uploads/20250426140534528016_scaled_1000430756.jpg
+INFO 2025-04-26 20:58:14,419 views 10260 9480 Vendor OTP for 8908168688: 211241
+INFO 2025-04-26 20:58:22,535 views 10260 7296 Vendor OTP verified, logging in vendor: V20250426140455161
+INFO 2025-04-26 20:58:22,536 views 10260 7296 Updating FCM token for vendor V20250426140455161 during OTP login
+INFO 2025-04-26 20:58:22,643 views 10260 7296 Generated tokens for vendor V20250426140455161
+INFO 2025-04-26 20:58:58,594 views 10260 14132 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000429047.jpg
+INFO 2025-04-26 20:58:58,594 views 10260 14132 Image saved successfully at path: vendor_images/uploads/20250426152858594443_scaled_1000429047.jpg
+INFO 2025-04-26 20:59:01,133 views 10260 11388 Creating menu for vendor: V20250426140455161 with data: {'name': 'odia food', 'description': 'food'}
+INFO 2025-04-26 20:59:36,902 views 10260 12812 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000429047.jpg
+INFO 2025-04-26 20:59:36,902 views 10260 12812 Image saved successfully at path: vendor_images/uploads/20250426152936902656_scaled_1000429047.jpg
+INFO 2025-04-26 20:59:37,060 views 10260 14732 Creating item for menu: 1 (Vendor: V20250426140455161) with data: {'name': 'kakra pitha', 'description': 'odia food', 'price': Decimal('40.00'), 'is_available': True}
+INFO 2025-04-26 20:59:37,060 serializers 10260 14732 Creating FoodListing via serializer create: {'name': 'kakra pitha', 'description': 'odia food', 'price': Decimal('40.00'), 'is_available': True, 'menu': <Menu: odia food (hello)>}
+INFO 2025-04-26 21:00:04,582 views 10260 8260 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000429047.jpg
+INFO 2025-04-26 21:00:04,592 views 10260 8260 Image saved successfully at path: vendor_images/uploads/20250426153004582760_scaled_1000429047.jpg
+INFO 2025-04-26 21:00:04,708 views 10260 716 Creating item for menu: 1 (Vendor: V20250426140455161) with data: {'name': 'pitha ghuguni', 'description': 'ghuguni', 'price': Decimal('20.00'), 'is_available': True}
+INFO 2025-04-26 21:00:04,712 serializers 10260 716 Creating FoodListing via serializer create: {'name': 'pitha ghuguni', 'description': 'ghuguni', 'price': Decimal('20.00'), 'is_available': True, 'menu': <Menu: odia food (hello)>}
+INFO 2025-04-26 21:00:25,582 views 10260 4712 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000428622.jpg
+INFO 2025-04-26 21:00:25,591 views 10260 4712 Image saved successfully at path: vendor_images/uploads/20250426153025582962_scaled_1000428622.jpg
+INFO 2025-04-26 21:00:25,803 views 10260 3296 Creating menu for vendor: V20250426140455161 with data: {'name': 'Biriyani', 'description': 'biriyani'}
+INFO 2025-04-26 21:01:10,132 views 10260 9752 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000428622.jpg
+INFO 2025-04-26 21:01:10,132 views 10260 9752 Image saved successfully at path: vendor_images/uploads/20250426153110132813_scaled_1000428622.jpg
+INFO 2025-04-26 21:01:10,418 views 10260 11768 Creating item for menu: 2 (Vendor: V20250426140455161) with data: {'name': 'Chicken Biriyani', 'description': 'famous Indian food', 'price': Decimal('150.00'), 'is_available': True}
+INFO 2025-04-26 21:01:10,428 serializers 10260 11768 Creating FoodListing via serializer create: {'name': 'Chicken Biriyani', 'description': 'famous Indian food', 'price': Decimal('150.00'), 'is_available': True, 'menu': <Menu: Biriyani (hello)>}
+INFO 2025-04-26 21:01:39,019 views 10260 10336 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000428622.jpg
+INFO 2025-04-26 21:01:39,027 views 10260 10336 Image saved successfully at path: vendor_images/uploads/20250426153139019226_scaled_1000428622.jpg
+INFO 2025-04-26 21:01:39,432 views 10260 14216 Creating item for menu: 2 (Vendor: V20250426140455161) with data: {'name': 'Dum Biryani', 'description': 'famous Indian food', 'price': Decimal('200.00'), 'is_available': True}
+INFO 2025-04-26 21:01:39,444 serializers 10260 14216 Creating FoodListing via serializer create: {'name': 'Dum Biryani', 'description': 'famous Indian food', 'price': Decimal('200.00'), 'is_available': True, 'menu': <Menu: Biriyani (hello)>}
+INFO 2025-04-26 21:01:54,119 views 10260 8812 Vendor OTP for 9856432516: 203824
+INFO 2025-04-26 21:02:00,832 views 10260 7932 Vendor OTP verified for 9856432516, signup required. Stored phone in session.
+INFO 2025-04-26 21:02:23,319 views 10260 10840 Anonymous/Pre-Reg Image upload attempt, Filename: 1000427984.jpg
+INFO 2025-04-26 21:02:23,319 views 10260 10840 Image saved successfully at path: vendor_images/uploads/20250426153223319358_1000427984.jpg
+INFO 2025-04-26 21:02:23,482 views 10260 10840 Vendor OTP Registration attempt.
+INFO 2025-04-26 21:02:24,752 views 10260 10840 Geocoding successful for address '7th Main Road, Marathahalli, Bengaluru, Karnataka, India': Lat=12.9537853, Lon=77.6967432
+INFO 2025-04-26 21:02:24,919 views 10260 10840 Vendor registered via OTP successfully: V20250426153224696
+INFO 2025-04-26 21:02:24,919 views 10260 10840 Generated tokens for vendor V20250426153224696
+INFO 2025-04-26 21:03:01,182 views 10260 9568 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000428622.jpg
+INFO 2025-04-26 21:03:01,182 views 10260 9568 Image saved successfully at path: vendor_images/uploads/20250426153301182774_scaled_1000428622.jpg
+INFO 2025-04-26 21:36:22,052 views 10260 12408 Vendor OTP for 8958632546: 255480
+INFO 2025-04-26 21:36:31,782 views 10260 11840 Vendor OTP verified for 8958632546, signup required. Stored phone in session.
+INFO 2025-04-26 21:36:55,202 views 10260 5704 Anonymous/Pre-Reg Image upload attempt, Filename: 1000430248.jpg
+INFO 2025-04-26 21:36:55,202 views 10260 5704 Image saved successfully at path: vendor_images/uploads/20250426160655202707_1000430248.jpg
+INFO 2025-04-26 21:36:55,312 views 10260 5704 Vendor OTP Registration attempt.
+INFO 2025-04-26 21:36:57,652 views 10260 5704 Geocoding successful for address '2nd Cross, Marathahalli, Bengaluru, Karnataka, India': Lat=12.9552952, Lon=77.699243
+INFO 2025-04-26 21:36:57,791 views 10260 5704 Vendor registered via OTP successfully: V20250426160657492
+INFO 2025-04-26 21:36:57,791 views 10260 5704 Generated tokens for vendor V20250426160657492
+INFO 2025-04-26 21:37:16,552 views 10260 2060 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-26 21:37:16,552 views 10260 2060 Image saved successfully at path: vendor_images/uploads/20250426160716552751_scaled_1000430248.jpg
+INFO 2025-04-26 21:37:16,852 views 10260 6820 Creating menu for vendor: V20250426160657492 with data: {'name': 'Phone', 'description': 'iphone'}
+INFO 2025-04-26 21:37:41,450 views 10260 13936 Anonymous/Pre-Reg Image upload attempt, Filename: scaled_1000430248.jpg
+INFO 2025-04-26 21:37:41,453 views 10260 13936 Image saved successfully at path: vendor_images/uploads/20250426160741450011_scaled_1000430248.jpg
+INFO 2025-04-26 21:37:41,768 views 10260 3560 Creating item for menu: 3 (Vendor: V20250426160657492) with data: {'name': 'phone', 'description': 'iphone', 'price': Decimal('60000.00'), 'is_available': True}
+INFO 2025-04-26 21:37:41,768 serializers 10260 3560 Creating FoodListing via serializer create: {'name': 'phone', 'description': 'iphone', 'price': Decimal('60000.00'), 'is_available': True, 'menu': <Menu: Phone (electronics)>}

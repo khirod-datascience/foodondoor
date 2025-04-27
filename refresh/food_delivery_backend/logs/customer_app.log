@@ -1,0 +1,504 @@
+ERROR 2025-04-02 14:50:36,975 views 4924 5116 Error in SendOTP: too many values to unpack (expected 2)
+INFO 2025-04-02 14:54:07,572 views 6960 14332 OTP for 8908168688: 539466
+INFO 2025-04-02 15:00:41,531 views 13592 9380 OTP for 8908168688: 321312
+INFO 2025-04-04 01:02:23,486 views 5160 6260 OTP for 8559556663: 624379
+INFO 2025-04-04 01:05:19,121 views 5160 11044 OTP for 9669999833: 637987
+INFO 2025-04-04 01:20:09,170 views 5160 10040 OTP for 8608252696: 119902
+ERROR 2025-04-04 01:25:37,696 views 14356 16392 Error in CustomerSignup: NOT NULL constraint failed: customer_app_customer.updated_at
+ERROR 2025-04-04 01:44:55,645 views 11008 10264 Error in CustomerSignup: UNIQUE constraint failed: customer_app_customer.email
+ERROR 2025-04-04 01:45:57,293 views 11008 6188 Error in CustomerSignup: UNIQUE constraint failed: customer_app_customer.phone
+INFO 2025-04-04 01:49:55,191 views 11008 17320 OTP for 6622566333: 683636
+INFO 2025-04-04 01:53:33,257 views 11008 10236 OTP for 3666666662: 163050
+ERROR 2025-04-04 01:54:02,699 views 11008 16792 Error in CustomerSignup: UNIQUE constraint failed: customer_app_customer.customer_id
+ERROR 2025-04-04 01:54:29,882 views 11008 14224 Error in CustomerSignup: UNIQUE constraint failed: customer_app_customer.customer_id
+ERROR 2025-04-04 01:54:34,647 views 11008 16848 Error in CustomerSignup: UNIQUE constraint failed: customer_app_customer.customer_id
+ERROR 2025-04-04 01:55:50,772 views 12452 9804 Error in CustomerSignup: UNIQUE constraint failed: customer_app_customer.customer_id
+INFO 2025-04-04 02:08:13,098 views 12452 11884 OTP for 9966666855: 930027
+ERROR 2025-04-04 02:08:46,960 views 12452 5780 Error in NearbyRestaurantsView: HAVING clause on a non-aggregate query
+INFO 2025-04-04 02:50:12,647 views 11600 13720 OTP for 8908168688: 183627
+ERROR 2025-04-04 02:50:51,632 views 11600 11808 Error in NearbyRestaurantsView: name 'VendorSerializer' is not defined
+INFO 2025-04-04 09:30:20,398 views 2848 15256 OTP for 8908168688: 851540
+INFO 2025-04-04 09:33:42,466 views 14704 10144 OTP for 8908168688: 616799
+ERROR 2025-04-04 09:33:54,374 views 14704 11572 Error in VerifyOTP: no such column: customer_app_customer.created_at
+ERROR 2025-04-04 09:34:02,954 views 14704 15784 Error in VerifyOTP: no such column: customer_app_customer.created_at
+INFO 2025-04-04 09:43:51,658 views 8896 9488 OTP for 8908168688: 130650
+ERROR 2025-04-04 09:44:08,896 views 8896 3664 Error in NearbyRestaurantsView: HAVING clause on a non-aggregate query
+INFO 2025-04-06 14:54:14,050 views 17824 16012 OTP for 8908168688: 745032
+ERROR 2025-04-06 14:54:55,115 views 17824 5928 OTP generation failed: Please wait before requesting another OTP
+ERROR 2025-04-06 14:55:03,196 views 17824 10848 OTP generation failed: Please wait before requesting another OTP
+INFO 2025-04-06 14:55:22,446 views 17824 6864 OTP for 8908168688: 580754
+INFO 2025-04-06 19:31:36,583 views 1096 12992 OTP for 8908168688: 644848
+INFO 2025-04-06 19:41:10,067 views 17636 12724 OTP for 8908168688: 426551
+INFO 2025-04-06 19:41:51,578 views 17636 15252 OTP for 9665552256: 827949
+ERROR 2025-04-08 07:02:34,411 utils 18400 17876 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-08 07:02:34,445 views 18400 17876 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-08 07:02:49,460 utils 18400 7204 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-08 07:02:49,460 views 18400 7204 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-08 07:04:08,885 utils 18400 6916 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-08 07:04:08,885 views 18400 6916 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-04-08 07:05:45,932 views 18400 18372 OTP for 8908168688: 288443
+ERROR 2025-04-08 07:06:13,319 views 18400 15868 OTP generation failed: Please wait before requesting another OTP
+ERROR 2025-04-08 07:06:24,974 views 18400 8680 OTP generation failed: Please wait before requesting another OTP
+INFO 2025-04-08 07:13:26,429 views 18400 11332 OTP for 8908168688: 710947
+INFO 2025-04-08 07:17:41,954 views 18400 15116 OTP for 8908168688: 391535
+INFO 2025-04-08 07:25:21,983 views 18400 4440 OTP for 8908168688: 836085
+INFO 2025-04-08 07:30:40,634 views 18400 12272 OTP for 8908166868: 763218
+ERROR 2025-04-08 07:31:04,204 views 18400 6944 Error in CustomerSignup (IntegrityError): UNIQUE constraint failed: customer_app_customer.email
+ERROR 2025-04-08 07:31:25,463 views 18400 15340 Error in CustomerSignup (IntegrityError): UNIQUE constraint failed: customer_app_customer.email
+INFO 2025-04-08 07:33:24,731 views 18400 7492 OTP for 8908168688: 554201
+INFO 2025-04-08 07:38:14,059 views 18400 17284 OTP for 8908168688: 273095
+INFO 2025-04-08 08:25:45,167 views 9456 6992 OTP for 8908168688: 904412
+INFO 2025-04-08 08:25:51,385 views 9456 8812 OTP verified for 8908168688, signup required.
+INFO 2025-04-08 08:26:07,891 views 9456 11592 Signup successful for customer C73618
+ERROR 2025-04-08 14:59:53,057 utils 3228 12992 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-08 14:59:53,333 views 3228 12992 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-04-08 15:00:17,469 views 3228 6224 OTP for 8908168688: 965680
+INFO 2025-04-08 15:00:27,776 views 3228 7560 Login successful for customer C73618
+INFO 2025-04-08 16:32:13,837 views 14116 15316 OTP for 8908168688: 917168
+INFO 2025-04-08 16:33:03,618 views 14116 6484 Login successful for customer C73618
+ERROR 2025-04-08 18:21:32,483 views 16560 7876 Error in RestaurantDetailView_test: 'FoodListing' object has no attribute 'image'
+INFO 2025-04-08 18:41:50,302 views 7360 17356 OTP for 8908168688: 777144
+INFO 2025-04-08 18:42:01,396 views 7360 15948 Login successful for customer C73618
+INFO 2025-04-08 19:18:00,972 views 1196 11604 OTP for 8908168688: 912515
+INFO 2025-04-08 19:18:20,575 views 1196 8768 Login successful for customer C73618
+INFO 2025-04-08 19:31:28,673 views 1196 9528 OTP for 8908168688: 686606
+INFO 2025-04-08 19:31:40,165 views 1196 17036 Login successful for customer C73618
+INFO 2025-04-08 23:09:12,268 views 1196 17108 OTP for 8908168688: 122969
+INFO 2025-04-08 23:09:21,781 views 1196 13368 Login successful for customer C73618
+INFO 2025-04-08 23:42:40,625 views 8116 6484 OTP for 8908168688: 258304
+INFO 2025-04-08 23:42:53,279 views 8116 6136 Login successful for customer C73618
+INFO 2025-04-09 06:47:55,966 views 8116 10812 OTP for 8908168688: 511013
+INFO 2025-04-09 06:48:05,898 views 8116 6352 Login successful for customer C73618
+INFO 2025-04-09 07:19:13,222 views 8116 5532 OTP for 8908168688: 729817
+INFO 2025-04-09 07:19:33,724 views 8116 14072 Login successful for customer C73618
+INFO 2025-04-09 07:40:52,068 views 8116 376 OTP for 8908168688: 870941
+INFO 2025-04-09 07:41:00,968 views 8116 12004 Login successful for customer C73618
+INFO 2025-04-09 08:00:56,461 views 5512 13172 OTP for 8908168688: 516648
+INFO 2025-04-09 08:01:04,935 views 5512 12004 Login successful for customer C73618
+INFO 2025-04-09 08:30:58,072 views 10416 7036 OTP for 8908168688: 743648
+INFO 2025-04-09 08:31:05,519 views 10416 5532 Login successful for customer C73618
+INFO 2025-04-09 11:00:03,723 views 15412 13292 OTP for 8908168688: 396426
+INFO 2025-04-09 11:00:13,738 views 15412 11816 Login successful for customer C73618
+INFO 2025-04-09 11:43:01,783 views 12328 9944 OTP for 8908168688: 529613
+INFO 2025-04-09 11:43:19,500 views 12328 4676 Login successful for customer C73618
+INFO 2025-04-09 11:45:36,562 views 12328 1896 OTP for 8908168688: 489348
+INFO 2025-04-09 11:46:04,614 views 12328 4908 Login successful for customer C73618
+INFO 2025-04-09 11:52:25,740 views 12328 4776 OTP for 8908168688: 487616
+INFO 2025-04-09 11:52:38,032 views 12328 11084 Login successful for customer C73618
+INFO 2025-04-09 13:44:14,261 views 12328 5860 OTP for 8908168688: 362088
+INFO 2025-04-09 13:44:33,338 views 12328 4940 Login successful for customer C73618
+ERROR 2025-04-09 13:45:10,232 views 12328 14520 OTP generation failed: Please wait before requesting another OTP
+INFO 2025-04-09 13:45:48,570 views 12328 14552 OTP for 8908168688: 798452
+INFO 2025-04-09 13:46:07,473 views 12328 5104 Login successful for customer C73618
+INFO 2025-04-09 14:11:22,675 views 12328 13040 OTP for 8908168688: 148968
+INFO 2025-04-09 14:13:46,756 views 12328 15468 OTP for 8908168688: 864657
+INFO 2025-04-09 14:18:08,895 views 12328 13996 OTP for 8908168688: 904650
+INFO 2025-04-09 15:15:44,464 views 12328 13716 OTP for 8908168688: 849051
+INFO 2025-04-09 18:46:40,707 views 12328 10372 OTP for 8908168688: 105977
+ERROR 2025-04-09 18:47:18,412 views 12328 6464 OTP generation failed: Please wait before requesting another OTP
+ERROR 2025-04-09 18:47:38,304 views 12328 1332 OTP generation failed: Please wait before requesting another OTP
+INFO 2025-04-09 18:47:56,971 views 12328 2828 OTP for 8908168689: 700758
+INFO 2025-04-09 18:48:05,422 views 12328 17048 OTP verified for 8908168689, signup required.
+INFO 2025-04-09 18:50:11,596 views 12328 7896 OTP for 8908168689: 890418
+INFO 2025-04-09 18:50:21,169 views 12328 12484 OTP verified for 8908168689, signup required.
+INFO 2025-04-09 18:53:43,397 views 12328 10012 OTP for 8908168689: 430127
+INFO 2025-04-09 18:53:57,108 views 12328 16004 OTP verified for 8908168689, signup required.
+INFO 2025-04-09 18:54:09,792 views 12328 14180 Signup successful for customer C44222
+ERROR 2025-04-09 18:54:20,356 views 12328 12192 OTP generation failed: Please wait before requesting another OTP
+INFO 2025-04-09 18:59:46,679 views 12328 2188 OTP for 8908168689: 545738
+INFO 2025-04-09 18:59:58,254 views 12328 11968 Login successful for customer C44222
+INFO 2025-04-09 19:14:23,642 views 12328 15564 OTP for 8908168688: 291400
+INFO 2025-04-09 19:14:36,704 views 12328 728 Login successful for customer C73618
+INFO 2025-04-09 19:17:09,349 views 12328 11344 OTP for 8908168688: 441029
+INFO 2025-04-09 19:17:19,164 views 12328 13684 Login successful for customer C73618
+INFO 2025-04-09 20:43:59,620 views 12328 9800 OTP for 8908168688: 208975
+INFO 2025-04-09 20:44:09,870 views 12328 7236 Login successful for customer C73618
+ERROR 2025-04-09 20:50:58,020 views 12328 9624 Error creating order: Cannot assign "<FoodListing: Biriyani>": "OrderItem.food" must be a "Food" instance.
+ERROR 2025-04-09 20:54:55,697 views 12328 14580 Error creating order: Cannot assign "<FoodListing: Biriyani>": "OrderItem.food" must be a "Food" instance.
+ERROR 2025-04-09 20:59:30,886 views 12328 13388 Error creating order: Cannot assign "<FoodListing: Biriyani>": "OrderItem.food" must be a "Food" instance.
+ERROR 2025-04-09 20:59:38,472 views 12328 9564 Error creating order: Cannot assign "<FoodListing: Biriyani>": "OrderItem.food" must be a "Food" instance.
+ERROR 2025-04-09 21:05:01,053 views 12328 13372 Error creating order: Cannot assign "<FoodListing: Biriyani>": "OrderItem.food" must be a "Food" instance.
+INFO 2025-04-09 21:23:15,874 views 13136 16632 Order ORD72599 created successfully for customer C73618
+ERROR 2025-04-09 21:23:16,117 views 13136 16632 Error creating order: Field name `image` is not valid for model `FoodListing` in `customer_app.serializers.FoodListingSerializer`.
+INFO 2025-04-09 21:26:13,556 views 5080 1568 Order ORD53109 created successfully for customer C73618
+INFO 2025-04-09 22:51:50,469 views 5080 9792 OTP for 8908168688: 826345
+INFO 2025-04-09 22:52:13,009 views 5080 352 Login successful for customer C73618
+INFO 2025-04-09 22:52:35,061 views 5080 11036 Order ORD86009 created successfully for customer C73618
+INFO 2025-04-09 23:08:28,985 views 5080 11356 Order ORD84375 created successfully for customer C73618
+INFO 2025-04-09 23:18:18,001 views 11256 1928 Order ORD24801 created successfully for customer C73618
+INFO 2025-04-09 23:26:15,196 views 11256 6852 Order ORD27231 created successfully for customer C73618
+INFO 2025-04-09 23:34:54,787 views 11256 17296 Order ORD36748 created successfully for customer C73618
+INFO 2025-04-10 09:12:11,083 views 11280 8928 OTP for 8908168688: 253626
+INFO 2025-04-10 09:12:33,414 views 11280 9924 Login successful for customer C73618
+INFO 2025-04-10 10:41:42,614 views 7764 2416 OTP for 8908168688: 853837
+INFO 2025-04-10 10:41:55,562 views 7764 1532 Login successful for customer C73618
+INFO 2025-04-11 07:12:28,413 views 1636 4508 OTP for 8908168688: 966711
+INFO 2025-04-11 07:12:41,893 views 1636 11976 Login successful for customer C73618
+INFO 2025-04-11 07:47:33,028 views 14740 7940 Notification sent to vendor V001 for order ORD82607
+INFO 2025-04-11 07:47:33,043 views 14740 7940 Order ORD82607 created successfully for customer C73618
+INFO 2025-04-11 07:57:23,791 views 10288 856 Notification sent to vendor V001 for order ORD63908
+INFO 2025-04-11 07:57:23,791 views 10288 856 Order ORD63908 created successfully for customer C73618
+INFO 2025-04-11 08:42:08,832 views 6224 6116 OTP for 8908168688: 228877
+INFO 2025-04-11 08:42:19,810 views 6224 15296 Login successful for customer C73618
+INFO 2025-04-11 08:42:36,031 views 6224 968 Notification sent to vendor V001 for order ORD51137
+INFO 2025-04-11 08:42:36,031 views 6224 968 Order ORD51137 created successfully for customer C73618
+INFO 2025-04-11 22:34:05,235 views 1508 1536 OTP for 8908168688: 584949
+INFO 2025-04-11 22:34:14,261 views 1508 11784 Login successful for customer C73618
+INFO 2025-04-11 22:34:40,238 views 1508 1532 Notification sent to vendor V001 for order ORD79276
+INFO 2025-04-11 22:34:40,239 views 1508 1532 Order ORD79276 created successfully for customer C73618
+INFO 2025-04-11 22:45:46,954 views 1508 3416 Notification sent to vendor V001 for order ORD43334
+INFO 2025-04-11 22:45:46,955 views 1508 3416 Order ORD43334 created successfully for customer C73618
+INFO 2025-04-12 00:25:07,987 views 9256 6668 OTP for 8908168688: 531672
+INFO 2025-04-12 00:25:18,273 views 9256 3880 Login successful for customer C73618
+INFO 2025-04-12 00:25:40,001 views 9256 11800 Notification sent to vendor V002 for order ORD40233
+INFO 2025-04-12 00:25:40,004 views 9256 11800 Order ORD40233 created successfully for customer C73618
+INFO 2025-04-12 08:15:50,652 views 7052 3256 OTP for 8908168688: 245762
+INFO 2025-04-12 08:15:59,140 views 7052 6892 Login successful for customer C73618
+INFO 2025-04-12 08:28:45,970 views 5772 11192 Notification sent to vendor V001 for order ORD52102
+INFO 2025-04-12 08:28:45,971 views 5772 11192 Order ORD52102 created successfully for customer C73618
+INFO 2025-04-12 09:22:18,399 views 5176 9916 OTP for 8908168688: 745098
+INFO 2025-04-12 09:22:31,092 views 5176 9500 Login successful for customer C73618
+INFO 2025-04-12 09:24:22,042 views 5176 4872 Notification sent to vendor V001 for order ORD81858
+INFO 2025-04-12 09:24:22,042 views 5176 4872 Order ORD81858 created successfully for customer C73618
+INFO 2025-04-12 11:38:32,140 views 5176 11520 OTP for 8908168688: 246640
+INFO 2025-04-12 11:38:45,347 views 5176 3132 Login successful for customer C73618
+INFO 2025-04-12 11:39:46,399 views 5176 2104 Notification sent to vendor V001 for order ORD36765
+INFO 2025-04-12 11:39:46,400 views 5176 2104 Order ORD36765 created successfully for customer C73618
+INFO 2025-04-12 11:39:55,651 views 5176 15004 OTP for 8908168688: 996987
+INFO 2025-04-12 11:40:05,260 views 5176 14876 Login successful for customer C73618
+INFO 2025-04-12 11:40:30,760 views 5176 13484 Notification sent to vendor V001 for order ORD60061
+INFO 2025-04-12 11:40:30,761 views 5176 13484 Order ORD60061 created successfully for customer C73618
+INFO 2025-04-12 12:43:37,736 views 5176 13840 OTP for 8908168688: 309804
+INFO 2025-04-12 12:43:45,849 views 5176 9636 Login successful for customer C73618
+ERROR 2025-04-12 13:34:06,567 views 7964 12508 Error fetching order details for ORD60061: Cannot find 'items' on Order object, 'items' is an invalid parameter to prefetch_related()
+ERROR 2025-04-12 13:35:13,446 views 9892 8672 Error fetching order details for ORD60061: Cannot find 'items' on Order object, 'items' is an invalid parameter to prefetch_related()
+INFO 2025-04-12 13:46:20,414 views 16360 16688 OTP for 8908168688: 640062
+INFO 2025-04-12 13:46:25,608 views 16360 7004 Login successful for customer C73618
+WARNING 2025-04-12 13:46:32,218 views 16360 16436 Order not found: latest
+WARNING 2025-04-12 13:49:12,313 views 10564 14136 Order not found: latest
+WARNING 2025-04-12 13:49:42,479 views 15860 14424 Order not found: latest
+WARNING 2025-04-12 13:49:51,701 views 15860 8356 Order not found: latest
+WARNING 2025-04-12 13:49:55,294 views 15860 3116 Order not found: latest
+WARNING 2025-04-12 13:49:58,389 views 15860 1632 Order not found: latest
+WARNING 2025-04-12 13:50:04,492 views 15860 14584 Order not found: latest
+WARNING 2025-04-12 13:50:09,514 views 15860 12748 Order not found: latest
+WARNING 2025-04-12 13:50:15,694 views 15860 7348 Order not found: latest
+WARNING 2025-04-12 13:50:18,623 views 15860 4520 Order not found: latest
+INFO 2025-04-12 13:51:45,762 views 15860 12664 Notification sent to vendor V001 for order ORD23643
+INFO 2025-04-12 13:51:45,763 views 15860 12664 Order ORD23643 created successfully for customer C73618
+WARNING 2025-04-12 13:52:03,689 views 15860 13472 Order not found: latest
+WARNING 2025-04-12 13:52:33,605 views 15860 13164 Order not found: latest
+WARNING 2025-04-12 13:53:03,528 views 15860 6880 Order not found: latest
+WARNING 2025-04-12 13:53:34,085 views 15860 10672 Order not found: latest
+WARNING 2025-04-12 13:54:03,559 views 15860 16604 Order not found: latest
+ERROR 2025-04-12 13:54:26,373 views 5708 12208 Error fetching order details for ORD23643: unsupported operand type(s) for +: 'decimal.Decimal' and 'float'
+WARNING 2025-04-12 13:54:54,691 views 7404 12204 Order not found: latest
+WARNING 2025-04-12 13:55:04,804 views 7404 5372 Order not found: latest
+WARNING 2025-04-12 13:55:07,950 views 7404 11124 Order not found: latest
+WARNING 2025-04-12 13:55:11,636 views 7404 11804 Order not found: latest
+WARNING 2025-04-12 13:55:14,760 views 7404 11648 Order not found: latest
+WARNING 2025-04-12 13:55:19,327 views 7404 6280 Order not found: latest
+INFO 2025-04-12 13:58:55,259 views 7404 8876 Notification sent to vendor V002 for order ORD87174
+INFO 2025-04-12 13:58:55,260 views 7404 8876 Order ORD87174 created successfully for customer C73618
+WARNING 2025-04-12 13:59:34,779 views 7404 13720 Order not found: latest
+INFO 2025-04-12 13:59:47,502 views 7404 14372 Notification sent to vendor V001 for order ORD31307
+INFO 2025-04-12 13:59:47,503 views 7404 14372 Order ORD31307 created successfully for customer C73618
+INFO 2025-04-13 20:55:59,027 views 13208 6304 OTP for 8908168688: 482015
+INFO 2025-04-13 20:56:22,971 views 13208 16520 Login successful for customer C73618
+WARNING 2025-04-13 20:56:36,315 views 13208 3768 Order not found: latest
+INFO 2025-04-13 20:57:14,881 views 13208 5896 Notification sent to vendor V002 for order ORD86254
+INFO 2025-04-13 20:57:14,882 views 13208 5896 Order ORD86254 created successfully for customer C73618
+WARNING 2025-04-13 20:57:24,397 views 13208 5100 Order not found: latest
+WARNING 2025-04-23 15:42:33,260 views 13756 13944 Signup attempt without verified phone in session.
+ERROR 2025-04-23 21:37:40,783 utils 9744 7148 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-23 21:37:40,807 views 9744 7148 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-04-23 21:38:03,258 views 9744 4956 OTP for 8908168680: 561230
+INFO 2025-04-23 21:38:19,124 views 9744 9328 OTP verified for 8908168680, signup required. Stored phone in session.
+WARNING 2025-04-23 21:38:41,138 views 9744 1100 Signup attempt without verified phone in session.
+INFO 2025-04-23 22:02:15,413 views 9744 10096 OTP for 8908168688: 231350
+INFO 2025-04-23 22:02:23,562 views 9744 9520 OTP verified for 8908168688, signup required. Stored phone in session.
+ERROR 2025-04-23 22:02:43,139 views 9744 504 Error in CustomerSignup: 'Manager' object has no attribute 'create_user'
+ERROR 2025-04-23 22:44:13,700 views 2420 11560 Error in CustomerSignup: 'Customer' object has no attribute 'id'
+ERROR 2025-04-23 22:53:14,764 views 1144 7000 Error in CustomerSignup (IntegrityError): UNIQUE constraint failed: customer_app_customer.email
+INFO 2025-04-23 22:55:44,046 views 11268 2556 OTP for 6694849949: 923583
+INFO 2025-04-23 22:57:04,403 views 11268 11572 OTP verified for 6694849949, signup required. Stored phone in session.
+INFO 2025-04-23 22:57:16,243 views 11268 7540 Signup successful for customer C21708
+ERROR 2025-04-24 06:51:45,097 utils 9080 9656 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-24 06:51:45,100 views 9080 9656 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-04-24 06:51:59,024 views 9080 11256 OTP for 8908168688: 678836
+INFO 2025-04-24 06:52:06,099 views 9080 2704 Login successful for customer C80523
+INFO 2025-04-24 06:53:32,492 views 9080 10836 OTP for 89645849949: 350418
+INFO 2025-04-24 06:54:13,415 views 9080 6072 OTP for 9857898546: 680919
+INFO 2025-04-24 06:54:19,984 views 9080 9812 OTP verified for 9857898546, signup required. Stored phone in session.
+INFO 2025-04-24 06:54:35,242 views 9080 11896 Signup successful for customer C55277
+INFO 2025-04-24 07:49:36,137 views 9080 6484 OTP for 8900896885: 673540
+INFO 2025-04-24 07:49:51,654 views 9080 9944 OTP verified for 8900896885, signup required. Stored phone in session.
+INFO 2025-04-24 07:50:02,249 views 9080 12196 Signup successful for customer C82108
+ERROR 2025-04-24 14:01:33,966 utils 2172 1128 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-24 14:01:34,119 views 2172 1128 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-04-24 14:01:44,193 views 2172 4968 OTP for 8908168688: 670355
+INFO 2025-04-24 14:01:52,105 views 2172 6336 Login successful for customer C80523
+INFO 2025-04-24 14:27:32,599 views 2172 5076 OTP for 8908168688: 483470
+INFO 2025-04-24 14:27:52,734 views 2172 804 Login successful for customer C80523
+INFO 2025-04-24 14:38:58,965 views 2172 11756 OTP for 8908168688: 938478
+INFO 2025-04-25 14:13:21,778 views 12904 13272 OTP for 8908168688: 256896
+INFO 2025-04-25 14:13:46,172 views 12904 12088 OTP verified for 8908168688, signup required. Stored phone in session.
+INFO 2025-04-25 14:14:02,594 views 12904 13072 Signup successful for customer C20123
+INFO 2025-04-26 09:11:45,199 views 2804 13224 OTP for 8908168688: 338619
+ERROR 2025-04-26 09:12:20,391 views 2804 11476 OTP generation failed: Please wait before requesting another OTP
+INFO 2025-04-26 09:13:47,379 views 2804 12692 OTP for 8908168688: 326536
+INFO 2025-04-26 09:14:00,784 views 2804 14756 Login successful for customer C20123
+ERROR 2025-04-26 15:48:26,055 utils 2600 6972 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-04-26 15:48:26,056 views 2600 6972 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-04-26 15:49:27,111 views 2600 6496 OTP for 8908168688: 681590
+INFO 2025-04-26 15:49:34,539 views 2600 6812 Login successful for customer C20123
+INFO 2025-04-26 16:56:16,412 views 13236 4816 OTP for 8908168688: 442486
+ERROR 2025-04-26 16:56:24,941 views 13236 9000 Error in VerifyOTP: name 'Customer' is not defined
+INFO 2025-04-26 16:59:07,005 views 5740 2672 OTP for 8908168688: 752703
+ERROR 2025-04-26 16:59:16,707 views 5740 3104 Error in VerifyOTP: Cannot resolve keyword 'phone' into field. Choices are: auth_token, customer_profile, date_joined, delivery_profile, email, groups, id, is_active, is_staff, is_superuser, last_login, logentry, password, user_permissions, user_type, vendor_profile
+ERROR 2025-04-26 17:00:20,763 views 11232 9720 Error in VerifyOTP: Cannot resolve keyword 'phone' into field. Choices are: auth_token, customer_profile, date_joined, delivery_profile, email, groups, id, is_active, is_staff, is_superuser, last_login, logentry, password, user_permissions, user_type, vendor_profile
+INFO 2025-04-26 17:02:24,139 views 6924 8 OTP verified for 8908168688, signup required. Stored phone in session.
+ERROR 2025-04-26 17:05:03,457 views 6924 4224 Error in CustomerSignup: Cannot resolve keyword 'email' into field. Choices are: addresses, cart_items, full_name, id, order, orders, phone, user, user_id
+ERROR 2025-04-26 17:09:54,823 views 14428 13360 Error in CustomerSignup: Cannot resolve keyword 'customer_id' into field. Choices are: addresses, cart_items, full_name, id, order, orders, phone, user, user_id
+ERROR 2025-04-26 17:13:41,140 views 11516 7324 Error in CustomerSignup: 'CustomerProfile' object has no attribute 'customer_id'
+INFO 2025-04-26 17:21:32,639 views 10352 4804 OTP for 8908168688: 143976
+INFO 2025-04-26 17:21:39,477 views 10352 9880 Login successful for customer 8908168688
+INFO 2025-04-26 17:21:47,358 views 10352 6028 Login successful for customer 8908168688
+INFO 2025-04-26 17:23:05,156 views 10352 11464 Login successful for customer 8908168688
+INFO 2025-04-26 17:29:33,691 views 10352 1528 OTP for 8908168688: 742256
+INFO 2025-04-26 17:29:41,589 views 10352 8080 Login successful for customer 8908168688
+INFO 2025-04-26 17:29:57,957 views 10352 12428 OTP for 8908168689: 369302
+INFO 2025-04-26 17:30:06,573 views 10352 13564 OTP verified for 8908168689, signup required. Stored phone in session.
+INFO 2025-04-26 17:30:39,407 views 10352 1604 Signup successful for customer 8908168689
+WARNING 2025-04-26 17:30:54,743 views 10352 14440 Signup attempt without verified phone in session.
+WARNING 2025-04-26 17:31:07,038 views 10352 12432 Signup attempt without verified phone in session.
+INFO 2025-04-26 17:35:37,072 views 13680 15320 OTP for 8908168689: 934379
+INFO 2025-04-26 17:35:44,893 views 13680 4436 Login successful for customer 8908168689
+INFO 2025-04-26 17:36:30,019 views 13680 10272 OTP for 8965236980: 325736
+INFO 2025-04-26 17:36:38,273 views 13680 11764 OTP verified for 8965236980, signup required. Stored phone in session.
+INFO 2025-04-26 17:37:29,556 views 13680 12840 Signup successful for customer 8965236980
+WARNING 2025-04-26 17:43:08,034 views 3704 14932 Signup attempt without verified phone in session.
+INFO 2025-04-26 17:43:29,906 views 3704 14832 OTP for 8908168688: 774605
+INFO 2025-04-26 17:43:39,817 views 3704 11032 Login successful for customer 8908168688
+ERROR 2025-04-26 17:43:40,473 views 3704 15204 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 540, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+INFO 2025-04-26 17:44:05,859 views 3704 15180 OTP for 8908542368: 968702
+INFO 2025-04-26 17:44:14,243 views 3704 13364 OTP verified for 8908542368, signup required. Stored phone in session.
+INFO 2025-04-26 17:44:36,972 views 3704 7976 Signup successful for customer 8908542368
+INFO 2025-04-26 17:47:49,070 views 3704 13616 OTP for 8908168688: 828933
+INFO 2025-04-26 17:47:59,954 views 3704 7576 Login successful for customer 8908168688
+ERROR 2025-04-26 17:48:00,998 views 3704 7756 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 540, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+INFO 2025-04-26 17:48:25,033 views 3704 13428 OTP for 8536248523: 357860
+INFO 2025-04-26 17:48:35,023 views 3704 6480 OTP verified for 8536248523, signup required. Stored phone in session.
+INFO 2025-04-26 17:49:00,456 views 3704 11076 Signup successful for customer 8536248523
+ERROR 2025-04-26 17:49:01,000 views 3704 10692 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 540, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+ERROR 2025-04-26 17:54:27,960 views 3704 11808 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 540, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+INFO 2025-04-26 17:54:44,493 views 3704 10256 OTP for 8908168563: 624666
+INFO 2025-04-26 17:55:04,714 views 3704 14928 OTP verified for 8908168563, signup required. Stored phone in session.
+INFO 2025-04-26 17:56:08,555 views 3704 2788 Signup successful for customer 8908168563
+ERROR 2025-04-26 17:56:09,329 views 3704 11248 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 540, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+ERROR 2025-04-26 18:40:04,039 views 3704 5264 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 540, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+INFO 2025-04-26 18:41:10,062 views 3704 13148 OTP for 8908168688: 747518
+INFO 2025-04-26 18:41:19,338 views 3704 6268 Login successful for customer 8908168688
+ERROR 2025-04-26 18:41:19,806 views 3704 8416 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 540, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+ERROR 2025-04-26 18:41:53,344 views 3704 11368 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 540, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+ERROR 2025-04-26 19:08:36,507 views 12012 6572 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 598, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+ERROR 2025-04-26 19:09:01,989 views 1700 12252 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 598, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+ERROR 2025-04-26 19:09:40,528 views 1700 1640 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 598, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+INFO 2025-04-26 19:10:23,040 views 1700 15156 OTP for 8908168688: 272102
+INFO 2025-04-26 19:10:49,806 views 1700 13892 Login successful for customer 8908168688
+ERROR 2025-04-26 19:10:50,563 views 1700 11332 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 598, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+ERROR 2025-04-26 19:11:53,696 views 1700 3704 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 598, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+ERROR 2025-04-26 19:27:06,468 views 11420 9588 Error in HomeDataView: name 'FoodSerializer' is not defined
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 598, in get
+    'popular_foods': FoodSerializer(
+                     ^^^^^^^^^^^^^^
+NameError: name 'FoodSerializer' is not defined. Did you mean: 'OrderSerializer'?
+
+INFO 2025-04-26 19:27:27,195 views 11420 11764 OTP for 8908168688: 870387
+ERROR 2025-04-26 19:27:44,546 views 11420 5484 Error in VerifyOTP: name 'get_jwt_tokens_for_customer' is not defined
+INFO 2025-04-26 19:59:42,246 views 11420 12788 OTP for 8908168688: 880668
+ERROR 2025-04-26 19:59:52,609 views 11420 15200 Error in VerifyOTP: name 'get_jwt_tokens_for_customer' is not defined
+INFO 2025-04-26 20:12:47,217 views 4436 13956 OTP for 8908168688: 234170
+ERROR 2025-04-26 20:12:59,972 views 4436 13596 Error in VerifyOTP: Field name `default_address` is not valid for model `CustomerProfile` in `customer_app.serializers.CustomerProfileSerializer`.
+INFO 2025-04-26 20:18:28,833 views 5152 15184 OTP for 8908168688: 512523
+INFO 2025-04-26 20:23:45,976 views 11720 1856 OTP for 8908168688: 154577
+INFO 2025-04-26 20:29:50,202 views 14300 5732 OTP for 8908168688: 685698
+INFO 2025-04-26 20:50:10,880 views 13648 14520 [SendOTP] OTP request received for phone: 8908168688
+INFO 2025-04-26 20:50:10,905 views 13648 14520 OTP for 8908168688: 641135
+INFO 2025-04-26 20:50:19,381 views 13648 1364 [VerifyOTP] OTP verification attempt for phone: 8908168688
+ERROR 2025-04-26 20:50:19,390 views 13648 1364 Error in VerifyOTP: Must provide a Customer instance
+INFO 2025-04-26 20:50:42,856 views 13648 2444 [SendOTP] OTP request received for phone: 8908168688
+INFO 2025-04-26 20:50:42,858 views 13648 2444 OTP for 8908168688: 734979
+INFO 2025-04-26 20:52:45,241 views 10260 11832 [VerifyOTP] OTP verification attempt for phone: 8908168688
+WARNING 2025-04-26 20:52:45,253 views 10260 11832 OTP verification failed for 8908168688: Invalid OTP.
+INFO 2025-04-26 20:52:55,504 views 10260 7428 [SendOTP] OTP request received for phone: 8908168688
+INFO 2025-04-26 20:52:55,506 views 10260 7428 OTP for 8908168688: 445696
+INFO 2025-04-26 20:53:04,726 views 10260 1344 [VerifyOTP] OTP verification attempt for phone: 8908168688
+ERROR 2025-04-26 20:53:05,418 views 10260 14008 Error in HomeDataView: Cannot resolve keyword 'popularity' into field. Choices are: cart, category, created_at, description, id, images, is_available, menu, menu_id, name, orderitem, price, updated_at, vendor, vendor_id
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 610, in get
+    FoodListing.objects.filter(is_available=True).order_by('-popularity')[:10],
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\query.py", line 1768, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'popularity' into field. Choices are: cart, category, created_at, description, id, images, is_available, menu, menu_id, name, orderitem, price, updated_at, vendor, vendor_id
+
+ERROR 2025-04-26 21:48:11,386 views 5008 7264 Error in HomeDataView: Cannot resolve keyword 'popularity' into field. Choices are: cart, category, created_at, description, id, images, is_available, menu, menu_id, name, orderitem, price, updated_at, vendor, vendor_id
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 610, in get
+    FoodListing.objects.filter(is_available=True).order_by('-popularity')[:10],
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\query.py", line 1768, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'popularity' into field. Choices are: cart, category, created_at, description, id, images, is_available, menu, menu_id, name, orderitem, price, updated_at, vendor, vendor_id
+
+ERROR 2025-04-26 21:48:41,215 views 5008 1752 Error in HomeDataView: Cannot resolve keyword 'popularity' into field. Choices are: cart, category, created_at, description, id, images, is_available, menu, menu_id, name, orderitem, price, updated_at, vendor, vendor_id
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 610, in get
+    FoodListing.objects.filter(is_available=True).order_by('-popularity')[:10],
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\query.py", line 1768, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'popularity' into field. Choices are: cart, category, created_at, description, id, images, is_available, menu, menu_id, name, orderitem, price, updated_at, vendor, vendor_id
+
+ERROR 2025-04-26 21:56:02,555 views 8424 7056 Error in HomeDataView: Cannot resolve keyword 'popularity' into field. Choices are: cart, category, created_at, description, id, images, is_available, menu, menu_id, name, orderitem, price, updated_at, vendor, vendor_id
+Traceback (most recent call last):
+  File "F:\Food_Delivery_app\Freshclone\food_delivery_backend\customer_app\views.py", line 610, in get
+    FoodListing.objects.filter(is_available=True).order_by('-popularity')[:10],
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "F:\Food_Delivery_app\djangoenv\Lib\site-packages\django\db\models\sql\query.py", line 1768, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'popularity' into field. Choices are: cart, category, created_at, description, id, images, is_available, menu, menu_id, name, orderitem, price, updated_at, vendor, vendor_id
+
+INFO 2025-04-26 22:48:58,984 views 7156 5980 [SendOTP] OTP request received for phone: 8908168688
+INFO 2025-04-26 22:48:59,238 views 7156 5980 OTP for 8908168688: 931359
+INFO 2025-04-26 22:50:53,644 views 7156 15076 [SendOTP] OTP request received for phone: 8908168688
+INFO 2025-04-26 22:50:53,658 views 7156 15076 OTP for 8908168688: 839653
+INFO 2025-04-26 22:51:02,092 views 7156 9512 [VerifyOTP] OTP verification attempt for phone: 8908168688
+INFO 2025-04-27 08:07:14,830 views 11452 13972 [SendOTP] OTP request received for phone: 8908168688
+[SendOTP] OTP request received for phone: 8908168688
+INFO 2025-04-27 08:07:16,691 views 11452 13972 OTP for 8908168688: 349910
+OTP for 8908168688: 349910
+INFO 2025-04-27 08:08:06,603 views 11452 11972 [SendOTP] OTP request received for phone: 8908168688
+[SendOTP] OTP request received for phone: 8908168688
+INFO 2025-04-27 08:08:06,604 views 11452 11972 OTP for 8908168688: 453225
+OTP for 8908168688: 453225
+INFO 2025-04-27 08:08:32,533 views 11452 14572 [VerifyOTP] OTP verification attempt for phone: 8908168688
+[VerifyOTP] OTP verification attempt for phone: 8908168688
+INFO 2025-04-27 12:07:55,567 views 11452 10468 [SendOTP] OTP request received for phone: 8908168688
+[SendOTP] OTP request received for phone: 8908168688
+INFO 2025-04-27 12:07:57,899 views 11452 10468 OTP for 8908168688: 311154
+OTP for 8908168688: 311154
+INFO 2025-04-27 12:08:06,375 views 11452 14904 [VerifyOTP] OTP verification attempt for phone: 8908168688
+[VerifyOTP] OTP verification attempt for phone: 8908168688
+INFO 2025-04-27 12:54:20,860 views 11452 13576 [VerifyOTP] OTP verification attempt for phone: 8908168688
+[VerifyOTP] OTP verification attempt for phone: 8908168688
+WARNING 2025-04-27 12:54:21,015 views 11452 13576 OTP verification failed for 8908168688: OTP expired or not found.
+OTP verification failed for 8908168688: OTP expired or not found.
+INFO 2025-04-27 12:54:44,331 views 11452 12460 [SendOTP] OTP request received for phone: 8908168688
+[SendOTP] OTP request received for phone: 8908168688
+INFO 2025-04-27 12:54:44,339 views 11452 12460 OTP for 8908168688: 695729
+OTP for 8908168688: 695729
+INFO 2025-04-27 12:55:01,963 views 11452 9048 [VerifyOTP] OTP verification attempt for phone: 8908168688
+[VerifyOTP] OTP verification attempt for phone: 8908168688
+INFO 2025-04-27 13:55:19,792 views 11452 14768 [SendOTP] OTP request received for phone: 8908168688
+[SendOTP] OTP request received for phone: 8908168688
+INFO 2025-04-27 13:55:20,659 views 11452 14768 OTP for 8908168688: 434941
+OTP for 8908168688: 434941
+INFO 2025-04-27 13:57:13,316 views 11452 7548 [VerifyOTP] OTP verification attempt for phone: 8908168688
+[VerifyOTP] OTP verification attempt for phone: 8908168688

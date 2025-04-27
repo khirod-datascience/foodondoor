@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "461750755135",
+    "project_id": "foodondoor-9d46b",
+    "storage_bucket": "foodondoor-9d46b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461750755135:android:b25a37aaadf289f9a27d8a",
+        "android_client_info": {
+          "package_name": "com.foodondoor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_LHuwGUH6G6Ja17QIKJ3XNHT91jcNt8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461750755135:android:d3e503619d0293d3a27d8a",
+        "android_client_info": {
+          "package_name": "com.foodondoor.vendor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_LHuwGUH6G6Ja17QIKJ3XNHT91jcNt8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
