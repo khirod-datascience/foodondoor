@@ -9,7 +9,11 @@ from .views import *
 # from .views import PopularFoodsView_test
 # # from .views import DeleteAddressView
 
+from .views import CustomerTokenRefreshView
+
 urlpatterns = [
+    path('token/refresh/', CustomerTokenRefreshView.as_view(), name='customer-token-refresh'),
+    path('reverse-geocode/', ReverseGeocodeView.as_view(), name='reverse-geocode'),
     path('send-otp/', SendOTP.as_view()),
     path('verify-otp/', VerifyOTP.as_view()),
     path('signup/', CustomerSignup.as_view()),
@@ -44,6 +48,7 @@ urlpatterns = [
     # New endpoints
     path('customer/<str:customer_id>/', CustomerDetailsView.as_view(), name='customer-details'),
     path('customer/<str:customer_id>/addresses/', CustomerAddressesView.as_view(), name='customer-addresses'),
+    path('<str:customer_id>/addresses/', CustomerAddressesView.as_view(), name='customer-addresses'),
     path('addresses/', AddAddressView.as_view(), name='add-address'),
     path('addresses/<int:address_id>/', UpdateAddressView.as_view(), name='update-address'),
     # path('customer/addresses/<int:address_id>/delete/', DeleteAddressView.as_view(), name='delete-address'),

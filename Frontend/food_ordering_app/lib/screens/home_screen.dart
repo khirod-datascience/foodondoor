@@ -240,26 +240,27 @@ class _HomeScreenState extends State<HomeScreen> {
          return;
       }
 
-      final dio = Dio();
-      final String? token = await AuthStorage.getToken();
-      final options = Options();
-      if (token != null) {
-        options.headers = {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json'
-        };
-        debugPrint('(HomeScreen) Adding Auth header to check-delivery request.');
-      }
-
-      final response = await dio.post(
-        '${AppConfig.baseUrl}/check-delivery/',
-        data: requestData,
-        options: options,
+      final response = await AuthApi.authenticatedRequest(
+  () => Dio().post(
+    '${AppConfig.baseUrl}/check-delivery/',
+    data: requestData,
+    options: Options(headers: {'Content-Type': 'application/json'}),
+  ),
+  onSessionExpired: () async {
+    await AuthStorage.clearAuthData();
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (route) => false,
       );
-      
-      debugPrint('Delivery API Response: ${response.data}');
+    }
+  },
+);
 
-      final bool available = response.data['delivery_available'] ?? false;
+      
+      debugPrint('Delivery API Response: ${response?.data}');
+
+      final bool available = response?.data['delivery_available'] ?? false;
       
       if (mounted) {
          setState(() {
@@ -807,10 +808,29 @@ class _HomeScreenState extends State<HomeScreen> {
       try {
         // 1. Get current position
         final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        // 2. Call reverse geocode API
-        final response = await CustomerApiService.reverseGeocode(latitude: pos.latitude, longitude: pos.longitude);
-        if (response.statusCode == 200 && response.body.isNotEmpty) {
-          final data = jsonDecode(response.body);
+        // 2. Call reverse geocode API with robust token management
+        final response = await AuthApi.authenticatedRequest(
+          () => Dio().post(
+            '${AppConfig.baseUrl}/reverse-geocode/',
+            data: {
+              'latitude': pos.latitude,
+              'longitude': pos.longitude,
+            },
+            options: Options(headers: {'Content-Type': 'application/json'}),
+          ),
+          onSessionExpired: () async {
+            await AuthStorage.clearAuthData();
+            if (mounted) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                (route) => false,
+              );
+            }
+          },
+        );
+
+        if (response?.statusCode == 200 && response?.data != null) {
+          final data = response?.data;
           if (data != null && data is Map<String, dynamic>) {
             setState(() {
               globalCurrentAddress = data;

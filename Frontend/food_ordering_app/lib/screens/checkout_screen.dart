@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
+import 'package:geolocator/geolocator.dart';
 import '../providers/cart_provider.dart';
 import '../config.dart'; // For backend URL
 import '../utils/globals.dart'; // For globalCustomerId, globalCurrentAddress
 import '../utils/auth_storage.dart'; // For AuthStorage
 import '../utils/auth_utils.dart'; // Import the refresh utility
+import '../utils/auth_api.dart'; // Import AuthApi for authenticated requests
 import './payment_screen.dart'; // Navigate to PaymentScreen
-import './home_screen.dart'; // For _formatDisplayAddress
+// import '../screens/home_screen.dart'; // Remove this to avoid ListTile ambiguity // For _formatDisplayAddress
 import 'add_edit_address_screen.dart'; // For Add/Edit Address
 
 class CheckoutScreen extends StatefulWidget {
@@ -20,30 +22,64 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  // STUB: Use Current Location (to resolve build error)
+  // Future<void> _useCurrentLocation(Function(Function()) setSheetState) async {
+  //   setSheetState(() {});
+  //   if (mounted) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Use Current Location is not implemented yet.')),
+  //     );
+  //   }
+  // }
+
   List<Map<String, dynamic>> _savedAddresses = [];
   bool _isLoadingAddresses = false;
+  String? _fetchError;
 
   Future<void> _showAddressSelectionSheet(BuildContext context) async {
-    setState(() { _isLoadingAddresses = true; });
-    try {
-      final String? token = await AuthStorage.getToken();
-      if (token == null || token.isEmpty || globalCustomerId == null) {
-        setState(() { _isLoadingAddresses = false; });
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please log in to select address')));
-        return;
+    // --- Local state for the sheet ---
+    bool isLocating = false;
+    String? locationError;
+
+    // --- Proactively refresh token before fetching addresses ---
+    await refreshTokenIfNeeded(context);
+    final String? token = await AuthStorage.getToken();
+    if (token == null || token.isEmpty || globalCustomerId == null) {
+      setState(() {
+        _fetchError = 'Please log in to select address.';
+        _isLoadingAddresses = false;
+      });
+    } else {
+      try {
+        final response = await AuthApi.authenticatedRequest(() => Dio().get(
+          '${AppConfig.baseUrl}/$globalCustomerId/addresses/',
+          options: Options(headers: {'Authorization': 'Bearer $token'}),
+        ));
+        if (response != null && response.statusCode == 200 && response.data is List) {
+          setState(() {
+            _savedAddresses = List<Map<String, dynamic>>.from(response.data);
+            if (globalCurrentAddress == null && _savedAddresses.isNotEmpty) {
+              Map<String, dynamic>? defaultAddr = _savedAddresses.firstWhere(
+                (addr) => addr['is_default'] == true,
+                orElse: () => _savedAddresses.first,
+              );
+              globalCurrentAddress = defaultAddr;
+              saveCurrentAddressId(defaultAddr['id']?.toString());
+            }
+          });
+        } else {
+          setState(() {
+            _fetchError = 'Failed to load addresses. Status: ${response?.statusCode}';
+          });
+        }
+      } catch (e) {
+        setState(() {
+          _fetchError = 'Error loading addresses: ${e.toString()}';
+        });
       }
-      final dio = Dio();
-      final url = '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/';
-      final response = await dio.get(url, options: Options(headers: {'Authorization': 'Bearer $token'}));
-      if (response.statusCode == 200 && response.data is List) {
-        _savedAddresses = List<Map<String, dynamic>>.from(response.data);
-      } else {
-        _savedAddresses = [];
-      }
-    } catch (e) {
-      _savedAddresses = [];
-    } finally {
-      setState(() { _isLoadingAddresses = false; });
+      setState(() {
+        _isLoadingAddresses = false;
+      });
     }
 
     showModalBottomSheet(
@@ -54,7 +90,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: _isLoadingAddresses
-                ? const Center(child: CircularProgressIndicator(color: Colors.orange))
+                ? Center(child: CircularProgressIndicator(color: Colors.orange))
                 : Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,10 +98,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Select Delivery Address', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text('Select Delivery Address', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                           TextButton.icon(
-                            icon: const Icon(Icons.add_location_alt_outlined),
-                            label: const Text('Add New'),
+                            icon: Icon(Icons.add_location_alt_outlined),
+                            label: Text('Add New'),
                             onPressed: () async {
                               Navigator.pop(context);
                               await Navigator.push(
@@ -78,18 +114,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ],
                       ),
                       const Divider(),
-                      if (_savedAddresses.isEmpty)
-                        const Padding(
+                      if (_fetchError != null)
+                        Center(child: Padding(padding: EdgeInsets.symmetric(vertical: 20.0), child: Text(_fetchError!, style: TextStyle(color: Colors.red)))),
+                      if (!_isLoadingAddresses && _fetchError == null && _savedAddresses.isEmpty)
+                        Padding(
                           padding: EdgeInsets.symmetric(vertical: 24.0),
                           child: Center(child: Text('No saved addresses found.')),
                         ),
                       ..._savedAddresses.map((address) {
-                        final formatted = _formatDisplayAddress(address);
+                        // Use address_line_1, fallback to line1/address1
+                        final addressLine1 = address['address_line_1']?.toString() ?? address['line1']?.toString() ?? address['address1']?.toString() ?? '';
+                        final formatted = addressLine1.isNotEmpty ? addressLine1 : _formatDisplayAddress(address);
                         return ListTile(
-                          leading: const Icon(Icons.home_outlined, color: Colors.orange),
+                          leading: Icon(Icons.home_outlined, color: Colors.orange),
                           title: Text(formatted),
                           trailing: (globalCurrentAddress != null && globalCurrentAddress!['id'] == address['id'])
-                              ? const Icon(Icons.check_circle, color: Colors.green)
+                              ? Icon(Icons.check_circle, color: Colors.green)
                               : null,
                           onTap: () async {
                             setState(() { globalCurrentAddress = address; });
@@ -98,6 +138,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           },
                         );
                       }).toList(),
+                      // Add "Use Current Location" option
+                      // ListTile(
+                      //   leading: Icon(Icons.my_location, color: Colors.blue),
+                      //   title: Text('Use Current Location'),
+                      //   onTap: () async {
+                      //     await _useCurrentLocation((fn) => setState(fn));
+                      //   },
+                      //   trailing: isLocating ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2)) : null,
+                      //   subtitle: locationError != null ? Text(locationError!, style: TextStyle(color: Colors.red)) : null,
+                      // ),
                     ],
                   ),
           ),
@@ -113,8 +163,48 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      debugPrint('[CheckoutScreen] Refreshing token in initState...');
+      await refreshTokenIfNeeded(context);
+    });
     refreshTokenIfNeeded(context);
+    _fetchAddressesAndSetDefault();
     _fetchDeliveryFee();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      debugPrint('[CheckoutScreen] Refreshing token in didChangeDependencies...');
+      await refreshTokenIfNeeded(context);
+    });
+  }
+
+  Future<void> _fetchAddressesAndSetDefault() async {
+    try {
+      final String? token = await AuthStorage.getToken();
+      if (token == null || token.isEmpty || globalCustomerId == null) return;
+      final response = await AuthApi.authenticatedRequest(() => Dio().get(
+        '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      ));
+      if (response != null && response.statusCode == 200 && response.data is List) {
+        _savedAddresses = List<Map<String, dynamic>>.from(response.data);
+        if (globalCurrentAddress == null && _savedAddresses.isNotEmpty) {
+          Map<String, dynamic>? defaultAddr = _savedAddresses.firstWhere(
+            (addr) => addr['is_default'] == true,
+            orElse: () => _savedAddresses.first,
+          );
+          setState(() {
+            globalCurrentAddress = defaultAddr;
+            saveCurrentAddressId(defaultAddr['id']?.toString());
+          });
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
   }
 
   Future<void> _fetchDeliveryFee() async {
@@ -165,9 +255,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ? vendorId 
           : 'V${vendorId.padLeft(3, '0')}';
 
-      final dio = Dio();
-      print(pincode);
-      final response = await dio.get(
+      final response = await AuthApi.authenticatedRequest(() => Dio().get(
         '${AppConfig.baseUrl}/delivery-fee/$formattedVendorId/?pin=$pincode',
         options: Options(
           headers: {
@@ -175,22 +263,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             'Content-Type': 'application/json',
           },
         ),
-      );
+      ));
 
-      if (response.statusCode == 200) {
+      if (response != null && response.statusCode == 200) {
         setState(() {
           _deliveryFee = (response.data['delivery_fee'] as num).toDouble();
           _isLoading = false;
         });
       } else {
         setState(() {
-          _error = response.data?['error']?.toString() ?? 'Failed to fetch delivery fee. Please try again.';
+          _error = response?.data?['error']?.toString() ?? 'Failed to fetch delivery fee. Please try again.';
           _isLoading = false;
         });
       }
     } catch (e) {
       setState(() {
         _error = 'Error fetching delivery fee. Please try again.';
+        _isLoading = false;
+      });
+    }
+    // Handle null response from authenticatedRequest (token/refresh failure)
+    if (_error == null && _deliveryFee == null) {
+      setState(() {
+        _error = 'Session expired or unauthorized. Please re-login.';
         _isLoading = false;
       });
     }
@@ -267,13 +362,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       'total_amount': totalAmount,
       'delivery_fee': _deliveryFee,
       'items': cart.items.entries.map((entry) {
+        final itemId = entry.key;
         final item = entry.value;
+        final itemName = item['name']?.toString() ?? 'Item';
+        final itemQuantity = (item['quantity'] as num?)?.toInt() ?? 0;
+        final itemPrice = (item['price'] as num?)?.toDouble() ?? 0.0;
         final vendorId = item['vendor_id']?.toString() ?? '';
         final formattedVendorId = vendorId.startsWith('V') 
             ? vendorId 
             : 'V${vendorId.padLeft(3, '0')}';
         
         return {
+          'food_id': itemId,
+          'quantity': itemQuantity,
+          'price': itemPrice,
           'food_id': entry.key,
           'quantity': item['quantity'],
           'price': item['price'],
@@ -383,6 +485,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       children: [
                         ...cart.items.entries.map((entry) {
                           final item = entry.value;
+                          final itemId = entry.key;
+                          final itemName = item['name']?.toString() ?? 'Item';
+                          final itemQuantity = (item['quantity'] as num?)?.toInt() ?? 0;
+                          final itemPrice = (item['price'] as num?)?.toDouble() ?? 0.0;
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
                             child: Row(
@@ -390,11 +496,51 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    '${item['quantity']}x ${item['name'] ?? 'Item'}',
+                                    '$itemQuantity x $itemName',
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                Text('₹${((item['price'] as num?)?.toDouble() ?? 0.0).toStringAsFixed(2)}'),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.remove_circle_outline, color: Colors.redAccent, size: 22),
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                      onPressed: () {
+                                        Provider.of<CartProvider>(context, listen: false).decreaseQuantity(itemId);
+                                        setState(() {});
+                                      },
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                                      child: Text('$itemQuantity', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.add_circle_outline, color: Colors.green, size: 22),
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                      onPressed: () {
+                                        Provider.of<CartProvider>(context, listen: false).increaseQuantity(itemId);
+                                        setState(() {});
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete_outline, color: Colors.grey, size: 20),
+                                      padding: const EdgeInsets.only(left: 6),
+                                      constraints: const BoxConstraints(),
+                                      onPressed: () {
+                                        Provider.of<CartProvider>(context, listen: false).removeFromCart(itemId);
+                                        setState(() {});
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Removed $itemName from cart'), duration: Duration(seconds: 1)),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text('₹${itemPrice.toStringAsFixed(2)}'),
+                                  ],
+                                ),
                               ],
                             ),
                           );

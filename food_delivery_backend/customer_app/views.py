@@ -19,12 +19,58 @@ from auth_app.models import FoodListing
 from django.db import IntegrityError
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db import transaction
+import jwt
+from datetime import datetime, timedelta
+from django.conf import settings
+
+# --- Custom JWT Refresh for Customer ---
+class CustomerTokenRefreshView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        refresh_token = request.data.get('refresh')
+        if not refresh_token:
+            return Response({'error': 'Refresh token required'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=['HS256'])
+            customer_id = payload.get('customer_id')
+            if not customer_id:
+                return Response({'error': 'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
+            # Validate customer
+            from .models import Customer
+            try:
+                customer = Customer.objects.get(customer_id=customer_id)
+            except Customer.DoesNotExist:
+                return Response({'error': 'Customer not found'}, status=status.HTTP_401_UNAUTHORIZED)
+            # Optionally: check for token expiry/blacklist here
+            # Issue new access token (2 hours expiry)
+            access_payload = {
+                'customer_id': customer.customer_id,
+                'exp': datetime.utcnow() + timedelta(hours=2),
+                'iat': datetime.utcnow(),
+            }
+            access_token = jwt.encode(access_payload, settings.SECRET_KEY, algorithm='HS256')
+            # Issue new refresh token (30 days expiry, rotation)
+            refresh_payload = {
+                'customer_id': customer.customer_id,
+                'exp': datetime.utcnow() + timedelta(days=30),
+                'iat': datetime.utcnow(),
+                'type': 'refresh',
+            }
+            refresh_token_new = jwt.encode(refresh_payload, settings.SECRET_KEY, algorithm='HS256')
+            return Response({'access': access_token, 'refresh': refresh_token_new}, status=status.HTTP_200_OK)
+        except jwt.ExpiredSignatureError:
+            return Response({'error': 'Refresh token expired'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            return Response({'error': 'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
+
 from .serializers import OrderSerializer, OrderItemSerializer # Ensure these are imported correctly
 from auth_app.models import Vendor, FoodListing # Ensure these are imported correctly
 import logging
 import traceback # For detailed error logging
 from rest_framework_simplejwt.tokens import RefreshToken # Import for JWT generation
 from geopy.geocoders import Nominatim
+from rest_framework.permissions import AllowAny
+
 import re
 from auth_app.models import Notification
 from rest_framework_simplejwt.authentication import JWTAuthentication # If using JWT
@@ -37,7 +83,7 @@ logger = logging.getLogger(__name__)
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
     return {
-        # 'refresh': str(refresh), # Optionally return refresh token
+        'refresh': str(refresh), # Optionally return refresh token
         'access': str(refresh.access_token),
     }
 
@@ -109,7 +155,8 @@ class VerifyOTP(APIView):
                     'message': 'Login successful',
                     'is_signup': False,
                     'customer_id': customer.customer_id,
-                    'auth_token': tokens['access'] # Return JWT access token
+                    'auth_token': tokens['access'], # Return JWT access token
+                    'refresh_token': tokens['refresh'],
                 }, status=status.HTTP_200_OK)
                 
             except Customer.DoesNotExist:
@@ -237,6 +284,33 @@ class HomeCategoriesView(APIView):
         print(categories)
         data = [{"name": category.name, "image_url": category.image_url.url} for category in categories]
         return Response(data, status=status.HTTP_200_OK)
+
+class ReverseGeocodeView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        try:
+            lat = request.data.get('latitude')
+            lon = request.data.get('longitude')
+            if lat is None or lon is None:
+                return Response({'error': 'Latitude and longitude are required.'}, status=status.HTTP_400_BAD_REQUEST)
+            geolocator = Nominatim(user_agent="foodondoor_geocoder")
+            location = geolocator.reverse(f"{lat}, {lon}", language='en')
+            if location is None or not location.address:
+                return Response({'error': 'Address not found for the given coordinates.'}, status=status.HTTP_404_NOT_FOUND)
+            address = location.raw.get('address', {})
+            # Structure the address fields for frontend
+            result = {
+                'address_line1': address.get('road', '') or address.get('suburb', '') or address.get('neighbourhood', ''),
+                'city': address.get('city', '') or address.get('town', '') or address.get('village', ''),
+                'state': address.get('state', ''),
+                'postal_code': address.get('postcode', ''),
+                'latitude': lat,
+                'longitude': lon
+            }
+            return Response(result, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"ReverseGeocodeView error: {str(e)}")
+            return Response({'error': 'Failed to reverse geocode location.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class NearbyRestaurantsView(APIView):
     def get(self, request):
@@ -552,16 +626,19 @@ class CartAddView(APIView):
             )
 
 class OrderView(APIView):
-    def _get_customer_orders(self, customer_id):
-        """Helper method to get customer orders used by both GET and POST"""
+    def _get_customer_orders(self, customer_id, inprogress=False):
+        """Helper method to get customer orders used by both GET and POST. Optionally filter for in-progress orders."""
         try:
             # Verify the customer exists
             customer = Customer.objects.get(customer_id=customer_id)
         except Customer.DoesNotExist:
             return None, {'error': 'Customer not found'}, status.HTTP_404_NOT_FOUND
-            
+        
         # Get all orders for this customer
         orders = Order.objects.filter(customer=customer).order_by('-created_at')
+        if inprogress:
+            inprogress_statuses = ['pending', 'confirmed', 'preparing', 'out_for_delivery']
+            orders = orders.filter(status__in=inprogress_statuses)
         
         # Get order items for each order
         response_data = []
@@ -604,19 +681,18 @@ class OrderView(APIView):
         return response_data, None, status.HTTP_200_OK
 
     def get(self, request):
-        """Handle GET requests to get orders for a customer"""
+        """Handle GET requests to get orders for a customer. Supports optional inprogress filter."""
         print("GET request to my-orders")
         print(request.query_params)
         try:
             customer_id = request.query_params.get('customer_id')
             if not customer_id:
                 return Response({'error': 'Customer ID is required'}, status=status.HTTP_400_BAD_REQUEST)
-            
-            response_data, error, status_code = self._get_customer_orders(customer_id)
-            
+            # Support ?inprogress=true
+            inprogress = request.query_params.get('inprogress', 'false').lower() == 'true'
+            response_data, error, status_code = self._get_customer_orders(customer_id, inprogress=inprogress)
             if error:
                 return Response(error, status=status_code)
-                
             return Response(response_data, status=status_code)
         except Exception as e:
             logger.error(f"Error in OrderView.get: {str(e)}")
@@ -624,7 +700,7 @@ class OrderView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def post(self, request):
-        """Handle POST requests to either create an order or get customer orders"""
+        """Handle POST requests to either create an order or get customer orders. Supports optional inprogress filter."""
         print("POST request path:", request.path)
         print("Request data:", request.data)
         try:
@@ -633,14 +709,12 @@ class OrderView(APIView):
                 customer_id = request.data.get('customer_id')
                 if not customer_id:
                     return Response({'error': 'Customer ID is required'}, status=status.HTTP_400_BAD_REQUEST)
-                
-                response_data, error, status_code = self._get_customer_orders(customer_id)
-                
+                # Support {"inprogress": true}
+                inprogress = bool(request.data.get('inprogress', False))
+                response_data, error, status_code = self._get_customer_orders(customer_id, inprogress=inprogress)
                 if error:
                     return Response(error, status=status_code)
-                    
                 return Response(response_data, status=status_code)
-            
             # Otherwise, this is a regular order creation request
             serializer = OrderSerializer(data=request.data)
             if serializer.is_valid():

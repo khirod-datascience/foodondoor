@@ -209,3 +209,178 @@ WARNING 2025-04-13 20:56:36,315 views 13208 3768 Order not found: latest
 INFO 2025-04-13 20:57:14,881 views 13208 5896 Notification sent to vendor V002 for order ORD86254
 INFO 2025-04-13 20:57:14,882 views 13208 5896 Order ORD86254 created successfully for customer C73618
 WARNING 2025-04-13 20:57:24,397 views 13208 5100 Order not found: latest
+ERROR 2025-05-07 21:22:01,822 utils 6956 4632 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-05-07 21:22:01,855 views 6956 4632 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-05-07 21:22:36,571 views 6956 15368 OTP for 8908168688: 942667
+INFO 2025-05-07 21:22:44,022 views 6956 7864 Login successful for customer C73618
+INFO 2025-05-07 21:23:24,772 views 6956 1976 Notification sent to vendor V001 for order ORD47971
+INFO 2025-05-07 21:23:24,772 views 6956 1976 Order ORD47971 created successfully for customer C73618
+ERROR 2025-05-09 07:06:29,086 utils 6048 4136 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-05-09 07:06:29,118 views 6048 4136 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-05-09 07:06:49,632 views 6048 10132 OTP for 8908168688: 608841
+INFO 2025-05-09 07:06:56,779 views 6048 6720 Login successful for customer C73618
+INFO 2025-05-09 12:04:46,396 views 6048 1612 OTP for 8908168688: 255251
+INFO 2025-05-09 12:04:55,412 views 6048 19108 Login successful for customer C73618
+ERROR 2025-05-09 12:05:07,660 views 6048 10932 OTP generation failed: Please wait before requesting another OTP
+WARNING 2025-05-09 12:54:36,537 views 6048 11324 Order not found: latest
+INFO 2025-05-10 20:23:24,521 views 6048 13208 OTP for 8908168688: 424221
+INFO 2025-05-10 20:23:37,612 views 6048 11620 Login successful for customer C73618
+INFO 2025-05-10 22:59:18,777 views 8452 9180 OTP for 8908168688: 292125
+INFO 2025-05-10 22:59:33,584 views 8452 840 Login successful for customer C73618
+INFO 2025-05-10 23:46:42,573 views 10752 17000 Notification sent to vendor V001 for order ORD61315
+INFO 2025-05-10 23:46:42,574 views 10752 17000 Order ORD61315 created successfully for customer C73618
+WARNING 2025-05-10 23:50:06,241 views 10752 16940 Order not found: latest
+INFO 2025-05-11 07:14:42,109 views 7296 15940 OTP for 8908168688: 325450
+INFO 2025-05-11 07:14:48,955 views 7296 13320 Login successful for customer C73618
+WARNING 2025-05-11 07:14:56,560 views 7296 9412 Order not found: latest
+WARNING 2025-05-11 07:15:10,217 views 7296 14640 Order not found: latest
+INFO 2025-05-11 09:02:50,731 views 9492 15176 Notification sent to vendor V001 for order ORD42523
+INFO 2025-05-11 09:02:50,753 views 9492 15176 Order ORD42523 created successfully for customer C73618
+INFO 2025-05-11 09:11:57,677 views 15604 12180 Notification sent to vendor V001 for order ORD51389
+INFO 2025-05-11 09:11:57,678 views 15604 12180 Order ORD51389 created successfully for customer C73618
+INFO 2025-05-11 09:32:57,360 views 3460 2660 OTP for 8908168688: 433967
+INFO 2025-05-11 09:33:06,055 views 3460 9856 Login successful for customer C73618
+WARNING 2025-05-11 09:33:21,798 views 3460 11432 Order not found: latest
+WARNING 2025-05-11 09:33:32,860 views 3460 13192 Order not found: latest
+WARNING 2025-05-11 09:33:37,482 views 3460 12240 Order not found: latest
+WARNING 2025-05-11 09:33:37,668 views 3460 14972 Order not found: latest
+WARNING 2025-05-11 09:33:47,437 views 3460 17944 Order not found: latest
+INFO 2025-05-11 09:33:54,348 views 3460 18448 Notification sent to vendor V001 for order ORD74624
+INFO 2025-05-11 09:33:54,348 views 3460 18448 Order ORD74624 created successfully for customer C73618
+WARNING 2025-05-11 09:33:55,770 views 3460 7260 Order not found: latest
+WARNING 2025-05-11 09:34:25,731 views 3460 4204 Order not found: latest
+WARNING 2025-05-11 09:34:55,665 views 3460 2952 Order not found: latest
+WARNING 2025-05-11 09:35:25,714 views 3460 8100 Order not found: latest
+WARNING 2025-05-11 09:35:55,674 views 3460 6836 Order not found: latest
+WARNING 2025-05-11 09:36:25,665 views 3460 7852 Order not found: latest
+WARNING 2025-05-11 09:36:55,825 views 3972 16916 Order not found: latest
+WARNING 2025-05-11 09:37:20,717 views 3972 11336 Order not found: latest
+WARNING 2025-05-11 09:37:50,651 views 3972 9892 Order not found: latest
+WARNING 2025-05-11 09:38:21,932 views 3972 11688 Order not found: latest
+WARNING 2025-05-11 09:38:50,625 views 3972 15808 Order not found: latest
+WARNING 2025-05-11 09:39:20,616 views 3972 3552 Order not found: latest
+WARNING 2025-05-11 09:39:50,626 views 3972 5872 Order not found: latest
+WARNING 2025-05-11 09:40:20,749 views 7140 10000 Order not found: latest
+WARNING 2025-05-11 09:40:50,659 views 7140 3964 Order not found: latest
+WARNING 2025-05-11 09:41:20,652 views 7140 9300 Order not found: latest
+WARNING 2025-05-11 09:41:29,671 views 7140 8512 Order not found: latest
+WARNING 2025-05-11 09:41:59,352 views 7140 4348 Order not found: latest
+WARNING 2025-05-11 09:42:29,438 views 7140 16756 Order not found: latest
+INFO 2025-05-11 21:25:58,655 views 11556 13548 OTP for 8908168688: 280817
+INFO 2025-05-11 21:26:06,593 views 11556 13644 Login successful for customer C73618
+INFO 2025-05-11 23:32:01,318 views 11556 15112 OTP for 8908168688: 857270
+INFO 2025-05-11 23:32:10,012 views 11556 10632 Login successful for customer C73618
+INFO 2025-05-12 07:33:42,186 views 11556 15604 Notification sent to vendor V001 for order ORD44539
+INFO 2025-05-12 07:33:42,310 views 11556 15604 Order ORD44539 created successfully for customer C73618
+INFO 2025-05-12 07:42:47,986 views 11556 15556 Notification sent to vendor V002 for order ORD17885
+INFO 2025-05-12 07:42:48,002 views 11556 15556 Order ORD17885 created successfully for customer C73618
+INFO 2025-05-12 07:44:59,647 views 11556 10956 Notification sent to vendor V001 for order ORD43335
+INFO 2025-05-12 07:44:59,648 views 11556 10956 Order ORD43335 created successfully for customer C73618
+INFO 2025-05-12 10:43:35,719 views 7200 6948 OTP for 8908168688: 407493
+INFO 2025-05-12 10:43:43,682 views 7200 12024 Login successful for customer C73618
+INFO 2025-05-12 17:24:26,606 views 5440 9072 OTP for 8908168688: 200930
+INFO 2025-05-12 18:39:02,056 views 6328 18972 OTP for 8908168688: 411934
+INFO 2025-05-12 18:39:13,218 views 6328 7580 Login successful for customer C73618
+INFO 2025-05-12 22:58:27,860 views 6328 10428 OTP for 8908168688: 659713
+INFO 2025-05-12 22:58:40,386 views 6328 15992 Login successful for customer C73618
+ERROR 2025-05-12 22:58:53,427 views 6328 10964 OTP generation failed: Please wait before requesting another OTP
+INFO 2025-05-12 22:59:36,092 views 6328 11544 OTP for 8908168688: 875254
+INFO 2025-05-12 22:59:42,679 views 6328 9540 Login successful for customer C73618
+INFO 2025-05-12 23:05:14,051 views 6328 18324 OTP for 8908168688: 979871
+INFO 2025-05-12 23:05:22,657 views 6328 17064 Login successful for customer C73618
+INFO 2025-05-12 23:18:04,033 views 6328 15444 OTP for 8908168688: 973597
+INFO 2025-05-12 23:18:15,640 views 6328 6740 Login successful for customer C73618
+INFO 2025-05-12 23:32:15,950 views 6328 7816 OTP for 8908168688: 172929
+INFO 2025-05-12 23:32:23,490 views 6328 14872 Login successful for customer C73618
+ERROR 2025-05-15 18:55:25,335 utils 17776 19068 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-05-15 18:55:25,360 views 17776 19068 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-05-15 18:55:53,884 views 17776 2444 OTP for 8908168688: 554168
+INFO 2025-05-15 18:56:07,090 views 17776 17924 Login successful for customer C73618
+INFO 2025-05-15 19:36:48,900 views 17776 13376 Notification sent to vendor V001 for order ORD14930
+INFO 2025-05-15 19:36:48,901 views 17776 13376 Order ORD14930 created successfully for customer C73618
+INFO 2025-05-15 19:51:02,207 views 17776 13508 Notification sent to vendor V001 for order ORD56546
+INFO 2025-05-15 19:51:02,209 views 17776 13508 Order ORD56546 created successfully for customer C73618
+ERROR 2025-05-16 23:12:25,695 utils 8996 2660 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2025-05-16 23:12:26,419 views 8996 2660 OTP generation failed: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-05-16 23:13:10,240 views 8996 11536 OTP for 8908168688: 445685
+INFO 2025-05-16 23:13:18,731 views 8996 4584 Login successful for customer C73618
+INFO 2025-05-16 23:13:53,283 views 8996 7040 Notification sent to vendor V001 for order ORD40335
+INFO 2025-05-16 23:13:53,304 views 8996 7040 Order ORD40335 created successfully for customer C73618
+WARNING 2025-05-16 23:13:55,836 views 8996 5264 Order not found: latest
+WARNING 2025-05-16 23:14:26,744 views 8996 12280 Order not found: latest
+WARNING 2025-05-16 23:14:55,675 views 8996 2548 Order not found: latest
+WARNING 2025-05-16 23:15:26,572 views 8996 11712 Order not found: latest
+WARNING 2025-05-16 23:15:55,587 views 8996 3004 Order not found: latest
+WARNING 2025-05-16 23:16:25,543 views 8996 11944 Order not found: latest
+WARNING 2025-05-16 23:16:55,552 views 8996 6704 Order not found: latest
+WARNING 2025-05-16 23:17:25,627 views 8996 6940 Order not found: latest
+WARNING 2025-05-16 23:17:55,560 views 8996 11752 Order not found: latest
+WARNING 2025-05-16 23:18:25,630 views 8996 3188 Order not found: latest
+WARNING 2025-05-16 23:18:55,559 views 8996 7864 Order not found: latest
+WARNING 2025-05-16 23:19:25,637 views 8996 11424 Order not found: latest
+WARNING 2025-05-16 23:19:56,658 views 8996 5920 Order not found: latest
+WARNING 2025-05-16 23:20:25,562 views 8996 6824 Order not found: latest
+WARNING 2025-05-16 23:20:55,532 views 8996 11152 Order not found: latest
+WARNING 2025-05-16 23:21:25,586 views 8996 11268 Order not found: latest
+WARNING 2025-05-16 23:21:55,562 views 8996 2540 Order not found: latest
+WARNING 2025-05-16 23:22:25,526 views 8996 9324 Order not found: latest
+WARNING 2025-05-16 23:22:55,718 views 8996 11828 Order not found: latest
+WARNING 2025-05-16 23:23:25,549 views 8996 11728 Order not found: latest
+WARNING 2025-05-16 23:23:56,714 views 8996 9200 Order not found: latest
+WARNING 2025-05-16 23:24:26,650 views 11824 5360 Order not found: latest
+WARNING 2025-05-16 23:24:55,528 views 11824 2660 Order not found: latest
+WARNING 2025-05-16 23:25:25,546 views 11824 5308 Order not found: latest
+WARNING 2025-05-16 23:25:55,528 views 11824 3596 Order not found: latest
+WARNING 2025-05-16 23:26:25,522 views 11824 6824 Order not found: latest
+WARNING 2025-05-16 23:26:55,523 views 11824 8408 Order not found: latest
+WARNING 2025-05-16 23:27:25,579 views 11824 5740 Order not found: latest
+WARNING 2025-05-16 23:27:55,520 views 11824 12148 Order not found: latest
+WARNING 2025-05-16 23:28:25,647 views 11824 6204 Order not found: latest
+WARNING 2025-05-16 23:28:55,535 views 11824 11596 Order not found: latest
+WARNING 2025-05-16 23:29:25,516 views 11824 4292 Order not found: latest
+WARNING 2025-05-16 23:29:55,693 views 11824 11156 Order not found: latest
+WARNING 2025-05-16 23:30:25,508 views 11824 6748 Order not found: latest
+WARNING 2025-05-16 23:30:55,535 views 11824 9620 Order not found: latest
+WARNING 2025-05-16 23:31:25,541 views 11824 6492 Order not found: latest
+WARNING 2025-05-16 23:31:55,512 views 11824 7124 Order not found: latest
+WARNING 2025-05-16 23:32:25,628 views 11824 4684 Order not found: latest
+WARNING 2025-05-16 23:32:55,553 views 11824 10136 Order not found: latest
+WARNING 2025-05-16 23:33:26,511 views 11824 10060 Order not found: latest
+WARNING 2025-05-16 23:34:14,782 views 11824 11364 Order not found: latest
+WARNING 2025-05-16 23:34:25,385 views 11824 9792 Order not found: latest
+INFO 2025-05-16 23:52:27,527 views 11824 752 Notification sent to vendor V001 for order ORD34319
+INFO 2025-05-16 23:52:27,528 views 11824 752 Order ORD34319 created successfully for customer C73618
+INFO 2025-05-16 23:59:17,751 views 11824 11160 Notification sent to vendor V001 for order ORD71351
+INFO 2025-05-16 23:59:17,752 views 11824 11160 Order ORD71351 created successfully for customer C73618
+WARNING 2025-05-16 23:59:21,726 views 11824 11832 Order not found: latest
+WARNING 2025-05-16 23:59:51,632 views 11824 10512 Order not found: latest
+WARNING 2025-05-17 00:00:21,634 views 11824 1400 Order not found: latest
+WARNING 2025-05-17 00:00:51,601 views 11824 9676 Order not found: latest
+WARNING 2025-05-17 00:01:21,651 views 11824 1456 Order not found: latest
+WARNING 2025-05-17 00:01:52,021 views 11824 3960 Order not found: latest
+WARNING 2025-05-17 00:02:22,032 views 11824 11768 Order not found: latest
+WARNING 2025-05-17 00:02:52,668 views 11824 10860 Order not found: latest
+INFO 2025-05-17 00:05:07,656 views 11824 9232 Notification sent to vendor V001 for order ORD58368
+INFO 2025-05-17 00:05:07,657 views 11824 9232 Order ORD58368 created successfully for customer C73618
+WARNING 2025-05-17 00:05:11,176 views 11824 1980 Order not found: latest
+WARNING 2025-05-17 00:05:40,997 views 11824 8408 Order not found: latest
+WARNING 2025-05-17 00:06:10,965 views 11824 4524 Order not found: latest
+WARNING 2025-05-17 00:06:40,941 views 11824 4164 Order not found: latest
+WARNING 2025-05-17 00:07:10,931 views 11824 6256 Order not found: latest
+WARNING 2025-05-17 00:07:40,931 views 11824 4836 Order not found: latest
+WARNING 2025-05-17 00:08:10,982 views 11824 10540 Order not found: latest
+WARNING 2025-05-17 00:08:40,931 views 11824 8440 Order not found: latest
+WARNING 2025-05-17 00:09:12,347 views 11824 372 Order not found: latest
+WARNING 2025-05-17 00:09:41,041 views 11824 11376 Order not found: latest
+WARNING 2025-05-17 00:10:10,932 views 11824 7016 Order not found: latest
+WARNING 2025-05-17 00:10:40,932 views 11824 11660 Order not found: latest
+WARNING 2025-05-17 00:11:10,948 views 11824 11344 Order not found: latest
+WARNING 2025-05-17 00:11:41,006 views 11824 10652 Order not found: latest
+WARNING 2025-05-17 00:12:11,085 views 11824 1240 Order not found: latest
+WARNING 2025-05-17 00:12:40,959 views 11824 8668 Order not found: latest
+INFO 2025-05-17 00:44:35,527 views 11824 7296 OTP for 8908168688: 421916
+INFO 2025-05-17 00:44:42,532 views 11824 11492 Login successful for customer C73618
+INFO 2025-05-17 00:45:15,732 views 11824 12244 Notification sent to vendor V001 for order ORD35859
+INFO 2025-05-17 00:45:15,736 views 11824 12244 Order ORD35859 created successfully for customer C73618
+WARNING 2025-05-17 00:45:19,551 views 11824 7040 Order not found: latest
+WARNING 2025-05-17 00:45:49,385 views 11824 7404 Order not found: latest

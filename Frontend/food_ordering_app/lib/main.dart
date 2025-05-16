@@ -8,6 +8,7 @@ import 'screens/home_screen.dart';
 import 'screens/menu_screen.dart';
 import 'screens/orders_screen.dart'; // Add import for existing orders screen
 import 'providers/auth_provider.dart';
+import 'providers/order_provider.dart';
 import 'providers/home_provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/token_provider.dart';
@@ -17,6 +18,7 @@ import 'config.dart';
 import 'utils/auth_storage.dart';
 import 'widgets/order_status_banner.dart';
 import 'services/simple_notification_service.dart'; // Import our notification service
+import 'utils/screen_refresh_observer.dart'; // For token refresh on navigation
 
 Future<String?> loadCurrentAddressId() async {
   final prefs = await SharedPreferences.getInstance();
@@ -133,6 +135,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => TokenProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
       ],
       builder: (context, child) {
         // Load tokens from storage into TokenProvider
@@ -168,7 +171,9 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.black,
         ),
       ),
-      home: globalCustomerId == null ? const LoginScreen() : const HomeScreen(),
+      navigatorKey: navigatorKey,
+      navigatorObservers: [ScreenRefreshObserver()],
+      home: globalCustomerId == null ? LoginScreen() : HomeScreen(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/restaurant-detail':
@@ -183,25 +188,25 @@ class MyApp extends StatelessWidget {
               // Handle error: ID is missing or invalid
               debugPrint('Error: vendor_id is null or empty for /restaurant-detail');
               // Redirect to home or show an error page
-              return MaterialPageRoute(builder: (context) => const HomeScreen()); // Or an ErrorScreen
+              return MaterialPageRoute(builder: (context) => HomeScreen()); // Or an ErrorScreen
             }
           
           case '/order-details':
             // Temporarily redirect to orders screen until we have an OrderDetailsScreen
             debugPrint('OrderDetailsScreen is not implemented yet, redirecting to orders');
-            return MaterialPageRoute(builder: (context) => const OrdersScreen());
+            return MaterialPageRoute(builder: (context) => OrdersScreen());
             
           case '/orders':
-            return MaterialPageRoute(builder: (context) => const OrdersScreen());
+            return MaterialPageRoute(builder: (context) => OrdersScreen());
             
           case '/notifications':
             // Temporarily redirect to home screen until we have a NotificationsScreen
             debugPrint('NotificationsScreen is not implemented yet, redirecting to home');
-            return MaterialPageRoute(builder: (context) => const HomeScreen());
+            return MaterialPageRoute(builder: (context) => HomeScreen());
             
           default:
             // Handle unknown routes, maybe redirect to home
-            return MaterialPageRoute(builder: (context) => const HomeScreen());
+            return MaterialPageRoute(builder: (context) => HomeScreen());
         }
       },
       // Keep existing routes if they don't need argument handling
@@ -212,3 +217,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

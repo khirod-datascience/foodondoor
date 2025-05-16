@@ -5,6 +5,7 @@ import '../config.dart';
 import '../utils/globals.dart';
 import '../utils/auth_storage.dart'; // <<< Import AuthStorage
 import './order_success_screen.dart';
+import './orders_screen.dart';
 import '../providers/cart_provider.dart'; // To clear cart
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/paytm_service.dart';
@@ -107,13 +108,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
           final orderId = response.data?['order_id']?.toString() ?? 'N/A';
           debugPrint('Order placed successfully with ID: $orderId');
 
-          // Navigate to success screen
+          // Navigate to OrdersScreen and trigger snackbar for in-progress order
           if (mounted) {
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => OrderSuccessScreen(
-                  orderId: orderId,
-                ),
+                builder: (context) => OrdersScreen(showInProgressSnackbar: true),
               ),
               (route) => route.isFirst,
             );
@@ -193,6 +192,58 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // --- Payment Summary ---
+            Card(
+              elevation: 2,
+              margin: const EdgeInsets.only(bottom: 18),
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Order Summary', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    ...List.generate((widget.orderData['items'] as List).length, (i) {
+                      final item = widget.orderData['items'][i];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(child: Text('${item['name'] ?? 'Item'} x${item['quantity']}', style: const TextStyle(fontSize: 14))),
+                            Text('₹${(item['price'] as num?)?.toStringAsFixed(2) ?? '--'}', style: const TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                      );
+                    }),
+                    const Divider(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Subtotal:'),
+                        Text('₹${(widget.orderData['subtotal'] as num?)?.toStringAsFixed(2) ?? '--'}'),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Delivery Fee:'),
+                        Text('₹${(widget.orderData['delivery_fee'] as num?)?.toStringAsFixed(2) ?? '--'}'),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Total:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('₹${widget.totalAmount.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // --- End Payment Summary ---
             Text(
               'Total Amount Payable: ₹${widget.totalAmount.toStringAsFixed(2)}',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange),

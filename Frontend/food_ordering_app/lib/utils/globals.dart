@@ -1,8 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'auth_storage.dart'; // Import for token clearing
+
 // Purpose: Contains global variables and utility functions for the application.
 
-import 'package:flutter/foundation.dart';
-import 'auth_storage.dart'; // Import for token clearing
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 String? globalCustomerId;
 

@@ -66,7 +66,7 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
       final dio = Dio();
       final String? token = await AuthStorage.getToken();
       if (token == null || token.isEmpty || globalCustomerId == null) return false;
-      final url = '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/';
+      final url = '${AppConfig.baseUrl}/$globalCustomerId/addresses/';
       final response = await dio.get(url, options: Options(headers: {'Authorization': 'Bearer $token'}));
       if (response.statusCode == 200 && response.data is List) {
         final List addresses = response.data;
@@ -213,54 +213,54 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
                     },
                   ),
                   const SizedBox(width: 8),
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.map, color: Colors.white),
-                    label: const Text('Pick on Map'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    ),
-                    onPressed: _isLoading ? null : () async {
-                      final LatLng? picked = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MapAddressPickerScreen(),
-                        ),
-                      );
-                      if (picked != null) {
-                        setState(() { _isLoading = true; });
-                        try {
-                          // Call backend reverse-geocode API
-                          final dio = Dio();
-                          final url = '${AppConfig.baseUrl}/reverse-geocode/';
-                          final response = await dio.post(url, data: {
-                            'latitude': picked.latitude,
-                            'longitude': picked.longitude,
-                          });
-                          if (response.statusCode == 200 && response.data is Map) {
-                            final data = response.data;
-                            setState(() {
-                              _addressLine1Controller.text = data['address_line1'] ?? '';
-                              _cityController.text = data['city'] ?? '';
-                              _stateController.text = data['state'] ?? '';
-                              _postalCodeController.text = data['postal_code'] ?? '';
-                            });
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Could not fetch address from map location'), backgroundColor: Colors.red),
-                            );
-                          }
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error fetching address: $e'), backgroundColor: Colors.red),
-                          );
-                        } finally {
-                          setState(() { _isLoading = false; });
-                        }
-                      }
-                    },
-                  ),
+                  // ElevatedButton.icon(
+                  //   icon: const Icon(Icons.map, color: Colors.white),
+                  //   label: const Text('Pick on Map'),
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.orange,
+                  //     foregroundColor: Colors.white,
+                  //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  //   ),
+                  //   onPressed: _isLoading ? null : () async {
+                  //     final LatLng? picked = await Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => MapAddressPickerScreen(),
+                  //       ),
+                  //     );
+                  //     if (picked != null) {
+                  //       setState(() { _isLoading = true; });
+                  //       try {
+                  //         // Call backend reverse-geocode API
+                  //         final dio = Dio();
+                  //         final url = '${AppConfig.baseUrl}/reverse-geocode/';
+                  //         final response = await dio.post(url, data: {
+                  //           'latitude': picked.latitude,
+                  //           'longitude': picked.longitude,
+                  //         });
+                  //         if (response.statusCode == 200 && response.data is Map) {
+                  //           final data = response.data;
+                  //           setState(() {
+                  //             _addressLine1Controller.text = data['address_line1'] ?? '';
+                  //             _cityController.text = data['city'] ?? '';
+                  //             _stateController.text = data['state'] ?? '';
+                  //             _postalCodeController.text = data['postal_code'] ?? '';
+                  //           });
+                  //         } else {
+                  //           ScaffoldMessenger.of(context).showSnackBar(
+                  //             const SnackBar(content: Text('Could not fetch address from map location'), backgroundColor: Colors.red),
+                  //           );
+                  //         }
+                  //       } catch (e) {
+                  //         ScaffoldMessenger.of(context).showSnackBar(
+                  //           SnackBar(content: Text('Error fetching address: $e'), backgroundColor: Colors.red),
+                  //         );
+                  //       } finally {
+                  //         setState(() { _isLoading = false; });
+                  //       }
+                  //     }
+                  //   },
+                  // ),
                   if (_isLoading)
                     const Padding(
                       padding: EdgeInsets.only(left: 12.0),

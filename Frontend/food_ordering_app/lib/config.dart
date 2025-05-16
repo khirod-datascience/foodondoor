@@ -1,5 +1,5 @@
 class AppConfig {
-  static const String baseUrl = 'http://192.168.70.184:8000/customer';
+  static const String baseUrl = 'http://192.168.225.54:8000/customer';
   
   // Paytm Configuration
   static const String paytmEnvironment = "1"; // "0" for production, "1" for testing

@@ -1,36 +1,80 @@
-# 🍽️ FOODONDOOR: FULL DEVELOPMENT ROADMAP (Flutter + Django + FCM + OTP + MongoDB Ready)
+# 🍽️ FOODONDOOR: CONSOLIDATED DEVELOPMENT PLAN (2025)
 
 ---
 
-## 🧩 CORE SETUP (PHASE 1: SHARED INITIALIZATION)
+## 📋 PRIORITY CHECKLIST FOR COMPLETION & MONITORING
 
-### ✅ Backend (Django)
-- Initialize Django project: `foodondoor_backend/`
-- Create 4 Django apps:
-  - `auth_app`: OTP logic + role-based login
-  - `customer_app`: cart, orders, addresses
-  - `vendor_app`: menu, orders, profile
-  - `delivery_app`: delivery tracking
-- Shared `core/` app:
-  - Models: `User`, `Restaurant`, `MenuItem`, `Order`, `Cart`, `DeliveryAgent`, `Address`
-  - Use `AbstractUser` + role field (customer, vendor, delivery)
-- Setup PostgreSQL DB with `JSONField` & loose coupling for MongoDB-readiness
-- Setup JWT Auth with `rest_framework_simplejwt` + custom claims (role, phone)
-- Integrate Firebase FCM & device token registration
-- Write modular serializers & `.select_related()` for efficiency
+### 🥇 High Priority (Core Flows)
+- [x] Customer: Login/OTP (phone, OTP, JWT, FCM token)
+- [x] Customer: Home Screen (auto-fetched address, banners, categories, nearby/top-rated restaurants)
+- [x] Customer: Address Selection/Management (auto-GPS, manual entry, edit/delete, API integration)
+- [x] Customer: Restaurant Browsing & Menu (grouped menu, add to cart)
+- [x] Customer: Cart (list, quantity, remove, total, checkout)
+- [ ] Customer: Checkout & Order Placement (address selection, payment, order summary, FCM notify vendor)
+    - [x] Add/Edit Address Screen Improvements:
+        - [x] Set as default address option
+        - [x] Address type selector (Home/Work/Other)
+        - [x] Use current location for autofill
+        - [x] Inline validation and error handling
+        - [x] Prevent duplicate/incomplete addresses
+    - [ ] Address Selection Enhancements:
+        - [x] Map-based selection
+        - [x] Indicate/set default address in list
+    - [ ] Checkout UX:
+        - [ ] Allow editing cart from checkout
+        - [ ] Show payment summary before placing order
+        - [ ] Show 'Track Order' after placement
+    - [ ] Order Placement Flow:
+        - [ ] Confirmation dialog before final order
+        - [ ] Loading/progress indicator during placement
+        - [ ] Success/failure feedback after order
+        - [ ] FCM notification to vendor (backend)
+    
+- [ ] Customer: Order Tracking (status polling, live tracking basic)
+- [x] Customer: Orders List & Details (history, reorder, rate) 
+- [x] Customer: Profile (view/update info, manage addresses, logout)
+- [x] Vendor: Login/OTP (role=vendor, JWT, FCM token)
+- [x] Vendor: Dashboard (orders today, revenue, completed vs pending)
+- [x] Vendor: Order Management (list, accept/reject, mark ready)
+- [x] Vendor: Menu Management (CRUD items/categories, image upload)
+- [x] Vendor: Profile (update info, open hours, delivery radius)
 
-### ✅ Frontend (Flutter - All 3 Apps)
-- Initialize 3 Flutter projects:
-  - `foodondoor_customer_app`
-  - `foodondoor_vendor_app`
-  - `foodondoor_delivery_app`
-- Common packages:
-  - `dio` (with interceptors)
-  - `flutter_secure_storage` (store JWT)
-  - `provider` or `riverpod`
-  - `firebase_messaging`, `flutter_local_notifications`
-  - `geolocator`, `google_maps_flutter`
-  - `cached_network_image`, `image_picker`
+### 🥈 Medium Priority (Enhancements & UX)
+- [ ] Customer: Address auto-complete & map picker (Google Maps integration)
+- [ ] Customer: Promotions & Coupons (apply at checkout, fetch from API)
+- [ ] Customer: Wallet & Transactions (balance, recharge, history)
+- [ ] Customer: Support Chat/Ticket (basic UI, API integration)
+- [ ] Customer: Order Tracking (live map with delivery agent)
+- [ ] Customer: Ratings & Reviews (after order, show in UI)
+- [ ] Customer: Push Notification Center (view past notifications, deep link handling)
+- [ ] Customer: Error Handling & Empty States (custom error widgets, skeletons)
+- [ ] Customer: Multi-language/i18n support
+- [ ] Vendor: Promotions/Coupons Management
+- [ ] Vendor: Analytics Dashboard (charts, order trends)
+- [ ] Vendor: Push Notification Center
+- [ ] Vendor: Error/empty states
+
+### 🥉 Future/Advanced (Optional or Later Phases)
+- [ ] Customer: Referral & Loyalty System
+- [ ] Customer: Scheduled Orders/Reminders
+- [ ] Customer: Advanced Search & Filters (cuisine, rating, delivery time)
+- [ ] Customer: Admin/support escalation UI
+- [ ] Vendor: Advanced analytics, export data
+- [ ] Delivery: Login/OTP, Orders list, Pickup/Delivery flow, Earnings, Notifications
+- [ ] Delivery: Live location tracking (map), status updates
+- [ ] Admin Panel: User/vendor/order management, analytics
+- [ ] Core: Real-time order tracking (WebSockets)
+- [ ] Core: Multi-database (MongoDB) readiness
+- [ ] Core: CI/CD, Docker, Production monitoring
+
+---
+
+## 1. Core Principles & Architecture
+- **Custom User System**: No Django built-in User/auth; use custom profile models (customer, vendor, delivery) with custom JWT/OTP logic.
+- **Tech Stack**: Django (REST API), PostgreSQL (MongoDB-ready), Flutter (3 apps), FCM for push notifications.
+- **Modular Apps**: `auth_app`, `customer_app`, `vendor_app`, `delivery_app`, `core`.
+- **RESTful APIs**: JWT auth, FCM, real-time features (WebSockets for tracking/support in future).
+- **Documentation**: Maintain `api_endpoints.md` and `work_summary.md` for all changes and endpoints.
 
 ---
 
@@ -209,4 +253,117 @@
 | 6     | Admin panel (optional but recommended)                                      |
 | 7     | MongoDB migration-ready architecture + DTO cleanup                         |
 | 8     | CI/CD, Docker, Production Deployment (Render/EC2), Monitoring               |
+
+---
+
+## 2. Feature Roadmap & UI/UX (All Apps)
+
+### 2.1 Customer App
+
+| Screen/Feature         | Description / UI Notes                                                                 |
+|-----------------------|---------------------------------------------------------------------------------------|
+| Splash/Onboarding     | Auto-login if token; fetch location; intro screens                                    |
+| Login/OTP             | Phone login, OTP input, error handling                                                |
+| Home                  | Banners, categories, featured, nearby, search bar, location/address display           |
+| Restaurant Details    | Menu grouped by category, add to cart, ratings                                        |
+| Cart                  | List, quantity, remove, total, proceed to checkout                                    |
+| Address Management    | GPS fetch, manual entry, list, edit, delete                                           |
+| Checkout              | Show cart, select address, confirm, payment, order summary                            |
+| Order Tracking        | Poll status, live tracking, map, delivery agent info                                  |
+| Past Orders           | List, reorder, rate, review                                                           |
+| Profile               | View/update info, logout, manage addresses                                            |
+| Notifications         | List, mark as read, push notification integration                                     |
+| Payments & Wallet     | Payment gateway, wallet, coupons, transaction history                                 |
+| Support               | Chat/ticket, FAQ, contact support                                                     |
+
+#### UI/UX Enhancements Needed
+- Consistent bottom navigation bar.
+- Modern, brand-aligned color scheme and typography.
+- Smooth state management (Provider/Riverpod).
+- Error handling for network/auth failures.
+- Loading skeletons for API fetches.
+- Push notification integration (order updates, promos).
+- Address auto-complete and map picker.
+- Friendly empty and error states.
+
+---
+
+### 2.2 Vendor App
+
+| Screen/Feature         | Description / UI Notes                                                                 |
+|-----------------------|---------------------------------------------------------------------------------------|
+| Login/OTP             | Phone login, OTP, JWT                                                                 |
+| Profile               | View/edit vendor info, logout                                                         |
+| Restaurant Details    | View/edit restaurant info, upload images                                               |
+| Menu Management       | CRUD for menu and categories, photo upload, availability toggle                       |
+| Orders                | List, accept/reject, mark ready, filter by status                                     |
+| Analytics/Dashboard   | Sales, top items, order trends, charts                                                |
+| Promotions            | Create/view promotions, manage coupons                                                |
+| Notifications         | List, push notification integration                                                   |
+
+#### UI/UX Enhancements Needed
+- Dashboard with analytics and charts.
+- Order status color coding and quick actions.
+- Menu item photo cropper and preview.
+- Push notification integration.
+- Modern, clean UI with vendor branding.
+
+---
+
+### 2.3 Delivery App
+
+| Screen/Feature         | Description / UI Notes                                                                 |
+|-----------------------|---------------------------------------------------------------------------------------|
+| Login/OTP             | Phone login, OTP, JWT                                                                 |
+| Profile               | View/edit info, logout                                                                |
+| Orders                | List, assign, pickup, deliver, status update                                          |
+| Earnings              | Earnings summary, payout requests                                                     |
+| Notifications         | List, push notification integration                                                   |
+| Live Tracking         | Update location, map for delivery                                                     |
+
+#### UI/UX Enhancements Needed
+- Bottom navigation bar (Pending, Ongoing, Completed, Earnings, Notifications, Profile).
+- Live map tracking for deliveries.
+- Order status timeline.
+- Push notification integration.
+- Modern, clean UI.
+
+---
+
+## 3. Advanced & Future Features
+- **Real-time Order Tracking**: WebSockets for live updates (customer, vendor, delivery).
+- **Payments**: Integrate payment gateway (Razorpay/Stripe), wallet, refunds.
+- **Promotions/Referral**: Coupons, referral system, loyalty points.
+- **Multi-language Support**: i18n for all apps.
+- **Scheduled Tasks**: Order reminders, auto-cancel, etc.
+- **Admin Panel**: Web dashboard for super-admins.
+- **Analytics**: For vendors and admin.
+- **Support Chat**: Real-time support for customers/vendors.
+- **Migration to MongoDB**: Use JSONField for flexibility now, plan for MongoDB switch later.
+
+---
+
+## 4. Implementation Sequence (Recommended)
+1. **Complete all pending core endpoints** (JWT refresh/logout, FCM token, profile update/delete, etc.).
+2. **UI/UX Improvements**: Update all apps with modern, consistent UI, navigation, error handling, and push notifications.
+3. **Advanced Features**: Payments, wallet, analytics, promotions, real-time tracking.
+4. **Delivery App**: Finalize all delivery agent flows and tracking.
+5. **Admin Panel & Analytics**: Build web dashboard for management.
+6. **Testing & QA**: Automated tests, manual QA, bug fixes.
+7. **Documentation**: Keep `api_endpoints.md` and `work_summary.md` up-to-date.
+8. **Prepare for MongoDB Migration** (if needed).
+
+---
+
+## 5. References
+- [helloharendra/Complete-Food-Delivery-App-Flutter](https://github.com/helloharendra/Complete-Food-Delivery-App-Flutter) (for UI/UX, feature ideas, and best practices)
+- Your current API and work summary markdowns.
+
+---
+
+## 6. Next Steps
+- Review this consolidated plan.
+- Update your `api_endpoints.md` to reflect any missing endpoints or features.
+- Prioritize pending backend endpoints and UI/UX improvements.
+- Begin implementing advanced features and delivery app flows.
 

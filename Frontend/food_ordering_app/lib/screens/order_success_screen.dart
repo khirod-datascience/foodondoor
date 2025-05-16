@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './order_tracking_screen.dart';
 // Purpose: Displays a confirmation message after a successful order placement.
 
 import './home_screen.dart'; // To navigate back home
@@ -54,6 +55,23 @@ class OrderSuccessScreen extends StatelessWidget {
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => const HomeScreen()),
                     (Route<dynamic> route) => false, // Remove all routes
+                  );
+                },
+              ),
+              const SizedBox(height: 18),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.track_changes),
+                label: const Text('Track Order'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => OrderTrackingScreen(orderNumber: orderId),
+                    ),
                   );
                 },
               ),

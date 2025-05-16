@@ -261,6 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // --- Logout Logic ---
   Future<void> _logout() async {
+    await AuthStorage.clearAuthData(); // Clear all tokens and credentials
     await clearGlobalData();
     Provider.of<CartProvider>(context, listen: false).clearCart();
     Navigator.of(context).pushAndRemoveUntil(

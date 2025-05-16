@@ -58,6 +58,9 @@ class _SignupScreenState extends State<SignupScreen> {
             if (customerId != null) {
               await AuthStorage.saveCustomerId(customerId);
             }
+            // Save phone and email for silent login
+            await AuthStorage.savePhone(widget.phoneNumber);
+            await AuthStorage.saveEmail(_emailController.text);
             
             // Verify the token was saved correctly
             final savedToken = await AuthStorage.getAuthToken();

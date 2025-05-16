@@ -3,6 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthStorage {
+  // ... existing static consts
+
+  static const _phoneKey = 'user_phone';
+  static const _emailKey = 'user_email';
   static const _storage = FlutterSecureStorage();
   static const _tokenKey = 'auth_token';
   static const _fallbackTokenKey = 'auth_token_fallback';
@@ -46,6 +50,50 @@ class AuthStorage {
     return isJwt || isSimpleToken;
   }
 
+  // Save user phone
+  static Future<void> savePhone(String phone) async {
+    try {
+      await _storage.write(key: _phoneKey, value: phone);
+      debugPrint('(AuthStorage) Phone saved.');
+    } catch (e) {
+      debugPrint('(AuthStorage) Error saving phone: $e');
+    }
+  }
+
+  // Retrieve user phone
+  static Future<String?> getPhone() async {
+    try {
+      final phone = await _storage.read(key: _phoneKey);
+      debugPrint('(AuthStorage) Retrieved phone: ${phone != null ? "exists" : "not found"}');
+      return phone;
+    } catch (e) {
+      debugPrint('(AuthStorage) Error retrieving phone: $e');
+      return null;
+    }
+  }
+
+  // Save user email
+  static Future<void> saveEmail(String email) async {
+    try {
+      await _storage.write(key: _emailKey, value: email);
+      debugPrint('(AuthStorage) Email saved.');
+    } catch (e) {
+      debugPrint('(AuthStorage) Error saving email: $e');
+    }
+  }
+
+  // Retrieve user email
+  static Future<String?> getEmail() async {
+    try {
+      final email = await _storage.read(key: _emailKey);
+      debugPrint('(AuthStorage) Retrieved email: ${email != null ? "exists" : "not found"}');
+      return email;
+    } catch (e) {
+      debugPrint('(AuthStorage) Error retrieving email: $e');
+      return null;
+    }
+  }
+
   // Save the access token (alias for saveToken)
   static Future<void> saveAccessToken(String token) async {
     await saveToken(token);
@@ -63,12 +111,32 @@ class AuthStorage {
     }
   }
 
+  // Retrieve the access token
+  static Future<String?> getToken() async {
+    try {
+      final token = await _storage.read(key: _tokenKey);
+      if (token != null && _isValidToken(token)) {
+        return token;
+      }
+      // Fallback to SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final fallback = prefs.getString(_fallbackTokenKey);
+      if (fallback != null && _isValidToken(fallback)) {
+        return fallback;
+      }
+      return null;
+    } catch (e) {
+      debugPrint('(AuthStorage) Error retrieving token: $e');
+      return null;
+    }
+  }
+
   // Retrieve the refresh token
   static Future<String?> getRefreshToken() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('refresh_token');
-      debugPrint('(AuthStorage) Retrieved refresh token: ${token != null ? "exists" : "not found"}');
+      debugPrint('(AuthStorage) Retrieved refresh token: [32m${token != null ? "exists" : "not found"}[0m');
       return token;
     } catch (e) {
       debugPrint('(AuthStorage) Error retrieving refresh token: $e');
@@ -126,52 +194,8 @@ class AuthStorage {
     }
   }
 
-  // Retrieve the auth token
-  static Future<String?> getToken() async {
-    String? token;
-    bool secureStorageError = false;
-    
-    // Try secure storage first if it hasn't failed before
-    if (!_secureStorageFailed) {
-      try {
-        token = await _storage.read(key: _tokenKey);
-        if (token != null) {
-          debugPrint('(AuthStorage) Retrieved token from secure storage: ${token.substring(0, min(10, token.length))}...');
-        } else {
-          debugPrint('(AuthStorage) No token found in secure storage');
-        }
-      } catch (e) {
-        debugPrint('(AuthStorage) Error retrieving from secure storage: $e');
-        secureStorageError = true;
-        _secureStorageFailed = true;
-      }
-    } else {
-      secureStorageError = true;
-    }
-    
-    // If we couldn't get from secure storage or it failed previously, try SharedPreferences
-    if (token == null || secureStorageError) {
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        token = prefs.getString(_fallbackTokenKey);
-        if (token != null) {
-          debugPrint('(AuthStorage) Retrieved token from SharedPreferences fallback: ${token.substring(0, min(10, token.length))}...');
-        } else {
-          debugPrint('(AuthStorage) No token found in SharedPreferences fallback either.');
-        }
-      } catch (e) {
-        debugPrint('(AuthStorage) Error retrieving from SharedPreferences: $e');
-      }
-    }
-    
-    // Validate the token format
-    if (token != null && !_isValidToken(token)) {
-      debugPrint('(AuthStorage) WARNING: Retrieved token appears to be invalid!');
-      // Consider returning null for clearly invalid tokens
-    }
-    
-    return token;
-  }
+
+
 
   // Delete the auth token
   static Future<void> deleteToken() async {
@@ -283,21 +307,25 @@ class AuthStorage {
     }
   }
 
-  // Clear all auth data
+  // Clear all authentication and user data (for logout)
   static Future<void> clearAuthData() async {
-    debugPrint('(AuthStorage) Clearing all auth data');
+    debugPrint('(AuthStorage) Clearing all auth data...');
     try {
-      // Remove secure token
-      await deleteToken();
-      
-      // Remove customer ID from preferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(_customerIdKey);
-      await prefs.remove(_fallbackTokenKey);
-      
-      debugPrint('(AuthStorage) All auth data cleared successfully');
+      await _storage.delete(key: _tokenKey);
+      await _storage.delete(key: _phoneKey);
+      await _storage.delete(key: _emailKey);
+      debugPrint('(AuthStorage) Cleared tokens, phone, email from secure storage.');
     } catch (e) {
-      debugPrint('(AuthStorage) Error clearing auth data: $e');
+      debugPrint('(AuthStorage) Error clearing secure storage: $e');
+    }
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_fallbackTokenKey);
+      await prefs.remove('refresh_token');
+      await prefs.remove(_customerIdKey);
+      debugPrint('(AuthStorage) Cleared tokens, refresh, customerId from SharedPreferences.');
+    } catch (e) {
+      debugPrint('(AuthStorage) Error clearing SharedPreferences: $e');
     }
   }
 

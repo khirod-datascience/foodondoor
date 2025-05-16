@@ -6,26 +6,48 @@ import '../utils/auth_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'order_details_screen.dart';
+import 'order_tracking_screen.dart';
 
 class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({Key? key}) : super(key: key);
+  final bool showInProgressSnackbar;
+  const OrdersScreen({Key? key, this.showInProgressSnackbar = false}) : super(key: key);
 
   @override
   _OrdersScreenState createState() => _OrdersScreenState();
 }
 
-class _OrdersScreenState extends State<OrdersScreen> {
-  final List<Map<String, dynamic>> _orders = [];
+class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderStateMixin {
+  final List<Map<String, dynamic>> _allOrders = [];
+  final List<Map<String, dynamic>> _inProgressOrders = [];
   bool _isLoading = true;
   String? _error;
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _fetchOrders();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) return;
+      _fetchOrders(inProgressOnly: _tabController.index == 1);
+    });
+    _fetchOrders(inProgressOnly: false);
+    // If requested, show snackbar for recent in-progress order after fetching
+    if (widget.showInProgressSnackbar) {
+      Future.delayed(const Duration(milliseconds: 600), () async {
+        await _fetchOrders(inProgressOnly: true);
+        if (mounted) showRecentInProgressOrderSnackbar(context);
+      });
+    }
   }
 
-  Future<void> _fetchOrders() async {
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchOrders({bool inProgressOnly = true}) async {
     if (mounted) {
       setState(() {
         _isLoading = true;
@@ -34,7 +56,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     }
 
     try {
-      debugPrint('Fetching orders for customer ID: $globalCustomerId');
+      debugPrint('Fetching ' + (inProgressOnly ? 'in-progress' : 'all') + ' orders for customer ID: $globalCustomerId');
       
       if (globalCustomerId == null) {
         setState(() {
@@ -56,7 +78,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       
       debugPrint('(AuthStorage) Retrieved token: ${token.substring(0, min(10, token.length))}...');
       
-      // First try using HTTP POST method (which is what your backend expects)
+      // Use HTTP POST method (backend expects this)
       try {
         final response = await http.post(
           Uri.parse('${AppConfig.baseUrl}/my-orders/'),
@@ -66,6 +88,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           },
           body: jsonEncode({
             'customer_id': globalCustomerId,
+            if (inProgressOnly) 'inprogress': true,
           }),
         );
         
@@ -74,8 +97,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
         if (response.statusCode == 200) {
           final List<dynamic> orderData = jsonDecode(response.body);
           setState(() {
-            _orders.clear();
-            _orders.addAll(orderData.map((order) => Map<String, dynamic>.from(order)).toList());
+            if (inProgressOnly) {
+              _inProgressOrders.clear();
+              _inProgressOrders.addAll(orderData.map((order) => Map<String, dynamic>.from(order)).toList());
+            } else {
+              _allOrders.clear();
+              _allOrders.addAll(orderData.map((order) => Map<String, dynamic>.from(order)).toList());
+            }
             _isLoading = false;
           });
         } else {
@@ -104,8 +132,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
           if (response.statusCode == 200) {
             final List<dynamic> orderData = jsonDecode(response.body);
             setState(() {
-              _orders.clear();
-              _orders.addAll(orderData.map((order) => Map<String, dynamic>.from(order)).toList());
+              _allOrders.clear();
+              _allOrders.addAll(orderData.map((order) => Map<String, dynamic>.from(order)).toList());
               _isLoading = false;
             });
           } else {
@@ -147,44 +175,94 @@ class _OrdersScreenState extends State<OrdersScreen> {
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: Colors.orange))
-          : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                      const SizedBox(height: 16),
-                      Text(_error!, textAlign: TextAlign.center),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: _fetchOrders,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          foregroundColor: Colors.white,
+      body: Column(
+        children: [
+          TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'All Orders'),
+              Tab(text: 'Track Orders'),
+            ],
+            labelColor: Colors.orange,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: Colors.orange,
+          ),
+          Expanded(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator(color: Colors.orange))
+                : _error != null
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                            const SizedBox(height: 16),
+                            Text(_error!, textAlign: TextAlign.center),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () => _fetchOrders(inProgressOnly: _tabController.index == 1),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text('Retry'),
+                            ),
+                          ],
                         ),
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                )
-              : _orders.isEmpty
-                  ? const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey),
-                          SizedBox(height: 16),
-                          Text('No orders found'),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: _orders.length,
-                      itemBuilder: (ctx, i) => _buildOrderCard(_orders[i]),
-                    ),
+                      )
+                    : (_tabController.index == 1 ? _inProgressOrders : _allOrders).isEmpty
+                        ? const Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey),
+                                SizedBox(height: 16),
+                                Text('No orders found'),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: (_tabController.index == 1 ? _inProgressOrders : _allOrders).length,
+                            itemBuilder: (ctx, i) => _buildOrderCard((_tabController.index == 1 ? _inProgressOrders : _allOrders)[i]),
+                          ),
+          ),
+        ],
+      ),
     );
+  }
+
+  // Call this after placing an order to show a snackbar for the most recent in-progress order
+  void showRecentInProgressOrderSnackbar(BuildContext context) {
+    if (_inProgressOrders.isNotEmpty) {
+      final order = _inProgressOrders.first;
+      debugPrint('Snackbar in-progress order object: ' + order.toString());
+      final orderNumber = order['order_number'] ?? order['id'] ?? order['order_id'];
+      final vendorName = order['vendor']?['name'] ?? 'Vendor';
+      final total = order['total_amount'] ?? order['total'] ?? 0.0;
+      final snackBar = SnackBar(
+        content: Text('Order #$orderNumber at $vendorName is in progress (₹${total.toStringAsFixed(2)})'),
+        action: SnackBarAction(
+          label: 'Track',
+          onPressed: () {
+            if (orderNumber != null && orderNumber.toString().isNotEmpty) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => OrderTrackingScreen(orderNumber: orderNumber.toString()),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Error: Could not get Order Number to track order.')),
+              );
+            }
+          },
+          textColor: Colors.orange,
+        ),
+        duration: const Duration(seconds: 8),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   Widget _buildOrderCard(Map<String, dynamic> order) {
