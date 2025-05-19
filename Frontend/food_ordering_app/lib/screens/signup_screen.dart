@@ -53,7 +53,7 @@ class _SignupScreenState extends State<SignupScreen> {
           debugPrint('(SignupScreen) Extracted auth_token from responseData: $authToken');
 
           if (authToken != null) {
-            await AuthStorage.saveAuthToken(authToken);
+            await AuthStorage.saveAccessToken(authToken);
             final customerId = responseData['customer_id'] as String?;
             if (customerId != null) {
               await AuthStorage.saveCustomerId(customerId);

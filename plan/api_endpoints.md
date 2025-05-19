@@ -28,8 +28,11 @@ This document lists all API endpoints for the FOODONDOOR application, covering C
 | `/api/customer/cart/remove/`                 | DELETE  | `customer_app`| `views.py`   | Remove item from cart.                                   | Cart screen                                    |
 | `/api/customer/place-order/`                 | POST    | `customer_app`| `views.py`   | Place a new order.                                       | Checkout                                       |
 | `/api/customer/orders/`                      | GET     | `customer_app`| `views.py`   | List past orders.                                        | Past orders screen                             |
-| `/api/customer/orders/<id>/status/`          | GET     | `customer_app`| `views.py`   | Get order status.                                        | Order tracking                                 |
-| `/api/customer/orders/<id>/track/`           | GET     | `customer_app`| `views.py`   | Live tracking for delivery.                              | Order tracking                                 |
+| `/api/customer/orders/<id>/status/`          | GET     | `customer_app`| `views.py`   | Get order status (polling).                              | Order tracking, implemented                    |
+| `/api/customer/orders/<id>/track/`           | GET     | `customer_app`| `views.py`   | Live tracking for delivery (status + delivery location). | Order tracking, implemented                    |
+| `/api/delivery/orders/<id>/status/`          | PATCH   | `delivery_auth`| `views.py`  | Delivery agent updates order status.                     | Triggers FCM to customer, implemented          |
+| `/api/delivery/orders/<id>/location/`        | PATCH   | `delivery_auth`| `views.py`  | Delivery agent updates live location (lat/lng).          | Triggers FCM to customer, implemented          |
+| `/api/vendor/orders/<id>/status/`            | PATCH   | `auth_app`    | `views.py`   | Vendor updates order status.                             | Triggers FCM to customer, implemented          |
 | `/api/customer/orders/<id>/rate/`            | POST    | `customer_app`| `views.py`   | Rate completed order/restaurant.                         | Past orders                                    |
 | `/api/customer/payment/verify/`              | POST    | `customer_app`| `views.py`   | Verify payment from gateway.                             | Checkout                                       |
 | `/api/customer/wallet/`                      | GET     | `customer_app`| `views.py`   | View wallet balance.                                     | Wallet/checkout                                |

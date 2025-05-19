@@ -3,8 +3,20 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Vendor
 from .serializers import *
+import firebase_admin
+from firebase_admin import credentials, messaging
 from .utils import OTPManager
-from firebase_admin import messaging
+import os
+
+# Initialize Firebase Admin SDK with explicit service account JSON
+try:
+    firebase_admin.get_app()
+except ValueError:
+    cred_path = os.path.join(os.path.dirname(__file__), '..', 'foodondoor-9d46b-fe4f07a4039b.json')
+    cred_path = os.path.abspath(cred_path)
+    cred = credentials.Certificate(cred_path)
+    firebase_admin.initialize_app(cred)
+
 from django.conf import settings
 import os
 from datetime import datetime
@@ -49,6 +61,30 @@ class SendOTP(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+import jwt
+from datetime import datetime, timedelta
+
+# ...
+
+def generate_vendor_jwt(vendor):
+    """Generate JWT access and refresh tokens for vendor login."""
+    now = datetime.utcnow()
+    access_payload = {
+        'vendor_id': vendor.vendor_id,
+        'exp': now + timedelta(hours=2),
+        'iat': now,
+        'token_type': 'access',
+    }
+    refresh_payload = {
+        'vendor_id': vendor.vendor_id,
+        'exp': now + timedelta(days=30),
+        'iat': now,
+        'token_type': 'refresh',
+    }
+    access_token = jwt.encode(access_payload, settings.SECRET_KEY, algorithm='HS256')
+    refresh_token = jwt.encode(refresh_payload, settings.SECRET_KEY, algorithm='HS256')
+    return {'access': access_token, 'refresh': refresh_token}
+
 class VerifyOTP(APIView):
     def post(self, request):
         try:
@@ -70,10 +106,13 @@ class VerifyOTP(APIView):
 
             try:
                 vendor = Vendor.objects.get(phone=phone)
+                tokens = generate_vendor_jwt(vendor)
                 return Response({
                     'message': 'Login successful',
                     'is_signup': False,
-                    'vendor_id': vendor.vendor_id
+                    'vendorId': vendor.vendor_id,
+                    'token': tokens['access'],
+                    'refreshToken': tokens['refresh'],
                 }, status=status.HTTP_200_OK)
                 
             except Vendor.DoesNotExist:
@@ -332,6 +371,33 @@ class OrderDetailView(APIView):
             traceback.print_exc()
             return Response({"error": "Failed to retrieve order details"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class VendorOrderStatusUpdateView(APIView):
+    def patch(self, request, order_number):
+        """Vendor updates order status (PATCH). Notifies customer via FCM."""
+        try:
+            new_status = request.data.get('status')
+            if not new_status:
+                return Response({'error': 'Missing status'}, status=status.HTTP_400_BAD_REQUEST)
+            order = Order.objects.get(order_number=order_number)
+            order.status = new_status
+            order.save()
+            # Notify customer via FCM if customer FCM token exists (pseudo-code)
+            customer = getattr(order, 'customer', None)
+            if customer and hasattr(customer, 'fcm_token') and customer.fcm_token:
+                title = f"Order {order.order_number} Status Updated"
+                body = f"Your order status is now: {new_status}"
+                try:
+                    send_notification_to_device(customer.fcm_token, title, body)
+                except Exception as e:
+                    logger.error(f"Failed to send FCM notification: {e}")
+            return Response({'order_no': order.order_number, 'status': order.status}, status=status.HTTP_200_OK)
+        except Order.DoesNotExist:
+            return Response({'error': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            logger.error(f"Error updating order status for {order_number}: {str(e)}")
+            traceback.print_exc()
+            return Response({"error": "Failed to update order status"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class ImageUploadView(APIView):
     def post(self, request):
         try:
@@ -531,9 +597,19 @@ class UpdateFCMTokenView(APIView):
                 )
             
             try:
-                vendor = Vendor.objects.get(vendor_id=vendor_id)
+                # Fix: handle vendor_id case-insensitively and strip whitespace
+                normalized_vendor_id = vendor_id.strip().upper()
+                try:
+                    vendor = Vendor.objects.get(vendor_id__iexact=normalized_vendor_id)
+                except Vendor.DoesNotExist:
+                    logger.error(f"Vendor not found for vendor_id: '{vendor_id}' (normalized: '{normalized_vendor_id}')")
+                    return Response(
+                        {'error': f'Vendor not found for vendor_id: {vendor_id}'},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
                 vendor.fcm_token = fcm_token
                 vendor.save()
+                logger.info(f"FCM token updated for vendor_id: {vendor.vendor_id}")
                 return Response(
                     {'message': 'FCM token updated successfully'}, 
                     status=status.HTTP_200_OK
@@ -550,3 +626,56 @@ class UpdateFCMTokenView(APIView):
                 {'error': 'Failed to update FCM token'}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class TestSendVendorNotificationView(APIView):
+    def post(self, request, vendor_id):
+        print(f"[DEBUG] Incoming request data: {request.data}")
+        title = request.data.get('title', 'Test Notification')
+        body = request.data.get('body', 'This is a test notification.')
+        try:
+            print(f"[DEBUG] Looking up vendor with id: '{vendor_id}' (normalized: '{vendor_id.strip()}')")
+            vendor = Vendor.objects.get(vendor_id__iexact=vendor_id.strip())
+            print(f"[DEBUG] Vendor found: {vendor.vendor_id}, FCM token: {vendor.fcm_token}")
+            if not vendor.fcm_token:
+                print(f"[DEBUG] Vendor {vendor_id} has no FCM token.")
+                return Response({'error': 'Vendor has no FCM token.'}, status=status.HTTP_400_BAD_REQUEST)
+            # Send notification with custom sound and channel (best practice)
+            # Construct FCM message with notification payload (not just data)
+            message = messaging.Message(
+                notification=messaging.Notification(
+                    title=title,
+                    body=body,
+                ),
+                android=messaging.AndroidConfig(
+                    priority='high',
+                    notification=messaging.AndroidNotification(
+                        channel_id='vendor_notifications',
+                        sound='vendor_delivery_ring.wav',
+                    ),
+                ),
+                token=vendor.fcm_token,
+                # Do not add unnecessary data fields unless needed for app logic
+            )
+            print(f"[DEBUG] Constructed FCM message (backend): {message}")
+            # FLUTTER FRONTEND INSTRUCTIONS:
+            # - Place 'vendor_delivery_ring.wav' in android/app/src/main/res/raw/ (Android) and iOS main bundle.
+            # - Create NotificationChannel with id 'vendor_notifications' and sound 'vendor_delivery_ring.wav' in Flutter (see work_summary.md for example).
+            # - For foreground notifications, use flutter_local_notifications to play sound and show alert.
+            print(f"[DEBUG] Constructed FCM message: {message}")
+            response = messaging.send(message)
+            print(f"[DEBUG] FCM send response: {response}")
+            # Save notification to DB for notification tab
+            Notification.objects.create(
+                vendor=vendor,
+                title=title,
+                body=body,
+            )
+            print(f"[DEBUG] Notification saved to DB for vendor {vendor.vendor_id}")
+            return Response({'message': 'Notification sent!', 'firebase_response': response}, status=status.HTTP_200_OK)
+        except Vendor.DoesNotExist:
+            print(f"[DEBUG] Vendor not found: {vendor_id}")
+            return Response({'error': 'Vendor not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(f"[DEBUG] Exception sending notification: {str(e)}")
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

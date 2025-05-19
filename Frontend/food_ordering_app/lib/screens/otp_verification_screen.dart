@@ -184,8 +184,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         debugPrint('(OtpVerificationScreen) Extracted auth_token: $authToken, refresh_token: $refreshToken');
 
         if (authToken != null) {
-          // Save tokens to persistent storage
-          await AuthStorage.saveToken(authToken);
+          // Save tokens to persistent storage (ensure access token is saved)
+          await AuthStorage.saveAccessToken(authToken);
           if (refreshToken != null) {
             await AuthStorage.saveRefreshToken(refreshToken);
           }

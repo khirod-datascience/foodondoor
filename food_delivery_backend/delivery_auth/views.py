@@ -13,6 +13,33 @@ from .authentication import DeliveryUserJWTAuthentication # Import custom authen
 from customer_app.models import Order # Assuming Order model is here
 from .permissions import IsAuthenticatedDeliveryUser # Import custom permission
 
+# --- FCM Notification Utility ---
+try:
+    from auth_app.views import send_notification_to_device
+except ImportError:
+    try:
+        from firebase_admin import messaging
+    except ImportError:
+        messaging = None
+    def send_notification_to_device(token, title, body):
+        if not messaging:
+            print("firebase_admin.messaging is not available.")
+            return False
+        try:
+            message = messaging.Message(
+                notification=messaging.Notification(
+                    title=title,
+                    body=body,
+                ),
+                token=token,
+            )
+            response = messaging.send(message)
+            print(f"FCM notification sent: {response}")
+            return True
+        except Exception as e:
+            print(f"Failed to send FCM notification: {e}")
+            return False
+
 # Custom JWT generation for DeliveryUser
 def generate_delivery_jwt(user: DeliveryUser):
     # Convert UUID to string for JSON serialization
@@ -204,6 +231,102 @@ class DeliveryOrderListView(generics.ListAPIView):
 
         return queryset.order_by('-created_at')
 
+# --- Delivery Agent: Update Order Status ---
+from auth_app.models import Order
+from auth_app.views import send_notification_to_device
+
+class DeliveryOrderStatusUpdateView(views.APIView):
+    authentication_classes = [DeliveryUserJWTAuthentication]
+    permission_classes = [IsAuthenticatedDeliveryUser]
+    def patch(self, request, order_number):
+        try:
+            new_status = request.data.get('status')
+            if not new_status:
+                return Response({'error': 'Missing status'}, status=status.HTTP_400_BAD_REQUEST)
+            order = Order.objects.get(order_number=order_number)
+            order.status = new_status
+            order.save()
+            # Notify customer via FCM if available
+            customer = getattr(order, 'customer', None)
+            if customer and hasattr(customer, 'fcm_token') and customer.fcm_token:
+                title = f"Order {order.order_number} Status Updated"
+                body = f"Your order status is now: {new_status}"
+                try:
+                    send_notification_to_device(customer.fcm_token, title, body)
+                except Exception as e:
+                    print(f"Failed to send FCM notification: {e}")
+            return Response({'order_no': order.order_number, 'status': order.status}, status=status.HTTP_200_OK)
+        except Order.DoesNotExist:
+            return Response({'error': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(f"Error updating order status for {order_number}: {str(e)}")
+            return Response({"error": "Failed to update order status"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# --- Delivery Agent: Update Live Location ---
+class DeliveryOrderLocationUpdateView(views.APIView):
+    authentication_classes = [DeliveryUserJWTAuthentication]
+    permission_classes = [IsAuthenticatedDeliveryUser]
+    def patch(self, request, order_number):
+        try:
+            lat = request.data.get('lat')
+            lng = request.data.get('lng')
+            if lat is None or lng is None:
+                return Response({'error': 'Missing lat/lng'}, status=status.HTTP_400_BAD_REQUEST)
+            order = Order.objects.get(order_number=order_number)
+            order.delivery_lat = lat
+            order.delivery_lng = lng
+            order.save()
+            # Notify customer via FCM if available (optional)
+            customer = getattr(order, 'customer', None)
+            if customer and hasattr(customer, 'fcm_token') and customer.fcm_token:
+                title = f"Order {order.order_number} Location Updated"
+                body = f"Your order is on the move!"
+                try:
+                    send_notification_to_device(customer.fcm_token, title, body)
+                except Exception as e:
+                    print(f"Failed to send FCM notification: {e}")
+            return Response({'order_no': order.order_number, 'delivery_lat': order.delivery_lat, 'delivery_lng': order.delivery_lng}, status=status.HTTP_200_OK)
+        except Order.DoesNotExist:
+            return Response({'error': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(f"Error updating order location for {order_number}: {str(e)}")
+            return Response({"error": "Failed to update order location"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 # TODO: Implement custom Authentication Class (DeliveryUserJWTAuthentication)
 # This class will be responsible for validating the custom JWT and attaching
 # the correct DeliveryUser object to request.user
+
+class UpdateFCMTokenView(views.APIView):
+    def get_permissions(self):
+        # AllowAny for GET, original permissions for POST
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticatedDeliveryUser()]
+
+    def get(self, request):
+        # HARDCODED TEST VALUES
+        fcm_token = '<PUT_YOUR_FCM_TOKEN_HERE>'
+        return Response({'success': True, 'fcm_token': fcm_token}, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        user = request.user
+        fcm_token = request.data.get('fcm_token')
+        if not fcm_token:
+            return Response({'success': False, 'message': 'No FCM token provided.'}, status=status.HTTP_400_BAD_REQUEST)
+        user.fcm_token = fcm_token
+        user.save()
+        return Response({'success': True, 'message': 'FCM token updated.'}, status=status.HTTP_200_OK)
+
+class TestNotificationView(views.APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        # HARDCODED TEST VALUES
+        fcm_token = '<PUT_YOUR_FCM_TOKEN_HERE>'
+        title = 'Test Notification (GET)'
+        body = 'This is a test notification triggered by GET request.'
+        success = send_notification_to_device(fcm_token, title, body)
+        if success:
+            return Response({'success': True, 'message': 'Notification sent via GET.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'success': False, 'message': 'Failed to send notification.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

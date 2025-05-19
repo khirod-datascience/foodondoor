@@ -115,7 +115,7 @@ class AuthProvider extends ChangeNotifier {
       }
 
       // Save token and customer ID immediately
-      await AuthStorage.saveToken(token);
+      await AuthStorage.saveAccessToken(token);
       debugPrint('Attempting to save refresh token: $refreshToken');
       if (refreshToken != null) {
         await AuthStorage.saveRefreshToken(refreshToken);

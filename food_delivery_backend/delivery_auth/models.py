@@ -10,6 +10,9 @@ class DeliveryUser(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(max_length=255, blank=True, null=True)
     profile_picture_url = models.URLField(max_length=500, blank=True, null=True)
+    
+    # FCM token for push notifications
+    fcm_token = models.CharField(max_length=256, blank=True, null=True, default=None, help_text='Device FCM token for notifications')
 
     is_active = models.BooleanField(default=True) # Can be used to deactivate partners
     # is_verified is implicitly handled by whether `name` is set during registration

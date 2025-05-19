@@ -2,12 +2,12 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import (
-    SendOTP, VerifyOTP, SignupView, VendorListView, NotificationListView, 
-    ProfileView, FoodListingView, OrderListView, OrderDetailView, ImageUploadView,
-    ActiveRestaurantsView, RestaurantDetailView, MenuView, FoodDetailView, 
-    BannersView, CategoriesView, NearbyRestaurantsView, TopRatedRestaurantsView, 
-    SearchView, UpdateFCMTokenView
+    SendOTP, VerifyOTP, SignupView, VendorListView, NotificationListView, ProfileView, FoodListingView,
+    OrderListView, OrderDetailView, VendorOrderStatusUpdateView, ImageUploadView, ActiveRestaurantsView, RestaurantDetailView, BannersView,
+    CategoriesView, NearbyRestaurantsView, TopRatedRestaurantsView, SearchView, UpdateFCMTokenView
 )
+
+from .views import TestSendVendorNotificationView
 
 urlpatterns = [
     path('send-otp/', SendOTP.as_view(), name='send-otp'),
@@ -15,13 +15,15 @@ urlpatterns = [
     path('signup/', SignupView.as_view(), name='signup'),
     path('vendors/', VendorListView.as_view(), name='vendor-list'),
     path('vendors/<str:vendor_id>/', RestaurantDetailView.as_view(), name='vendor-detail'),
-    path('notifications/<str:vendor_id>/', NotificationListView.as_view(), name='notification-list'),
+    path('vendors/<str:vendor_id>/notifications/', NotificationListView.as_view(), name='notification-list'),
     path('vendors/<str:vendor_id>/fcm-token/', UpdateFCMTokenView.as_view(), name='update-fcm-token'),
+    path('vendors/<str:vendor_id>/test-notification/', TestSendVendorNotificationView.as_view(), name='test-send-vendor-notification'),
     path('profile/<str:vendor_id>/', ProfileView.as_view(), name='profile'),
     path('food-listings/<str:vendor_id>/', FoodListingView.as_view(), name='food-listings'),
     path('food-listings/<str:vendor_id>/<int:food_id>/', FoodListingView.as_view(), name='food-listing-detail'),
     path('orders/<str:vendor_id>/', OrderListView.as_view(), name='orders'),
     path('order-detail/<str:order_number>/', OrderDetailView.as_view(), name='order-detail'),
+    path('orders/<str:order_number>/status/', VendorOrderStatusUpdateView.as_view(), name='vendor-order-status-update'),
     path('upload-image/', ImageUploadView.as_view(), name='upload-image'),
     path('restaurants/', ActiveRestaurantsView.as_view(), name='active-restaurants'),
     path('restaurants/<str:vendor_id>/', RestaurantDetailView.as_view(), name='restaurant-detail'),

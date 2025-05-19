@@ -53,6 +53,22 @@ class SimpleNotificationService {
       );
       
       print('User granted permission: ${settings.authorizationStatus}');
+
+      // Get FCM token
+      String? token = await _messaging.getToken();
+      print('[SimpleNotificationService] FCM token: $token');
+      // Send to backend if customerId exists
+      String? customerId = await AuthStorage.getCustomerId();
+      if (token != null && customerId != null) {
+        await sendFcmTokenToBackend(token, customerId);
+      }
+      // Listen for token refresh
+      _messaging.onTokenRefresh.listen((newToken) async {
+        String? customerId = await AuthStorage.getCustomerId();
+        if (customerId != null) {
+          await sendFcmTokenToBackend(newToken, customerId);
+        }
+      });
       
       // Get initial message (app opened from terminated state)
       _initialMessage = await FirebaseMessaging.instance.getInitialMessage();
@@ -73,106 +89,22 @@ class SimpleNotificationService {
         _messageOpenedApp = message;
         _messageStreamController.add(message);
       });
-      
-      // Get the token
-      String? token = await _messaging.getToken();
-      if (token != null) {
-        print('FCM Token: $token');
-        // Send token to server
-        await _sendTokenToServer(token);
-      }
-      
-      // Listen for token refreshes
-      _messaging.onTokenRefresh.listen((String token) {
-        print('FCM Token refreshed: $token');
-        _sendTokenToServer(token);
-      });
-      
     } catch (e) {
       print('Error initializing notifications: $e');
     }
   }
   
-  // Send token to your backend server
-  Future<void> _sendTokenToServer(String token) async {
+  Future<void> sendFcmTokenToBackend(String token, String customerId) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/fcm-token/update/');
     try {
-      // Get customer ID
-      final customerId = await AuthStorage.getCustomerId();
-      if (customerId == null) {
-        print('Cannot send FCM token: Customer ID not found');
-        return;
-      }
-      
-      // Get auth token
-      final authToken = await AuthStorage.getToken();
-      
-      // Send the token to your backend
       final response = await http.post(
-        Uri.parse('${AppConfig.baseUrl}/update-fcm-token/'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (authToken != null) 'Authorization': 'Bearer $authToken',
-        },
-        body: jsonEncode({
-          'customer_id': customerId,
-          'fcm_token': token,
-          'device_type': 'customer_app'
-        }),
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'fcm_token': token, 'customer_id': customerId}),
       );
-      
-      if (response.statusCode == 200) {
-        print('FCM token sent to server successfully');
-      } else {
-        print('Failed to send FCM token to server: ${response.statusCode}');
-        print('Response: ${response.body}');
-      }
+      print('[SimpleNotificationService] Sent FCM token to backend. Status: ${response.statusCode}');
     } catch (e) {
-      print('Error sending FCM token to server: $e');
-    }
-  }
-  
-  // Delete FCM token on logout
-  Future<void> deleteToken() async {
-    try {
-      await _sendTokenDeleteRequest();
-      await _messaging.deleteToken();
-      print('FCM token deleted successfully');
-    } catch (e) {
-      print('Error deleting FCM token: $e');
-    }
-  }
-  
-  // Send token delete request to server
-  Future<void> _sendTokenDeleteRequest() async {
-    try {
-      final customerId = await AuthStorage.getCustomerId();
-      final authToken = await AuthStorage.getToken();
-      final fcmToken = await _messaging.getToken();
-      
-      if (customerId == null || fcmToken == null) {
-        print('Cannot delete FCM token: Missing customer ID or FCM token');
-        return;
-      }
-      
-      final response = await http.post(
-        Uri.parse('${AppConfig.baseUrl}/delete-fcm-token/'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (authToken != null) 'Authorization': 'Bearer $authToken',
-        },
-        body: jsonEncode({
-          'customer_id': customerId,
-          'fcm_token': fcmToken,
-        }),
-      );
-      
-      if (response.statusCode == 200) {
-        print('FCM token deletion notified to server');
-      } else {
-        print('Failed to notify server about FCM token deletion: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error sending FCM token deletion to server: $e');
+      print('[SimpleNotificationService] Failed to send FCM token: $e');
     }
   }
   
@@ -270,4 +202,4 @@ class SimpleNotificationService {
   void dispose() {
     _messageStreamController.close();
   }
-} 
+}

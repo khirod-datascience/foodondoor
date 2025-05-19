@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import *
+from .views import CustomerOrderStatusView, CustomerOrderTrackingView, UpdateFCMTokenView, TestNotificationView
 # from .views import CheckDeliveryView
+
 # from .views import (
 #     NearbyRestaurantsView, TopRatedRestaurantsView, SearchView,
 #     RestaurantDetailView, FoodDetailView, CreateCODOrderView, VerifyPaymentView,
@@ -13,6 +15,8 @@ from .views import CustomerTokenRefreshView
 
 urlpatterns = [
     path('token/refresh/', CustomerTokenRefreshView.as_view(), name='customer-token-refresh'),
+    path('fcm-token/update/', UpdateFCMTokenView.as_view(), name='customer-fcm-token-update'),
+    path('testnotify/', TestNotificationView.as_view(), name='customer-test-notification'),
     path('reverse-geocode/', ReverseGeocodeView.as_view(), name='reverse-geocode'),
     path('send-otp/', SendOTP.as_view()),
     path('verify-otp/', VerifyOTP.as_view()),
@@ -27,7 +31,8 @@ urlpatterns = [
     # path('restaurants/<str:vendor_id>/', RestaurantDetailView.as_view(), name='restaurant-detail'),
     # path('restaurants/<str:vendor_id>/foods/<int:food_id>/', FoodDetailView.as_view(), name='food-detail'),
     path('orders/<str:order_number>/', OrderDetailView.as_view()),
-    # path('orders/<str:order_number>/track/', OrderTrackingView.as_view()),
+    path('orders/<str:order_number>/status/', CustomerOrderStatusView.as_view()),
+    path('orders/<str:order_number>/track/', CustomerOrderTrackingView.as_view()),
     # path('payment/create/', CreatePaymentView.as_view()),
     # # path('payment/verify/', VerifyPaymentView.as_view()),
     path('check-delivery/', CheckDeliveryView.as_view(), name='check-delivery'),

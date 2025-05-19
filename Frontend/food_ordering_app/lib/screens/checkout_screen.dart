@@ -43,18 +43,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     // --- Proactively refresh token before fetching addresses ---
     await refreshTokenIfNeeded(context);
-    final String? token = await AuthStorage.getToken();
-    if (token == null || token.isEmpty || globalCustomerId == null) {
+    if (globalCustomerId == null) {
       setState(() {
         _fetchError = 'Please log in to select address.';
         _isLoadingAddresses = false;
       });
     } else {
       try {
-        final response = await AuthApi.authenticatedRequest(() => Dio().get(
-          '${AppConfig.baseUrl}/$globalCustomerId/addresses/',
-          options: Options(headers: {'Authorization': 'Bearer $token'}),
-        ));
+        // Always fetch the latest token inside the closure to avoid using a stale/expired token.
+        final response = await AuthApi.authenticatedRequest(() async {
+          final token = await AuthStorage.getToken();
+          return Dio().get(
+            '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/',
+            options: Options(headers: {'Authorization': 'Bearer $token'}),
+          );
+        });
         if (response != null && response.statusCode == 200 && response.data is List) {
           setState(() {
             _savedAddresses = List<Map<String, dynamic>>.from(response.data);
@@ -183,12 +186,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Future<void> _fetchAddressesAndSetDefault() async {
     try {
-      final String? token = await AuthStorage.getToken();
-      if (token == null || token.isEmpty || globalCustomerId == null) return;
-      final response = await AuthApi.authenticatedRequest(() => Dio().get(
-        '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
-      ));
+      // Always fetch the latest token inside the closure to avoid using a stale/expired token.
+      if (globalCustomerId == null) return;
+      final response = await AuthApi.authenticatedRequest(() async {
+        final token = await AuthStorage.getToken();
+        return Dio().get(
+          '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/',
+          options: Options(headers: {'Authorization': 'Bearer $token'}),
+        );
+      });
       if (response != null && response.statusCode == 200 && response.data is List) {
         _savedAddresses = List<Map<String, dynamic>>.from(response.data);
         if (globalCurrentAddress == null && _savedAddresses.isNotEmpty) {

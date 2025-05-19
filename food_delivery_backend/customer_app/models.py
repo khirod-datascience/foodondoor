@@ -84,6 +84,10 @@ class Customer(AbstractBaseUser, PermissionsMixin): # Inherit from AbstractBaseU
     phone = models.CharField(max_length=15, unique=True)
     full_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
+    
+    # FCM token for push notifications
+    fcm_token = models.CharField(max_length=256, blank=True, null=True, default=None, help_text='Device FCM token for notifications')
+
     updated_at = models.DateTimeField(auto_now=True)
     default_address = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True, blank=True, related_name='default_for_customer')
 

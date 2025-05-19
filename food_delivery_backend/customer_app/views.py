@@ -18,35 +18,70 @@ from auth_app.models import Vendor
 from auth_app.models import FoodListing
 from django.db import IntegrityError
 from rest_framework.permissions import IsAuthenticated, AllowAny
+import jwt
 from django.db import transaction
 import jwt
 from datetime import datetime, timedelta
 from django.conf import settings
+
+# --- FCM Notification Utility ---
+try:
+    from firebase_admin import messaging
+except ImportError:
+    messaging = None
+
+def send_notification_to_device(token, title, body):
+    if not messaging:
+        print("firebase_admin.messaging is not available.")
+        return False
+    try:
+        message = messaging.Message(
+            notification=messaging.Notification(
+                title=title,
+                body=body,
+            ),
+            token=token,
+        )
+        response = messaging.send(message)
+        print(f"FCM notification sent: {response}")
+        return True
+    except Exception as e:
+        print(f"Failed to send FCM notification: {e}")
+        return False
 
 # --- Custom JWT Refresh for Customer ---
 class CustomerTokenRefreshView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
         refresh_token = request.data.get('refresh')
+        print('[REFRESH] Incoming refresh token:', refresh_token)
         if not refresh_token:
+            print('[REFRESH] No refresh token provided')
             return Response({'error': 'Refresh token required'}, status=status.HTTP_400_BAD_REQUEST)
         try:
             payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=['HS256'])
-            customer_id = payload.get('customer_id')
+            print('[REFRESH] Decoded payload:', payload)
+            customer_id = payload.get('customer_id') or payload.get('user_id')
             if not customer_id:
+                print('[REFRESH] Payload missing customer_id/user_id')
                 return Response({'error': 'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
+            token_type = payload.get('type') or payload.get('token_type')
+            if token_type != 'refresh':
+                print('[REFRESH] Token type is not refresh:', token_type)
+                return Response({'error': 'Invalid refresh token type'}, status=status.HTTP_401_UNAUTHORIZED)
             # Validate customer
             from .models import Customer
             try:
                 customer = Customer.objects.get(customer_id=customer_id)
             except Customer.DoesNotExist:
+                print('[REFRESH] Customer not found:', customer_id)
                 return Response({'error': 'Customer not found'}, status=status.HTTP_401_UNAUTHORIZED)
-            # Optionally: check for token expiry/blacklist here
             # Issue new access token (2 hours expiry)
             access_payload = {
                 'customer_id': customer.customer_id,
                 'exp': datetime.utcnow() + timedelta(hours=2),
                 'iat': datetime.utcnow(),
+                'token_type': 'access',
             }
             access_token = jwt.encode(access_payload, settings.SECRET_KEY, algorithm='HS256')
             # Issue new refresh token (30 days expiry, rotation)
@@ -54,14 +89,18 @@ class CustomerTokenRefreshView(APIView):
                 'customer_id': customer.customer_id,
                 'exp': datetime.utcnow() + timedelta(days=30),
                 'iat': datetime.utcnow(),
-                'type': 'refresh',
+                'token_type': 'refresh',
             }
             refresh_token_new = jwt.encode(refresh_payload, settings.SECRET_KEY, algorithm='HS256')
+            print('[REFRESH] Issued new tokens for customer:', customer_id)
             return Response({'access': access_token, 'refresh': refresh_token_new}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError:
+            print('[REFRESH] Token expired')
             return Response({'error': 'Refresh token expired'}, status=status.HTTP_401_UNAUTHORIZED)
         except Exception as e:
+            print('[REFRESH] Exception:', str(e))
             return Response({'error': 'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 from .serializers import OrderSerializer, OrderItemSerializer # Ensure these are imported correctly
 from auth_app.models import Vendor, FoodListing # Ensure these are imported correctly
@@ -80,12 +119,27 @@ from rest_framework_simplejwt.authentication import JWTAuthentication # If using
 logger = logging.getLogger(__name__)
 
 # --- Helper function to get tokens ---
-def get_tokens_for_user(user):
-    refresh = RefreshToken.for_user(user)
-    return {
-        'refresh': str(refresh), # Optionally return refresh token
-        'access': str(refresh.access_token),
+def generate_customer_jwt(customer):
+    import jwt
+    from datetime import datetime, timedelta
+    from django.conf import settings
+    now = datetime.utcnow()
+    access_payload = {
+        'customer_id': customer.customer_id,
+        'exp': now + timedelta(hours=2),
+        'iat': now,
+        'token_type': 'access',
     }
+    refresh_payload = {
+        'customer_id': customer.customer_id,
+        'exp': now + timedelta(days=30),
+        'iat': now,
+        'token_type': 'refresh',
+    }
+    access_token = jwt.encode(access_payload, settings.SECRET_KEY, algorithm='HS256')
+    refresh_token = jwt.encode(refresh_payload, settings.SECRET_KEY, algorithm='HS256')
+    return {'access': access_token, 'refresh': refresh_token}
+
 
 class SendOTP(APIView):
     def post(self, request):
@@ -148,7 +202,7 @@ class VerifyOTP(APIView):
             try:
                 customer = Customer.objects.get(phone=phone)
                 # --- Generate JWT ---
-                tokens = get_tokens_for_user(customer)
+                tokens = generate_customer_jwt(customer)
                 # --- End JWT Generation ---
                 logger.info(f"Login successful for customer {customer.customer_id}")
                 return Response({
@@ -211,7 +265,7 @@ class CustomerSignup(APIView):
             )
 
             # --- Generate JWT for the new customer ---
-            tokens = get_tokens_for_user(customer)
+            tokens = generate_customer_jwt(customer)
             # --- End JWT Generation ---
 
             logger.info(f"Signup successful for customer {customer.customer_id}")
@@ -883,6 +937,29 @@ class OrderTrackingView(APIView):
         except Order.DoesNotExist:
             return Response({'error': 'Order not found'}, status=404)
 
+# --- Customer: Poll Order Status ---
+class CustomerOrderStatusView(APIView):
+    def get(self, request, order_number):
+        try:
+            order = Order.objects.get(order_number=order_number)
+            return Response({'order_no': order.order_number, 'status': order.status}, status=200)
+        except Order.DoesNotExist:
+            return Response({'error': 'Order not found'}, status=404)
+
+# --- Customer: Track Order (status + location) ---
+class CustomerOrderTrackingView(APIView):
+    def get(self, request, order_number):
+        try:
+            order = Order.objects.get(order_number=order_number)
+            return Response({
+                'order_no': order.order_number,
+                'status': order.status,
+                'delivery_lat': order.delivery_lat,
+                'delivery_lng': order.delivery_lng
+            }, status=200)
+        except Order.DoesNotExist:
+            return Response({'error': 'Order not found'}, status=404)
+
 class CreatePaymentView(APIView):
     def post(self, request):
         try:
@@ -938,6 +1015,26 @@ class CheckDeliveryView(APIView):
             return Response({"delivery_available": True}, status=status.HTTP_200_OK)
         else:
             return Response({"delivery_available": False}, status=status.HTTP_200_OK)
+
+class UpdateFCMTokenView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        # HARDCODED TEST VALUES
+        fcm_token = '<PUT_YOUR_FCM_TOKEN_HERE>'
+        return Response({'success': True, 'fcm_token': fcm_token}, status=status.HTTP_200_OK)
+
+class TestNotificationView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        # HARDCODED TEST VALUES
+        fcm_token = '<PUT_YOUR_FCM_TOKEN_HERE>'
+        title = 'Test Notification (GET)'
+        body = 'This is a test notification triggered by GET request.'
+        success = send_notification_to_device(fcm_token, title, body)
+        if success:
+            return Response({'success': True, 'message': 'Notification sent via GET.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'success': False, 'message': 'Failed to send notification.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class TopRatedRestaurantsView(APIView):
     def get(self, request):
@@ -1089,11 +1186,40 @@ class CustomerDetailsView(APIView):
             return Response({"error": "Customer not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class CustomerAddressesView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request, customer_id):
+        print("... this is test header request for request.headers...........................................",request.headers)
+        print("... this is test data request for request.data",request.data)
+        print("=== CUSTOMER ADDRESSES VIEW HIT - MAIN FILE ===")
+        # --- JWT Auth Start ---
+        auth_header = request.headers.get('Authorization')
+        print(f"[DEBUG][CustomerAddressesView] Incoming headers: {dict(request.headers)}")
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return Response({'error': 'Authorization header missing'}, status=status.HTTP_401_UNAUTHORIZED)
+        token = auth_header.split(' ')[1]
+        print(f"[DEBUG][CustomerAddressesView] Received JWT token: {token}")
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            print(f"[DEBUG][CustomerAddressesView] Decoded JWT payload: {payload}")
+        except jwt.ExpiredSignatureError:
+            return Response({'error': 'Token expired'}, status=status.HTTP_401_UNAUTHORIZED)
+        except jwt.InvalidTokenError:
+            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+        # Debug print for troubleshooting
+        print(f"[CustomerAddressesView] customer_id from URL: {customer_id}, customer_id from token: {payload.get('customer_id')}")
+        # Check token_type is 'access'
+        print(f"[CustomerAddressesView] token_type in payload: {payload.get('token_type')}")
+        if payload.get('token_type') != 'access':
+            print("------Payload.. for token type......",payload.get('token_type'))
+            return Response({'error': 'Given token not valid for any token type'}, status=status.HTTP_401_UNAUTHORIZED)
+        # Check customer_id match
+        if str(payload.get('customer_id')) != str(customer_id):
+            print("------Payload.. for customer id......",payload.get('customer_id'))
+            return Response({'error': 'Token does not match customer'}, status=status.HTTP_401_UNAUTHORIZED)
+        # --- JWT Auth End ---
         try:
             customer = Customer.objects.get(customer_id=customer_id)
             addresses = customer.addresses.all()
-            
             data = [
                 {
                     "id": address.id,

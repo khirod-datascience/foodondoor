@@ -20,17 +20,30 @@
     - [ ] Address Selection Enhancements:
         - [x] Map-based selection
         - [x] Indicate/set default address in list
-    - [ ] Checkout UX:
-        - [ ] Allow editing cart from checkout
-        - [ ] Show payment summary before placing order
-        - [ ] Show 'Track Order' after placement
+    - [x] Checkout UX:
+    - [x] Allow editing cart from checkout
+    - [ ] Show payment summary before placing order
+    - [ ] Show 'Track Order' after placement
     - [ ] Order Placement Flow:
         - [ ] Confirmation dialog before final order
         - [ ] Loading/progress indicator during placement
         - [ ] Success/failure feedback after order
         - [ ] FCM notification to vendor (backend)
+
+---
+
+### Backend/API Progress (2025-05-18)
+- [x] Vendor JWT refresh/logout endpoints (custom PyJWT, in-memory blacklist)
+- [x] Reverse geocode API (customer_app, geopy/Nominatim)
+- [x] Menu browsing endpoints (vendor_app/customer_app)
+- [x] Address endpoints unified (latest access token, consistent Authorization header)
+- [x] Vendor notification backend now sends FCM messages with custom sound/channel for distinct vendor alerts.
+- [x] Notifications are saved to DB for in-app notification tab.
+- [x] Flutter frontend must create NotificationChannel with matching id and sound, and handle foreground notifications.
+- [x] Troubleshooting and verification steps added as best practice.
+
     
-- [ ] Customer: Order Tracking (status polling, live tracking basic)
+- [x] Customer: Order Tracking (status polling, live tracking basic, PATCH/GET endpoints, FCM notifications)
 - [x] Customer: Orders List & Details (history, reorder, rate) 
 - [x] Customer: Profile (view/update info, manage addresses, logout)
 - [x] Vendor: Login/OTP (role=vendor, JWT, FCM token)

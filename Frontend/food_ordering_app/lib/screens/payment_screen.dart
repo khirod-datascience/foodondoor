@@ -108,11 +108,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
           final orderId = response.data?['order_id']?.toString() ?? 'N/A';
           debugPrint('Order placed successfully with ID: $orderId');
 
-          // Navigate to OrdersScreen and trigger snackbar for in-progress order
+          // Navigate to OrderSuccessScreen with the actual orderId
           if (mounted) {
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => OrdersScreen(showInProgressSnackbar: true),
+                builder: (context) => OrderSuccessScreen(orderId: orderId),
               ),
               (route) => route.isFirst,
             );
@@ -187,9 +187,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // --- Payment Summary ---
@@ -271,13 +272,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
               icon: Icons.account_balance_wallet_outlined,
               value: PaymentMethod.wallet,
             ),
-             _buildPaymentOptionTile(
+            _buildPaymentOptionTile(
               title: 'Cash on Delivery (COD)',
               icon: Icons.money_outlined,
               value: PaymentMethod.cod,
             ),
 
-            const Spacer(), // Push button to bottom
+            const SizedBox(height: 24), // Push button to bottom
 
             if (_error != null)
               Padding(
@@ -324,10 +325,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
-  // Helper widget for payment option tiles
   Widget _buildPaymentOptionTile({
     required String title,
     required IconData icon,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 // Purpose: Provides the main home screen UI, including banners, categories, restaurants, and address selection.
 
 import 'package:provider/provider.dart';
@@ -7,25 +8,20 @@ import 'package:dio/dio.dart';
 import '../providers/home_provider.dart';
 import '../utils/globals.dart';
 import '../config.dart';
+import '../services/customer_api_service.dart';
 import './search_screen.dart';
 import '../providers/cart_provider.dart';
 import './cart_screen.dart';
 import './profile_screen.dart';
-import '../providers/home_provider.dart';
 import './add_edit_address_screen.dart';
-import './orders_screen.dart';
-import './wallet_screen.dart';
-import './promotions_screen.dart';
-import './notifications_screen.dart';
-import '../utils/auth_storage.dart'; 
-import '../utils/auth_api.dart'; 
+import '../utils/auth_storage.dart';
+import '../utils/auth_api.dart';
 import '../providers/auth_provider.dart';
 import './login_screen.dart';
-import 'package:food_ordering_app/services/customer_api_service.dart';
-import 'dart:convert';
-import '../widgets/app_scaffold.dart';
-import '../widgets/order_status_banner.dart';
-// --- HomeScreen and _HomeScreenState implementation restored below ---
+import '../utils/auth_utils.dart'; // <-- Import the new utility
+
+import '../providers/order_provider.dart';
+import './order_tracking_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -35,7 +31,369 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Position? _currentPosition;
+  // --- Helper: Format Address ---
+  String _formatDisplayAddress(Map<String, dynamic>? address) {
+    if (address == null) return 'Select Address';
+    final line1 = address['address_line1']?.toString() ?? address['address_line_1']?.toString() ?? '';
+    final line2 = address['address_line2']?.toString() ?? address['address_line_2']?.toString() ?? '';
+    final city = address['city']?.toString() ?? '';
+    final state = address['state']?.toString() ?? '';
+    final pincode = address['pincode']?.toString() ?? address['postal_code']?.toString() ?? '';
+    List<String> parts = [];
+    if (line1.isNotEmpty) parts.add(line1);
+    if (line2.isNotEmpty) parts.add(line2);
+    if (city.isNotEmpty) parts.add(city);
+    if (state.isNotEmpty) parts.add(state);
+    if (pincode.isNotEmpty) parts.add(pincode);
+    return parts.isEmpty ? 'Address Details Missing' : parts.join(', ');
+  }
+  // (All other helper methods here, only once, before usage)
+
+  // Helper function to format address for display
+  String _formatDisplayAddress(Map<String, dynamic>? address) {
+    if (address == null) return 'Select Address';
+    final line1 = address['address_line1']?.toString() ?? address['address_line_1']?.toString() ?? '';
+    final line2 = address['address_line2']?.toString() ?? address['address_line_2']?.toString() ?? '';
+    final city = address['city']?.toString() ?? '';
+    final state = address['state']?.toString() ?? '';
+    final pincode = address['pincode']?.toString() ?? address['postal_code']?.toString() ?? '';
+    List<String> parts = [];
+    if (line1.isNotEmpty) parts.add(line1);
+    if (line2.isNotEmpty) parts.add(line2);
+    if (city.isNotEmpty) parts.add(city);
+    if (state.isNotEmpty) parts.add(state);
+    if (pincode.isNotEmpty) parts.add(pincode);
+    return parts.isEmpty ? 'Address Details Missing' : parts.join(', ');
+  }
+
+  // Helper method to show address selection bottom sheet
+  void _showAddressSelectionSheet(BuildContext context) async {
+    // State for location fetching
+    bool isLocating = false;
+    String? locationError;
+
+    Future<void> _useCurrentLocation(StateSetter setSheetState) async {
+      setSheetState(() {
+        isLocating = true;
+        locationError = null;
+      });
+      try {
+        // 1. Get current position
+        final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        // 2. Call reverse geocode API with robust token management
+        final response = await AuthApi.authenticatedRequest(
+          () => Dio().post(
+            '${AppConfig.baseUrl}/reverse-geocode/',
+            data: {
+              'latitude': pos.latitude,
+              'longitude': pos.longitude,
+            },
+            options: Options(headers: {'Content-Type': 'application/json'}),
+          ),
+          onSessionExpired: () async {
+            await AuthStorage.clearAuthData();
+            if (mounted) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                (route) => false,
+              );
+            }
+          },
+        );
+
+        if (response?.statusCode == 200 && response?.data != null) {
+          final data = response?.data;
+          if (data != null && data is Map<String, dynamic>) {
+            setState(() {
+              globalCurrentAddress = data;
+              saveCurrentAddressId(data['id']?.toString());
+            });
+            Navigator.of(context).pop(); // Close the sheet
+            // Optionally, trigger delivery check
+          }
+        } else {
+          setSheetState(() {
+            locationError = 'Could not fetch address. Please try again.';
+          });
+        }
+      } catch (e) {
+        setSheetState(() {
+          locationError = 'Failed to get location: $e';
+        });
+      } finally {
+        setSheetState(() {
+          isLocating = false;
+        });
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                top: 16, left: 16, right: 16
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on, color: Colors.orange),
+                      const SizedBox(width: 8),
+                      const Text('Choose Address', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton.icon(
+                    icon: isLocating ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Icon(Icons.my_location),
+                    label: const Text('Use Current Location'),
+                    onPressed: isLocating ? null : () => _useCurrentLocation(setSheetState),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                  ),
+                  if (locationError != null) ...[
+                    const SizedBox(height: 8),
+                    Text(locationError!, style: const TextStyle(color: Colors.red)),
+                  ],
+                  const SizedBox(height: 16),
+                  // Optionally, add list of saved addresses here
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // Helper method to build category image widgets
+  Widget _buildCategoryImage(String imageUrl) {
+    Uri? uri = Uri.tryParse(imageUrl);
+    bool isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+    bool isLocalAsset = imageUrl.startsWith('assets/');
+
+    // Handle relative paths from server
+    if (!isNetworkUrl && !isLocalAsset && imageUrl.startsWith('/')) {
+      imageUrl = '${AppConfig.baseUrl}$imageUrl';
+      uri = Uri.tryParse(imageUrl);
+      isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+    }
+
+    Widget placeholder = Icon(Icons.category_outlined, size: 30, color: Colors.grey.shade400);
+
+    if (imageUrl.isEmpty || (!isNetworkUrl && !isLocalAsset)) {
+      return placeholder;
+    }
+
+    if (isNetworkUrl) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) => placeholder,
+        loadingBuilder: (context, child, progress) {
+          if (progress == null) return child;
+          return Center(child: CircularProgressIndicator(value: progress.expectedTotalBytes != null ? progress.cumulativeBytesLoaded / progress.expectedTotalBytes! : null, strokeWidth: 2));
+        },
+      );
+    } else {
+      return Image.asset(
+        imageUrl,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) => placeholder,
+      );
+    }
+  }
+
+  // Helper Method to Show Food Details Dialog
+  void _showFoodDetailsDialog(BuildContext context, Map<String, dynamic> foodItem) {
+    final imageUrl = foodItem['image']?.toString() ?? '';
+    final description = foodItem['description']?.toString() ?? 'No description available.';
+    final rating = (foodItem['rating'] as num?)?.toDouble();
+    final priceValue = foodItem['price'];
+    final price = priceValue?.toString() ?? '';
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        contentPadding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                child: Container(
+                  height: 150,
+                  width: double.infinity,
+                  child: _buildDialogImage(imageUrl),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(foodItem['name'] ?? 'Food Item', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    if (price.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text('₹$price', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.orange.shade800)),
+                      ),
+                    if (rating != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Icon(Icons.star, color: Colors.amber.shade700, size: 16),
+                            const SizedBox(width: 4),
+                            Text(rating.toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.w500)),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 8),
+                    Text(description, style: const TextStyle(fontSize: 14, color: Colors.black54)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: const Text('Close'),
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.add_shopping_cart, size: 16),
+            label: const Text('Add to Cart'),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
+            onPressed: () {
+              if (foodItem['id'] != null && priceValue != null) {
+                final cartItem = Map<String, dynamic>.from(foodItem);
+                cartItem['price'] = (priceValue is num) ? priceValue : (double.tryParse(price) ?? 0.0);
+                Provider.of<CartProvider>(context, listen: false).addToCart(cartItem);
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Added "${cartItem['name'] ?? 'Item'}" to cart!'), duration: Duration(seconds: 1)),
+                );
+              } else {
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not add item: Missing details.'), duration: Duration(seconds: 2), backgroundColor: Colors.red),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper to build image for the dialog
+  Widget _buildDialogImage(String imageUrl) {
+    Uri? uri = Uri.tryParse(imageUrl);
+    bool isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+    bool isLocalAsset = imageUrl.startsWith('assets/');
+
+    if (!isNetworkUrl && !isLocalAsset && imageUrl.startsWith('/')) {
+      imageUrl = '${AppConfig.baseUrl}$imageUrl';
+      uri = Uri.tryParse(imageUrl);
+      isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+    }
+
+    Widget placeholder = const FittedBox(
+      fit: BoxFit.contain,
+      child: Icon(Icons.fastfood, size: 60, color: Colors.grey),
+    );
+
+    if (imageUrl.isEmpty || (!isNetworkUrl && !isLocalAsset)) {
+      return placeholder;
+    }
+
+    if (isNetworkUrl) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => placeholder,
+        loadingBuilder: (context, child, progress) {
+          if (progress == null) return child;
+          return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+        },
+      );
+    } else {
+      return Image.asset(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => placeholder,
+      );
+    }
+  }
+
+
+
+  // Helper function to format address for display
+  String _formatDisplayAddress(Map<String, dynamic>? address) {
+    if (address == null) return 'Select Address';
+    final line1 = address['address_line1']?.toString() ?? address['address_line_1']?.toString() ?? '';
+    final line2 = address['address_line2']?.toString() ?? address['address_line_2']?.toString() ?? '';
+    final city = address['city']?.toString() ?? '';
+    final state = address['state']?.toString() ?? '';
+    final pincode = address['pincode']?.toString() ?? address['postal_code']?.toString() ?? '';
+    List<String> parts = [];
+    if (line1.isNotEmpty) parts.add(line1);
+    if (line2.isNotEmpty) parts.add(line2);
+    if (city.isNotEmpty) parts.add(city);
+    if (state.isNotEmpty) parts.add(state);
+    if (pincode.isNotEmpty) parts.add(pincode);
+    return parts.isEmpty ? 'Address Details Missing' : parts.join(', ');
+  }
+
+  // Helper widget to show persistent Track Order bar
+  Widget _buildTrackOrderBar(BuildContext context, Map<String, dynamic> order) {
+    final orderNumber = order['order_id'] ?? order['order_number'] ?? order['id'] ?? 'Unknown';
+    final vendorName = order['vendor']?['name'] ?? 'Vendor';
+    final total = order['total_amount'] ?? order['total'] ?? 0.0;
+    return Material(
+      color: Colors.orange.shade700,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => OrderTrackingScreen(orderNumber: orderNumber.toString()),
+            ),
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          child: Row(
+            children: [
+              const Icon(Icons.delivery_dining, color: Colors.white),
+              const SizedBox(width: 12),
+              Expanded(child: Text('Track Order #$orderNumber at $vendorName (₹${total.toStringAsFixed(2)})', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600))),
+              const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  String? _enteredPincode;
+  late Position _currentPosition;
   bool _isDeliveryAvailable = false;
   bool _locationPermissionDenied = false;
   String? _selectedCategory;
@@ -44,151 +402,85 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    // Fetch in-progress orders on app startup
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+      orderProvider.fetchInProgressOrders();
+    });
     super.initState();
-    _startupAuthAndLocation();
-  }
-
-  // Combined startup logic for auth and location
-  Future<void> _startupAuthAndLocation() async {
-    await _checkAuthToken(); // Always set _authToken
-    await _verifyAuthentication();
-    if (mounted && _authToken != null) {
-      await _initializeHomeScreenData(); // Load main content first
-      _fetchAndSetAddress(); // Fetch address in the background
-    }
-  }
-
-  // Fetch address in the background, update UI when ready
-  Future<void> _fetchAndSetAddress() async {
-    setState(() { _isFetchingAddress = true; });
-    try {
-      if (_useCurrentLocation) {
-        await _getUserLocationAndReverseGeocode();
-      } else if (globalCurrentAddress != null && globalCurrentAddress!['latitude'] != null && globalCurrentAddress!['longitude'] != null) {
-        await _reverseGeocodeAndSet(globalCurrentAddress!['latitude'], globalCurrentAddress!['longitude']);
+    // Proactively refresh token on HomeScreen load
+    refreshTokenIfNeeded(context);
+    _checkAuthenticationStatus();
+    // Schedule initialization after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _checkAuthToken();
+        _verifyAuthentication(); // Add authentication check
+        // Start both initialization and location check concurrently
+        _initializeHomeScreenData(); // <<-- Now called after first frame
+        _initializeLocationCheck(); // <<-- Location check can also start here
       }
-    } finally {
-      if (mounted) setState(() { _isFetchingAddress = false; });
-    }
-  }
-
-  // Helper to get user location and reverse geocode
-  Future<void> _getUserLocationAndReverseGeocode() async {
-    try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) return;
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) return;
-      }
-      if (permission == LocationPermission.deniedForever) return;
-      final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      await _reverseGeocodeAndSet(pos.latitude, pos.longitude);
-    } catch (e) {
-      debugPrint('Error getting user location: $e');
-    }
-  }
-
-  // Reverse geocode and update globalCurrentAddress
-  Future<void> _reverseGeocodeAndSet(double lat, double lon) async {
-    try {
-      final dio = Dio();
-      final token = await AuthStorage.getAccessToken();
-      final options = Options(headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      });
-      final response = await AuthApi.authenticatedRequest(() => dio.post(
-        AppConfig.baseUrl + '/reverse-geocode/',
-        data: {
-          'latitude': lat,
-          'longitude': lon,
-        },
-        options: options,
-      ));
-      if (response != null && response.statusCode == 200 && response.data != null) {
-        setState(() {
-          globalCurrentAddress = response.data;
-        });
-      }
-    } catch (e) {
-      debugPrint('Reverse geocode API error: $e');
-    }
-  }
-
-  // Call this when user selects an address (not current location)
-  Future<void> onAddressSelected(Map<String, dynamic> address) async {
-    setState(() {
-      globalCurrentAddress = address;
-      _useCurrentLocation = false;
-      _selectedPincode = null;
-      _isFetchingAddress = true;
     });
-    if (address['latitude'] != null && address['longitude'] != null) {
-      await _reverseGeocodeAndSet(address['latitude'], address['longitude']);
-    }
-    setState(() { _isFetchingAddress = false; });
-    await _checkDeliveryAvailability(
-      latitude: (address['latitude'] as num?)?.toDouble(),
-      longitude: (address['longitude'] as num?)?.toDouble(),
-      pincode: address['postal_code']?.toString(),
-    );
-    await _initializeHomeScreenData();
   }
-
-  // Call this when user selects "Use Current Location"
-  Future<void> onUseCurrentLocation() async {
-    setState(() {
-      _useCurrentLocation = true;
-      globalCurrentAddress = null;
-      _selectedPincode = null;
-      _isFetchingAddress = true;
-    });
-    await _getUserLocationAndReverseGeocode();
-    setState(() { _isFetchingAddress = false; });
-    await _checkDeliveryAvailability();
-    await _initializeHomeScreenData();
-  }
-
-  bool _isFetchingAddress = false;
 
   Future<void> _checkAuthToken() async {
-    final token = await AuthStorage.getAccessToken();
+    final token = await AuthStorage.getToken();
     debugPrint('(HomeScreen) Retrieved auth_token: ${token != null ? "exists" : "not found"}');
     if (token != null) {
       debugPrint('(HomeScreen) Token length: ${token.length}');
+      // Log first characters of token for debugging
       debugPrint('(HomeScreen) Token begins with: ${token.substring(0, token.length > 10 ? 10 : token.length)}...');
     }
-    setState(() {
-      _authToken = token;
-    });
+    _authToken = token;
   }
 
   // Verify authentication status and redirect to login if needed
   Future<void> _verifyAuthentication() async {
     if (mounted) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final token = await AuthStorage.getAccessToken();
+      final token = await AuthStorage.getToken();
       
       if (token == null) {
-        debugPrint('(HomeScreen) No auth token found, redirecting to login');
-        _redirectToLogin('Please log in to continue');
-        return;
+        debugPrint('(HomeScreen) No auth token found, attempting refresh...');
+        await refreshTokenIfNeeded(context);
+        final refreshedToken = await AuthStorage.getToken();
+        if (refreshedToken == null) {
+          debugPrint('(HomeScreen) Still no auth token after refresh. Showing error but not logging out.');
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Authentication error. Please try again later.')),
+            );
+          }
+          return;
+        }
       }
 
       try {
         final isAuthenticated = await authProvider.isAuthenticated();
         
         if (!isAuthenticated && mounted) {
-          debugPrint('(HomeScreen) Token validation failed, redirecting to login');
-          _redirectToLogin('Your session has expired. Please log in again.');
-          return;
+          debugPrint('(HomeScreen) Token validation failed, attempting refresh...');
+          await refreshTokenIfNeeded(context);
+          final refreshedToken = await AuthStorage.getToken();
+          if (refreshedToken == null) {
+            debugPrint('(HomeScreen) Still no valid token after refresh. Showing error but not logging out.');
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Authentication error. Please try again later.')),
+              );
+            }
+            return;
+          }
         }
         
         debugPrint('(HomeScreen) User is authenticated, continuing');
       } catch (e) {
         debugPrint('(HomeScreen) Error verifying authentication: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('An error occurred. Please try again later.')),
+          );
+        }
         _redirectToLogin('An error occurred. Please log in again.');
       }
     }
@@ -218,81 +510,57 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _getUserLocation() async {
-    setState(() { _locationPermissionDenied = false; });
+    // Clear flags initially
+    bool wasPermissionDenied = _locationPermissionDenied;
+    setState(() {
+      _locationPermissionDenied = false;
+    });
+    
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       debugPrint('Location service disabled.');
       setState(() { _locationPermissionDenied = true; });
-      await _checkDeliveryAvailability();
+      // If permission was previously granted, but service is now off, 
+      // we might still show the main content but with a warning later.
+      // Or force pincode if _isDeliveryAvailable is false after check.
+      _checkDeliveryAvailability(); // Check without location to see if backend handles it
       return;
     }
+
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         debugPrint('Location permission denied.');
         setState(() { _locationPermissionDenied = true; });
-        await _checkDeliveryAvailability();
+        _checkDeliveryAvailability(); // Check without location
         return;
       }
     }
+
     if (permission == LocationPermission.deniedForever) {
       debugPrint('Location permission denied forever.');
       setState(() { _locationPermissionDenied = true; });
-      await _checkDeliveryAvailability();
+       _checkDeliveryAvailability(); // Check without location
       return;
     }
+
+    // If we reach here, permission is granted
     debugPrint('Location permission granted.');
     try {
-      _currentPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      debugPrint('Current position obtained: ${_currentPosition?.latitude}, ${_currentPosition?.longitude}');
-      try {
-        final dio = Dio();
-        final token = await AuthStorage.getAccessToken();
-        final options = Options(headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        });
-        final response = await AuthApi.authenticatedRequest(() => dio.post(
-          AppConfig.baseUrl + '/reverse-geocode/',
-          data: {
-            'latitude': _currentPosition?.latitude,
-            'longitude': _currentPosition?.longitude,
-          },
-          options: options,
-        ));
-        if (response != null && response.statusCode == 200 && response.data != null) {
-          debugPrint('Reverse geocode API response: ${response.data}');
-          setState(() {
-            globalCurrentAddress = response.data;
-            _useCurrentLocation = true;
-            _selectedPincode = null;
-          });
-          await _initializeHomeScreenData(); // <-- Fetch home data for new address
-        } else {
-          debugPrint('Reverse geocode API failed with status: ${response?.statusCode}');
-          setState(() {
-            globalCurrentAddress = null;
-            _useCurrentLocation = true;
-            _selectedPincode = null;
-          });
-        }
-      } catch (e) {
-        debugPrint('Reverse geocode API error: $e');
-        setState(() {
-          globalCurrentAddress = null;
-          _useCurrentLocation = true;
-          _selectedPincode = null;
-        });
-      }
+      _currentPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      debugPrint('Current position obtained: ${_currentPosition.latitude}, ${_currentPosition.longitude}');
+      // Check delivery using fetched location (will prioritize global address first inside the method)
       await _checkDeliveryAvailability(
-        latitude: _currentPosition?.latitude,
-        longitude: _currentPosition?.longitude,
+        latitude: _currentPosition.latitude,
+        longitude: _currentPosition.longitude,
       );
     } catch (e) {
-      debugPrint('Error getting current position: $e');
-      setState(() { _locationPermissionDenied = true; });
-      await _checkDeliveryAvailability();
+       debugPrint('Error getting current position: $e');
+       setState(() { _locationPermissionDenied = true; }); 
+       // Check delivery without location as fallback (will use global address if available)
+       await _checkDeliveryAvailability(); 
     }
   }
 
@@ -342,26 +610,27 @@ class _HomeScreenState extends State<HomeScreen> {
          return;
       }
 
-      final dio = Dio();
-      final String? token = await AuthStorage.getToken();
-      final options = Options();
-      if (token != null) {
-        options.headers = {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json'
-        };
-        debugPrint('(HomeScreen) Adding Auth header to check-delivery request.');
-      }
-
-      final response = await dio.post(
-        '${AppConfig.baseUrl}/check-delivery/',
-        data: requestData,
-        options: options,
+      final response = await AuthApi.authenticatedRequest(
+  () => Dio().post(
+    '${AppConfig.baseUrl}/check-delivery/',
+    data: requestData,
+    options: Options(headers: {'Content-Type': 'application/json'}),
+  ),
+  onSessionExpired: () async {
+    await AuthStorage.clearAuthData();
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (route) => false,
       );
-      
-      debugPrint('Delivery API Response: ${response.data}');
+    }
+  },
+);
 
-      final bool available = response.data?['delivery_available'] ?? false;
+      
+      debugPrint('Delivery API Response: ${response?.data}');
+
+      final bool available = response?.data['delivery_available'] ?? false;
       
       if (mounted) {
          setState(() {
@@ -426,6 +695,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     if (pincode != null && pincode.isNotEmpty) {
+      setState(() {
+        _enteredPincode = pincode;
+        globalCurrentAddress = null; // Clear address if using pincode
+      });
       print('Pincode entered: $pincode'); // Debug log
       await _checkDeliveryAvailability(pincode: pincode);
     } else {
@@ -466,15 +739,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // *** NEW: Function to conditionally show address sheet after build ***
   void _conditionallyShowAddressSheet() {
-    final homeProvider = Provider.of<HomeProvider>(context, listen: false);
-    if (!homeProvider.isLoading && globalCurrentAddress == null && !_addressSheetShownAfterLoad) {
-      _addressSheetShownAfterLoad = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _showAddressSelectionSheet(context);
-        }
-      });
-    }
+     // Check if data is loaded, no address is set, and sheet hasn't been shown yet
+     final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+     if (!homeProvider.isLoading && globalCurrentAddress == null && !_addressSheetShownAfterLoad) {
+       // Mark as shown immediately to prevent multiple triggers during rebuilds
+       _addressSheetShownAfterLoad = true; 
+       // Schedule the sheet to be shown after the current frame is built
+       WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) { // Ensure widget is still in the tree
+             _showAddressSelectionSheet(context); 
+          }
+       });
+     }
   }
 
   @override
@@ -558,13 +834,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                crossAxisAlignment: CrossAxisAlignment.start,
                                children: [
                                  const Text('Delivering To', style: TextStyle(fontSize: 11, color: Colors.grey)),
-                                 _isFetchingAddress
-  ? Row(children: [SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 2)), SizedBox(width: 8), Text('Fetching address...', style: TextStyle(fontSize: 13, color: Colors.grey))])
-  : Text(
-      _formatDisplayAddress(globalCurrentAddress),
-      style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-      overflow: TextOverflow.ellipsis,
-    ),
+                                 Builder(
+                                   builder: (context) {
+                                     if (globalCurrentAddress != null) {
+                                       return Text(
+                                         _formatDisplayAddress(globalCurrentAddress),
+                                         style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+                                         overflow: TextOverflow.ellipsis,
+                                       );
+                                     } else if (_enteredPincode != null && _enteredPincode!.isNotEmpty) {
+                                       return Text(
+                                         'Delivering to pincode $_enteredPincode',
+                                         style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+                                         overflow: TextOverflow.ellipsis,
+                                       );
+                                     } else {
+                                       return Text(
+                                         'Select Address',
+                                         style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+                                         overflow: TextOverflow.ellipsis,
+                                       );
+                                     }
+                                   },
+                                 ),
                                ],
                              ),
                            ),
@@ -574,10 +866,20 @@ class _HomeScreenState extends State<HomeScreen> {
                      ),
                    ),
                    const Divider(height: 1), // Separator
-
-
+                 
                   // Optional: Show a non-blocking warning if delivery unavailable but location known
                   if (!_isDeliveryAvailable && !_locationPermissionDenied)
+                     Padding(
+                       padding: const EdgeInsets.all(8.0),
+                       child: Card(
+                         color: Colors.yellow.shade100,
+                         child: const ListTile(
+                            leading: Icon(Icons.warning_amber_rounded, color: Colors.orange),
+                            title: Text('Delivery currently unavailable for your location.', style: TextStyle(fontSize: 14)),
+                         ),
+                       ),
+                     ),
+                 
                   // Banners Section
                   if (homeProvider.banners.isNotEmpty)
                     Container(
@@ -606,9 +908,106 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           );
-                                  ),
+                        },
+                      ),
+                    ),
+
+                  // Categories Section - Updated to GridView
+                  if (homeProvider.categories.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 8), 
+                      child: Text(
+                        'Categories',
+                        style: TextStyle(
+                          fontSize: 20, 
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                    ),
+                    // Use GridView for categories with images
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: GridView.builder(
+                        shrinkWrap: true, // Important inside SingleChildScrollView
+                        physics: const NeverScrollableScrollPhysics(), // Disable GridView's own scrolling
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4, // Adjust number of columns
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                          childAspectRatio: 0.85, // Adjust aspect ratio (width/height)
+                        ),
+                        itemCount: homeProvider.categories.length,
+                        itemBuilder: (context, index) {
+                          final category = homeProvider.categories[index];
+                          final categoryName = category['name']?.toString() ?? 'N/A';
+                          final imageUrl = category['image_url']?.toString() ?? '';
+                          final isSelected = _selectedCategory == categoryName;
+
+                          return GestureDetector(
+                            onTap: () => _selectCategory(categoryName),
+                            child: Card(
+                              elevation: isSelected ? 4 : 1,
+                              color: isSelected ? Colors.orange.shade50 : Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(
+                                  color: isSelected ? Colors.orange : Colors.grey.shade300,
+                                  width: isSelected ? 1.5 : 1,
                                 ),
-                              },
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    flex: 3, // Give more space to image
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 6.0),
+                                      child: _buildCategoryImage(imageUrl), // Image helper
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2, // Less space for text
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(4, 2, 4, 4),
+                                      child: Text(
+                                        categoryName,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 11, // Smaller font size
+                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                          color: isSelected ? Colors.orange.shade800 : Colors.black87,
+                                        ),
+                                        maxLines: 2, // Allow text wrapping
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+
+                  // Popular Food Items Section - Use filtered list
+                  if (filteredPopularFood.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(16, 20, 16, 8),
+                      child: Text(
+                        'Popular Food Items',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 190,
                       margin: const EdgeInsets.only(bottom: 16),
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -616,14 +1015,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: filteredPopularFood.length,
                         itemBuilder: (context, index) {
                           final foodItem = filteredPopularFood[index];
+                          // Wrap FoodCard with GestureDetector
                           return GestureDetector(
-                            onTap: () => _showFoodDetailsDialog(context, foodItem),
-                            child: FoodCard(food: foodItem),
+                             onTap: () => _showFoodDetailsDialog(context, foodItem),
+                             child: FoodCard(food: foodItem),
                           );
                         },
                       ),
-                    )
-                  else if (_selectedCategory != null)
+                    ),
+                  ] else if (_selectedCategory != null) ...[
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
                       child: Center(
@@ -633,178 +1033,86 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
+                  ],
 
-                  // Popular Food Items Section - Modern, robust, with empty/loading handling
-                   Padding(
-                     padding: const EdgeInsets.only(top: 8.0),
-                     child: Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       children: [
-                         Padding(
-                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                           child: Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                             children: [
-                               const Text(
-                                 'Popular Foods',
-                                 style: TextStyle(
-                                   fontSize: 20,
-                                   fontWeight: FontWeight.bold,
-                                   color: Colors.orange,
-                                 ),
-                               ),
-                               if (_selectedCategory != null)
-                                 Text(
-                                   'Filtered by: $_selectedCategory',
-                                   style: TextStyle(color: Colors.orange.shade700, fontSize: 13),
-                                 ),
-                             ],
-                           ),
-                         ),
-                         if (homeProvider.isLoading)
-                           const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator(color: Colors.orange))),
-                         if (!homeProvider.isLoading && filteredPopularFood.isEmpty)
-                           Padding(
-                             padding: const EdgeInsets.symmetric(vertical: 18.0),
-                             child: Center(
-                               child: Text(
-                                 _selectedCategory != null
-                                     ? 'No popular items found for "$_selectedCategory".'
-                                     : 'No popular food items available',
-                                 style: const TextStyle(color: Colors.grey, fontSize: 15),
-                               ),
-                             ),
-                           ),
-                         if (filteredPopularFood.isNotEmpty)
-                           SizedBox(
-                             height: 190,
-                             child: ListView.builder(
-                               scrollDirection: Axis.horizontal,
-                               padding: const EdgeInsets.symmetric(horizontal: 12),
-                               itemCount: filteredPopularFood.length,
-                               itemBuilder: (context, index) {
-                                 final foodItem = filteredPopularFood[index];
-                                 return GestureDetector(
-                                   onTap: () => _showFoodDetailsDialog(context, foodItem),
-                                   child: FoodCard(food: foodItem),
-                                 );
-                               },
-                             ),
-                           ),
-                       ],
-                     ),
-                   ),
+                  // Nearby Restaurants Section
+                  if (homeProvider.nearbyRestaurants.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        'Nearby Restaurants',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 180,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: homeProvider.nearbyRestaurants.length,
+                        itemBuilder: (context, index) {
+                          final restaurant = homeProvider.nearbyRestaurants[index];
+                          return RestaurantCard(restaurant: restaurant);
+                        },
+                      ),
+                    ),
+                  ],
 
-                  // Nearby Restaurants Section - Modern, robust, with empty/loading handling
-                   Padding(
-                     padding: const EdgeInsets.only(top: 8.0),
-                     child: Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       children: [
-                         const Padding(
-                           padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-                           child: Text(
-                             'Nearby Restaurants',
-                             style: TextStyle(
-                               fontSize: 20,
-                               fontWeight: FontWeight.bold,
-                               color: Colors.orange,
-                             ),
-                           ),
-                         ),
-                         if (homeProvider.isLoading)
-                           const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator(color: Colors.orange))),
-                         if (!homeProvider.isLoading && homeProvider.nearbyRestaurants.isEmpty)
-                           const Center(
-                             child: Padding(
-                               padding: EdgeInsets.symmetric(vertical: 18.0),
-                               child: Text('No nearby restaurants found', style: TextStyle(color: Colors.grey, fontSize: 15)),
-                             ),
-                           ),
-                         if (homeProvider.nearbyRestaurants.isNotEmpty)
-                           SizedBox(
-                             height: 180,
-                             child: ListView.builder(
-                               scrollDirection: Axis.horizontal,
-                               padding: const EdgeInsets.symmetric(horizontal: 12),
-                               itemCount: homeProvider.nearbyRestaurants.length,
-                               itemBuilder: (context, index) {
-                                 final restaurant = homeProvider.nearbyRestaurants[index];
-                                 return RestaurantCard(restaurant: restaurant);
-                               },
-                             ),
-                           ),
-                       ],
-                     ),
-                   ),
-                  // Top Rated Restaurants Section - Modern, robust, with empty/loading handling
-                   Padding(
-                     padding: const EdgeInsets.only(top: 8.0),
-                     child: Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       children: [
-                         const Padding(
-                           padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-                           child: Text(
-                             'Top Rated Restaurants',
-                             style: TextStyle(
-                               fontSize: 20,
-                               fontWeight: FontWeight.bold,
-                               color: Colors.orange,
-                             ),
-                           ),
-                         ),
-                         if (homeProvider.isLoading)
-                           const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator(color: Colors.orange))),
-                         if (!homeProvider.isLoading && homeProvider.topRatedRestaurants.isEmpty)
-                           const Center(
-                             child: Padding(
-                               padding: EdgeInsets.symmetric(vertical: 18.0),
-                               child: Text('No top rated restaurants found', style: TextStyle(color: Colors.grey, fontSize: 15)),
-                             ),
-                           ),
-                         if (homeProvider.topRatedRestaurants.isNotEmpty)
-                           SizedBox(
-                             height: 180,
-                             child: ListView.builder(
-                               scrollDirection: Axis.horizontal,
-                               padding: const EdgeInsets.symmetric(horizontal: 12),
-                               itemCount: homeProvider.topRatedRestaurants.length,
-                               itemBuilder: (context, index) {
-                                 final restaurant = homeProvider.topRatedRestaurants[index];
-                                 return RestaurantCard(restaurant: restaurant);
-                               },
-                             ),
-                           ),
-                       ],
-                     ),
-                   ),
+                  // Top-rated Restaurants Section
+                  if (homeProvider.topRatedRestaurants.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        'Top-rated Restaurants',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 180,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: homeProvider.topRatedRestaurants.length,
+                        itemBuilder: (context, index) {
+                          final restaurant = homeProvider.topRatedRestaurants[index];
+                          return RestaurantCard(restaurant: restaurant);
+                        },
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
           ),
-        ),
-      ),
-    );
+        );
+    }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Food Delivery App'),
-        backgroundColor: Colors.orange,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SearchScreen()),
-              );
-            },
-          ),
-          Stack(
-            alignment: Alignment.center,
-            children: [
+    return Consumer<OrderProvider>(
+      builder: (context, orderProvider, child) {
+        final inProgressOrder = orderProvider.latestInProgressOrder;
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Food Delivery App'),
+            backgroundColor: Colors.orange,
+            elevation: 0,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SearchScreen()),
+                  );
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.shopping_cart_outlined),
                 onPressed: () {
@@ -838,97 +1146,179 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+              IconButton(
+                icon: const Icon(Icons.person_outline),
+                tooltip: 'My Profile',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                  );
+                },
+              ),
             ],
           ),
-          IconButton(
-            icon: const Icon(Icons.person_outline),
-            tooltip: 'My Profile',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
-              );
-            },
-          ),
-        ],
-      ),
-      body: bodyContent, // Use the determined body content
+          body: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (inProgressOrder != null)
+                _buildTrackOrderBar(context, inProgressOrder),
+              Expanded(child: bodyContent),
+            ],
+          ), // Use the determined body content
+        );
+      },
     );
-  }
 
   // Helper function to format address for display
   String _formatDisplayAddress(Map<String, dynamic>? address) {
-  // Show current location if selected
-  if (_useCurrentLocation && _currentPosition != null) {
-    String lat = _currentPosition!.latitude.toStringAsFixed(5);
-    String lon = _currentPosition!.longitude.toStringAsFixed(5);
-    // Optionally, you could reverse geocode for a human-readable address
-    return 'Current Location ($lat, $lon)';
+    if (address == null) return 'Select Address';
+    final line1 = address['address_line1']?.toString() ?? address['address_line_1']?.toString() ?? '';
+    final line2 = address['address_line2']?.toString() ?? address['address_line_2']?.toString() ?? '';
+    final city = address['city']?.toString() ?? '';
+    final state = address['state']?.toString() ?? '';
+    final pincode = address['pincode']?.toString() ?? address['postal_code']?.toString() ?? '';
+    List<String> parts = [];
+    if (line1.isNotEmpty) parts.add(line1);
+    if (line2.isNotEmpty) parts.add(line2);
+    if (city.isNotEmpty) parts.add(city);
+    if (state.isNotEmpty) parts.add(state);
+    if (pincode.isNotEmpty) parts.add(pincode);
+    return parts.isEmpty ? 'Address Details Missing' : parts.join(', ');
   }
-  // Show pincode if set and no address
-  if (_selectedPincode != null && _selectedPincode!.isNotEmpty) {
-    return 'Pincode: $_selectedPincode';
-  }
-  if (address == null) return 'Select Address';
-  final line1 = address['address_line1']?.toString() ?? '';
-  final city = address['city']?.toString() ?? '';
-  final state = address['state']?.toString() ?? '';
-  List<String> parts = [];
-  if (line1.isNotEmpty) parts.add(line1);
-  if (city.isNotEmpty) parts.add(city);
-  if (state.isNotEmpty) parts.add(state);
-  if (parts.isEmpty) {
-    return 'Address Details Missing';
-  } else {
-    return parts.join(', ');
-  }
-}
-
 
   // Helper method to show address selection bottom sheet
-  // Track if user wants to use current location
-bool _useCurrentLocation = false;
-String? _selectedPincode; // Track last entered pincode
+  void _showAddressSelectionSheet(BuildContext context) async {
+    // State for location fetching
+    bool isLocating = false;
+    String? locationError;
 
-void _showAddressSelectionSheet(BuildContext context) async {
+    Future<void> _useCurrentLocation(StateSetter setSheetState) async {
+      setSheetState(() {
+        isLocating = true;
+        locationError = null;
+      });
+      try {
+        // 1. Get current position
+        final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        // 2. Call reverse geocode API with robust token management
+        final response = await AuthApi.authenticatedRequest(
+          () => Dio().post(
+            '${AppConfig.baseUrl}/reverse-geocode/',
+            data: {
+              'latitude': pos.latitude,
+              'longitude': pos.longitude,
+            },
+            options: Options(headers: {'Content-Type': 'application/json'}),
+          ),
+          onSessionExpired: () async {
+            await AuthStorage.clearAuthData();
+            if (mounted) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                (route) => false,
+              );
+            }
+          },
+        );
+
+        if (response?.statusCode == 200 && response?.data != null) {
+          final data = response?.data;
+          if (data != null && data is Map<String, dynamic>) {
+            setState(() {
+              globalCurrentAddress = data;
+              saveCurrentAddressId(data['id']?.toString());
+            });
+            Navigator.of(context).pop(); // Close the sheet
+            // Optionally, trigger delivery check
+            _checkDeliveryAvailability(
+              latitude: (data['latitude'] as num?)?.toDouble(),
+              longitude: (data['longitude'] as num?)?.toDouble(),
+              pincode: data['postal_code']?.toString(),
+            );
+            return;
+          } else {
+            locationError = 'Could not parse address.';
+          }
+        } else {
+          locationError = 'Failed to get address from location.';
+        }
+      } on PermissionDeniedException {
+        locationError = 'Location permission denied.';
+      } on LocationServiceDisabledException {
+        locationError = 'Location services are disabled.';
+      } catch (e) {
+        locationError = 'Error: ${e.toString()}';
+      }
+      setSheetState(() {
+        isLocating = false;
+      });
+    }
+
      List<Map<String, dynamic>> savedAddresses = [];
      bool isLoading = true;
      String? fetchError;
 
      // --- Fetch addresses when the sheet is opened ---
-      if (globalCustomerId != null) {
-        try {
-          final dio = Dio();
-          final url = '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/';
-          debugPrint('(Sheet) Fetching addresses from: $url');
-          final response = await AuthApi.authenticatedRequest(() => dio.get(
-            url,
-            options: Options(headers: {
-              'Content-Type': 'application/json',
-            }),
-          ));
-          debugPrint('(Sheet) Raw Response Data: ${response?.data}');
-          if (response != null && response.statusCode == 200 && response.data != null) {
-            debugPrint('(Sheet) Data before parsing: ${response.data}');
-            savedAddresses = List<Map<String, dynamic>>.from(
-              (response.data as List).where((item) => item is Map).map((item) => Map<String, dynamic>.from(item))
-            );
-            debugPrint('(Sheet) Parsed savedAddresses: $savedAddresses');
-          } else {
-            fetchError = 'Failed to load addresses.';
-            debugPrint('(Sheet) Fetch failed, status: ${response?.statusCode}');
+     // Proactively refresh token before fetching addresses
+     await AuthApi.refreshToken();
+     if (globalCustomerId != null) {
+       try {
+           final dio = Dio();
+           final url = '${AppConfig.baseUrl}/$globalCustomerId/addresses/';
+           debugPrint('(Sheet) Fetching addresses from: $url');
+           final token = await AuthStorage.getToken();
+           debugPrint('(Sheet) Using token: ${token != null ? token.substring(0, token.length > 20 ? 20 : token.length) : 'null'}...');
+           if (token != null) {
+             // Decode JWT payload for debugging
+             try {
+               final parts = token.split('.');
+               if (parts.length == 3) {
+                 final payload = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
+                 debugPrint('(Sheet) JWT payload: $payload');
+               }
+             } catch (e) {
+               debugPrint('(Sheet) Error decoding JWT payload: $e');
+             }
+           }
+           final headers = {'Authorization': 'Bearer $token'};
+           debugPrint('(Sheet) Request headers: $headers');
+           try {
+             final response = await dio.get(url, options: Options(headers: headers));
+             debugPrint('(Sheet) Dio response headers: ${response.headers}');
+             debugPrint('(Sheet) Saved Addresses Response (${response.statusCode}): ${response.data}');
+            if (response.statusCode == 200 && response.data is List) {
+              savedAddresses = List<Map<String, dynamic>>.from(
+                (response.data as List).where((item) => item is Map).map((item) => Map<String, dynamic>.from(item))
+              );
+              debugPrint('(Sheet) Parsed savedAddresses: $savedAddresses');
+              // --- Auto-select default address if none selected ---
+              if (globalCurrentAddress == null && savedAddresses.isNotEmpty) {
+                Map<String, dynamic>? defaultAddr = savedAddresses.firstWhere(
+                  (addr) => addr['is_default'] == true,
+                  orElse: () => savedAddresses.first,
+                );
+                debugPrint('(Sheet) Setting globalCurrentAddress to: $defaultAddr');
+                globalCurrentAddress = defaultAddr;
+                saveCurrentAddressId(defaultAddr['id']?.toString());
+              }
+            } else {
+              fetchError = 'Failed to load addresses. Status: ${response.statusCode}';
+            }
+          } on DioException catch (e) {
+            fetchError = 'Error loading addresses: ${e.response?.data?['detail'] ?? e.message}';
+            debugPrint('(Sheet) DioError fetching saved addresses: $e');
+          } catch (e) {
+            fetchError = 'Could not load addresses.';
+            debugPrint('(Sheet) Fetch error: $e');
           }
-        } catch (e) {
-          fetchError = 'Could not load addresses.';
-          debugPrint('(Sheet) Fetch error: $e');
-          if (e is DioException && (e.response?.statusCode == 401 || e.response?.statusCode == 403)) {
-            fetchError = 'Authentication failed. Please log in again.';
-            // Optionally clear token, etc.
-          }
-        }
-      } else {
+       } catch (e) {
+           fetchError = 'Could not load addresses.';
+           debugPrint('(Sheet) Fetch error: $e');
+       }
+     } else {
         fetchError = 'Not logged in.';
-      }
+     }
      isLoading = false;
      // --- End fetch ---
 
@@ -947,30 +1337,35 @@ void _showAddressSelectionSheet(BuildContext context) async {
                  Future<void> refreshAddresses() async {
                       setSheetState(() { isLoading = true; fetchError = null; });
                       // Re-run fetch logic
-                      if (globalCustomerId != null) {
-                        try {
-                          final dio = Dio();
-                          final url = '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/';
-                          final response = await AuthApi.authenticatedRequest(() => dio.get(
-                            url,
-                            options: Options(headers: {
-                              'Content-Type': 'application/json',
-                            }),
-                          ));
-                          if (response != null && response.statusCode == 200 && response.data is List) {
-                            savedAddresses = List<Map<String, dynamic>>.from(
-                              (response.data as List).where((item) => item is Map).map((item) => Map<String, dynamic>.from(item))
-                            );
-                          } else {
-                            fetchError = 'Failed to load addresses.';
-                          }
-                        } catch (e) {
-                          fetchError = 'Could not load addresses.';
-                          if (e is DioException && (e.response?.statusCode == 401 || e.response?.statusCode == 403)) {
-                            fetchError = 'Authentication failed. Please log in again.';
-                          }
-                        }
-                      } else { fetchError = 'Not logged in.'; }
+                       if (globalCustomerId != null) {
+                         try {
+                            final dio = Dio();
+                            final url = '${AppConfig.baseUrl}/$globalCustomerId/addresses/';
+                            try {
+                              final response = await dio.get(url);
+                              debugPrint('(Sheet) Saved Addresses Response (${response.statusCode}): ${response.data}');
+                              if (response.statusCode == 200 && response.data is List) {
+                                savedAddresses = List<Map<String, dynamic>>.from(
+                                  (response.data as List).where((item) => item is Map).map((item) => Map<String, dynamic>.from(item))
+                                );
+                                debugPrint('(Sheet) Parsed savedAddresses: $savedAddresses');
+                              } else {
+                                fetchError = 'Failed to load addresses. Status: ${response.statusCode}';
+                              }
+                            } on DioException catch (e) {
+                              fetchError = 'Error loading addresses: ${e.response?.data?['detail'] ?? e.message}';
+                              debugPrint('(Sheet) DioError fetching saved addresses: $e');
+                            } catch (e) {
+                              fetchError = 'An unexpected error occurred loading addresses.';
+                              debugPrint('(Sheet) Error fetching saved addresses: $e');
+                            }
+                         } catch (e) {
+                            fetchError = 'Could not load addresses.';
+                            debugPrint('(Sheet) Fetch error: $e');
+                         }
+                       } else {
+                          fetchError = 'Not logged in.';
+                       }
                        isLoading = false;
                        // Crucially update the sheet's state
                        setSheetState(() {}); 
@@ -995,42 +1390,34 @@ void _showAddressSelectionSheet(BuildContext context) async {
                  // Function to show pincode dialog and check delivery
                  void checkDeliveryWithPincode() async {
                     Navigator.pop(sheetContext); // Close sheet first
-                    String? pincode = await showDialog<String>(
-                      context: context,
-                      builder: (context) {
-                        String enteredPincode = '';
-                        return AlertDialog(
-                          title: const Text('Enter Pincode'),
-                          content: TextField(
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(hintText: 'Enter your pincode'),
-                            onChanged: (value) {
-                              enteredPincode = value;
-                            },
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(enteredPincode),
-                              child: const Text('Submit'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    if (pincode != null && pincode.isNotEmpty) {
-                      setState(() {
-                        _selectedPincode = pincode;
-                        _useCurrentLocation = false;
-                        globalCurrentAddress = null;
-                      });
-                      await _checkDeliveryAvailability(pincode: pincode);
-                      await _initializeHomeScreenData(); // Refresh home data for new pincode
-                    }
+                    await _askForPincode(); // Reuse existing pincode dialog logic
                  }
+
+                 // --- Use Current Location Button ---
+                 final Widget useLocationButton = Padding(
+                   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                   child: OutlinedButton.icon(
+                     icon: const Icon(Icons.my_location, size: 20, color: Colors.orange),
+                     label: isLocating
+                         ? const SizedBox(
+                             width: 18,
+                             height: 18,
+                             child: CircularProgressIndicator(
+                               strokeWidth: 2,
+                               valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                             ),
+                           )
+                         : const Text('Use Current Location', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600)),
+                     style: OutlinedButton.styleFrom(
+                       foregroundColor: Colors.orange,
+                       side: BorderSide(color: Colors.orange.shade200, width: 1.5),
+                       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                       backgroundColor: Colors.white,
+                     ),
+                     onPressed: isLocating ? null : () => _useCurrentLocation(setSheetState),
+                   ),
+                 );
 
                  // <<<--- ADD DEBUG PRINT HERE --->>
                  debugPrint('(Sheet Builder) isLoading: $isLoading, fetchError: $fetchError, savedAddresses count: ${savedAddresses.length}');
@@ -1039,31 +1426,41 @@ void _showAddressSelectionSheet(BuildContext context) async {
                  // <<<--- END DEBUG PRINT --->>
 
                  return Padding(
-                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom), // Adjust for keyboard
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                         mainAxisSize: MainAxisSize.min,
-                         crossAxisAlignment: CrossAxisAlignment.start,
-                         children: [
+                     padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom), // Adjust for keyboard
+                     child: Container(
+                       padding: const EdgeInsets.all(16),
+                       child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // --- Use Current Location Button ---
+                            useLocationButton,
+                            if (locationError != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text(
+                                  locationError!,
+                                  style: const TextStyle(color: Colors.red, fontSize: 13),
+                                ),
+                              ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Select Delivery Address', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                IconButton(icon: Icon(Icons.close), onPressed: () => Navigator.pop(sheetContext)),
+                                const Text('Select Delivery Address', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(sheetContext)),
                               ],
                             ),
-                            Divider(height: 20),
+                            const Divider(height: 20),
                             if (isLoading)
-                               Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator())),
+                               const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator())),
                             if (!isLoading && fetchError != null)
                                 Center(child: Padding(padding: const EdgeInsets.symmetric(vertical: 20.0), child: Text(fetchError!, style: TextStyle(color: Colors.red)))),
                             if (!isLoading && fetchError == null && savedAddresses.isEmpty) ...[
-                               SizedBox(height: 10),
+                               const SizedBox(height: 10),
                                Center(
                                   child: OutlinedButton.icon(
-                                     icon: Icon(Icons.pin_drop_outlined, size: 16),
-                                     label: Text('Check Delivery via Pincode'),
+                                     icon: const Icon(Icons.pin_drop_outlined, size: 16),
+                                     label: const Text('Check Delivery via Pincode'),
                                      onPressed: checkDeliveryWithPincode,
                                      style: OutlinedButton.styleFrom(
                                         foregroundColor: Colors.orange,
@@ -1082,8 +1479,11 @@ void _showAddressSelectionSheet(BuildContext context) async {
                                      itemBuilder: (listContext, index) {
                                         final address = savedAddresses[index];
                                         final bool isCurrent = globalCurrentAddress?['id'] == address['id'];
-                                        final addressLine1 = address['address_line_1']?.toString() ?? ''; 
 
+                                        // Log all keys for debugging
+                                        debugPrint('(Sheet ListTile Builder) Address keys: ${address.keys}');
+                                        // Try possible variants for address line 1
+                                        String addressLine1 = address['address_line_1']?.toString() ?? address['line1']?.toString() ?? address['address1']?.toString() ?? '';
                                         debugPrint('(Sheet ListTile Builder) Index: $index, Address ID: ${address['id']}, value for title: "$addressLine1", isEmpty: ${addressLine1.isEmpty}');
 
                                         return ListTile(
@@ -1092,66 +1492,60 @@ void _showAddressSelectionSheet(BuildContext context) async {
                                               color: isCurrent ? Colors.orange : Colors.grey,
                                               size: 22,
                                            ),
-                                           title: Text(addressLine1.isNotEmpty ? addressLine1 : '(No Address Line 1)'), 
+                                           // Use the safe addressLine1 and provide placeholder if empty
+                                           title: Text(addressLine1.isNotEmpty ? addressLine1 : '(No Address Line 1)'),
                                            subtitle: Text('${address['city'] ?? ''}, ${address['state'] ?? ''} ${address['postal_code'] ?? ''}'),
-                                           onTap: () async {
-                                              final selectedAddress = Map<String, dynamic>.from(address); 
-                                              setState(() {
-                                                globalCurrentAddress = selectedAddress;
-                                                saveCurrentAddressId(selectedAddress['id']?.toString());
+                                           onTap: () {
+                                              // Set the global address
+                                              final selectedAddress = Map<String, dynamic>.from(address); // Create copy
+                                              setState(() { // Update HomeScreen's state
+                                                 globalCurrentAddress = selectedAddress;
+                                                 saveCurrentAddressId(selectedAddress['id']?.toString()); // Save preference
                                               });
-                                              Navigator.pop(sheetContext);
-                                              await _checkDeliveryAvailability(
+                                              Navigator.pop(sheetContext); // Close the sheet
+                                              // Trigger delivery check with the NEWLY selected address details
+                                              _checkDeliveryAvailability(
                                                   latitude: (selectedAddress['latitude'] as num?)?.toDouble(),
                                                   longitude: (selectedAddress['longitude'] as num?)?.toDouble(),
                                                   pincode: selectedAddress['postal_code']?.toString()
                                               );
-                                              await _initializeHomeScreenData(); 
                                            },
                                         );
                                      },
                                   ),
                                ),
-                            Divider(height: 20),
-                            Wrap(
-                              alignment: WrapAlignment.center,
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.my_location, size: 16),
-                                  label: Text('Use Current Location'),
-                                  onPressed: () async {
-  Navigator.pop(sheetContext);
-  await onUseCurrentLocation();
-},
-                                  style: TextButton.styleFrom(foregroundColor: Colors.blue.shade700),
-                                ),
-                                TextButton.icon(
-                                  icon: Icon(Icons.add_circle_outline, size: 16),
-                                  label: Text('Add New Address'),
-                                  onPressed: goToAddAddress,
-                                ),
-                                const SizedBox(width: 10),
-                                TextButton.icon(
-                                  icon: Icon(Icons.settings_outlined, size: 16),
-                                  label: Text('Manage All'),
-                                  onPressed: () {
-                                    Navigator.pop(sheetContext); 
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
-                                  },
-                                ),
-                              ],
+                            const Divider(height: 20),
+                            Row(
+                               mainAxisAlignment: MainAxisAlignment.center,
+                               children: [
+                                 TextButton.icon(
+                                   icon: const Icon(Icons.add_circle_outline, size: 16),
+                                   label: const Text('Add New Address'),
+                                   onPressed: goToAddAddress,
+                                 ),
+                                 const SizedBox(width: 10),
+                                 TextButton.icon(
+                                    icon: const Icon(Icons.settings_outlined, size: 16),
+                                    label: const Text('Manage All'),
+                                    onPressed: () {
+                                       Navigator.pop(sheetContext); // Close sheet first
+                                       Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+                                    },
+                                 ),
+                               ],
                             ),
-                            if (!isLoading && fetchError == null) 
+                            // --- Option to Check Pincode (alternative place) ---
+                           if (!isLoading && fetchError == null) ...[
+                              const SizedBox(height: 10),
                               Center(
                                 child: TextButton.icon(
-                                  icon: Icon(Icons.pin_drop_outlined, size: 16),
+                                  icon: const Icon(Icons.pin_drop_outlined, size: 16),
                                   label: const Text('Or Check Delivery via Pincode'),
                                   onPressed: checkDeliveryWithPincode,
-                                  style: TextButton.styleFrom(foregroundColor: Colors.orange.shade700),
+                                  style: TextButton.styleFrom(foregroundColor: Colors.orange.shade700)
                                 ),
                               ),
+                           ],
                          ],
                       ),
                     ),
@@ -1255,7 +1649,6 @@ void _showAddressSelectionSheet(BuildContext context) async {
                        ),
                     const SizedBox(height: 8),
                     Text(description, style: const TextStyle(fontSize: 14, color: Colors.black54)),
-                    OrderStatusBanner(),
                   ],
                 ),
               ),
@@ -1346,14 +1739,13 @@ void _showAddressSelectionSheet(BuildContext context) async {
         if (customerId != null && customerId.isNotEmpty) {
           globalCustomerId = customerId;
           // Also make sure we have a token
-          final token = await AuthStorage.getAccessToken();
+          final token = await AuthStorage.getToken();
           if (token == null || token.isEmpty) {
             _redirectToLogin();
           }
+        } else {
           _redirectToLogin();
         }
-      } else {
-        _redirectToLogin();
       }
     }
   }
@@ -1363,41 +1755,6 @@ class RestaurantCard extends StatelessWidget {
   final Map<String, dynamic> restaurant;
 
   const RestaurantCard({Key? key, required this.restaurant}) : super(key: key);
-
-  Widget _buildRestaurantImage(String imageUrl, String name) {
-    Uri? uri = Uri.tryParse(imageUrl);
-    bool isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
-    bool isLocalAsset = imageUrl.startsWith('assets/');
-    if (!isNetworkUrl && !isLocalAsset && imageUrl.startsWith('/')) {
-      imageUrl = '${AppConfig.baseUrl}$imageUrl';
-      uri = Uri.tryParse(imageUrl);
-      isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
-    }
-    Widget placeholder = const FittedBox(
-      fit: BoxFit.contain,
-      child: Icon(Icons.store, size: 60, color: Colors.grey),
-    );
-    if (imageUrl.isEmpty || (!isNetworkUrl && !isLocalAsset)) {
-      return placeholder;
-    }
-    if (isNetworkUrl) {
-      return Image.network(
-        imageUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => placeholder,
-        loadingBuilder: (context, child, progress) {
-          if (progress == null) return child;
-          return const Center(child: CircularProgressIndicator(strokeWidth: 2));
-        },
-      );
-    } else {
-      return Image.asset(
-        imageUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => placeholder,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -1446,7 +1803,7 @@ class RestaurantCard extends StatelessWidget {
                 child: SizedBox(
                   height: 100,
                   width: double.infinity,
-                  child: _buildRestaurantImage(imageUrl, name),
+                  child: _buildImage(imageUrl, name),
                 ),
               ),
               Expanded(
@@ -1504,6 +1861,83 @@ class RestaurantCard extends StatelessWidget {
       ),
     );
   }
+
+  // *** REPLACE THIS METHOD ***
+  Widget _buildImage(String imageUrl, String name) {
+    Uri? uri = Uri.tryParse(imageUrl);
+    bool isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+    bool isLocalAsset = imageUrl.startsWith('assets/');
+
+    // Handle relative paths from server (if applicable)
+    if (!isNetworkUrl && !isLocalAsset && imageUrl.startsWith('/')) {
+      imageUrl = '${AppConfig.baseUrl}$imageUrl'; // Assuming AppConfig is available or adjust as needed
+      uri = Uri.tryParse(imageUrl);
+      isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+      debugPrint('(RestaurantCard) Corrected relative image URL to: $imageUrl');
+    }
+
+    if (imageUrl.isEmpty || (!isNetworkUrl && !isLocalAsset)) {
+      if (imageUrl.isNotEmpty) {
+        debugPrint('(RestaurantCard) Invalid or unhandled image URL format: $imageUrl');
+      }
+      return _buildPlaceholderImage(name);
+    }
+
+    if (isNetworkUrl) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+           if (loadingProgress == null) return child;
+           return Center(child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                  : null,
+              strokeWidth: 2,
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
+           ));
+        },
+        errorBuilder: (context, error, stackTrace) {
+          debugPrint('(RestaurantCard) Error loading network image "$imageUrl": $error');
+          return _buildPlaceholderImage(name);
+        },
+      );
+    } else { // isLocalAsset
+      return Image.asset(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          debugPrint('(RestaurantCard) Error loading asset image "$imageUrl": $error');
+          return _buildPlaceholderImage(name);
+        },
+      );
+    }
+  }
+
+  Widget _buildPlaceholderImage(String name) {
+    return Container(
+      color: Colors.grey[200],
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.restaurant, size: 32, color: Colors.grey[400]),
+            const SizedBox(height: 4),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Text(
+                name,
+                style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class FoodCard extends StatelessWidget {
@@ -1518,6 +1952,7 @@ class FoodCard extends StatelessWidget {
     final priceValue = food['price'];
     final price = priceValue?.toString() ?? '0.00';
     final rating = (food['rating'] as num?)?.toDouble() ?? 0.0;
+    // *** START CHANGE ***
     // Prioritize the first URL from image_urls if available
     final imageList = food['image_urls'] as List?;
     String imageUrl = '';
@@ -1527,6 +1962,7 @@ class FoodCard extends StatelessWidget {
        // Fallback to the 'image' field if 'image_urls' is missing or empty
        imageUrl = food['image']?.toString() ?? '';
     }
+    // *** END CHANGE ***
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
 
     debugPrint('FoodCard data: $food'); // Log data for debugging nulls
@@ -1548,7 +1984,7 @@ class FoodCard extends StatelessWidget {
             SizedBox(
               height: 80,
               width: double.infinity,
-              child: FoodCard._buildImage(imageUrl, name), // Use static method
+              child: _buildImage(imageUrl, name), // Pass the potentially updated imageUrl
             ),
             Expanded(
               child: Padding(
@@ -1626,7 +2062,7 @@ class FoodCard extends StatelessWidget {
     );
   }
 
-  static Widget _buildImage(String imageUrl, String name) {
+  Widget _buildImage(String imageUrl, String name) {
     Uri? uri = Uri.tryParse(imageUrl);
     bool isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
     bool isLocalAsset = imageUrl.startsWith('assets/');
@@ -1642,7 +2078,7 @@ class FoodCard extends StatelessWidget {
       if (imageUrl.isNotEmpty) {
         debugPrint('Invalid or unhandled image URL format: $imageUrl');
       }
-      return FoodCard._buildPlaceholderImage(name);
+      return _buildPlaceholderImage(name);
     }
 
     if (isNetworkUrl) {
@@ -1661,7 +2097,7 @@ class FoodCard extends StatelessWidget {
         },
         errorBuilder: (context, error, stackTrace) {
           debugPrint('Error loading network image "$imageUrl": $error');
-          return FoodCard._buildPlaceholderImage(name);
+          return _buildPlaceholderImage(name);
         },
       );
     } else {
@@ -1670,13 +2106,13 @@ class FoodCard extends StatelessWidget {
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
           debugPrint('Error loading asset image "$imageUrl": $error');
-          return FoodCard._buildPlaceholderImage(name);
+          return _buildPlaceholderImage(name);
         },
       );
     }
   }
 
-  static Widget _buildPlaceholderImage(String name) {
+  Widget _buildPlaceholderImage(String name) {
     return Container(
       color: Colors.grey[200],
       child: Center(
@@ -1699,5 +2135,54 @@ class FoodCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class RestaurantSearchDelegate extends SearchDelegate {
+  final HomeProvider homeProvider;
+
+  RestaurantSearchDelegate(this.homeProvider);
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final results = homeProvider.searchRestaurants(query) ?? [];
+    return results.isEmpty
+        ? const Center(child: Text('No results found'))
+        : ListView.builder(
+            itemCount: results.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(results[index]['name'] ?? 'Unknown'),
+                subtitle: Text(results[index]['description'] ?? 'No description available'),
+              );
+            },
+          );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return const Center(child: Text('Search for restaurants'));
   }
 }

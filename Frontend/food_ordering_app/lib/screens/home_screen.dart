@@ -19,6 +19,8 @@ import '../utils/auth_api.dart';
 import '../providers/auth_provider.dart';
 import './login_screen.dart';
 import '../utils/auth_utils.dart'; // <-- Import the new utility
+import '../providers/order_provider.dart';
+import './order_tracking_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -28,6 +30,646 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // --- Helper: Format Address ---
+  String _formatDisplayAddress(Map<String, dynamic>? address) {
+    if (address == null) return 'Select Address';
+    final line1 = address['address_line1']?.toString() ?? address['address_line_1']?.toString() ?? '';
+    final line2 = address['address_line2']?.toString() ?? address['address_line_2']?.toString() ?? '';
+    final city = address['city']?.toString() ?? '';
+    final state = address['state']?.toString() ?? '';
+    final pincode = address['pincode']?.toString() ?? address['postal_code']?.toString() ?? '';
+    List<String> parts = [];
+    if (line1.isNotEmpty) parts.add(line1);
+    if (line2.isNotEmpty) parts.add(line2);
+    if (city.isNotEmpty) parts.add(city);
+    if (state.isNotEmpty) parts.add(state);
+    if (pincode.isNotEmpty) parts.add(pincode);
+    return parts.isEmpty ? 'Address Details Missing' : parts.join(', ');
+  }
+  // (All other helper methods here, only once, before usage)
+
+  // Helper function to format address for display
+  // String _formatDisplayAddress(Map<String, dynamic>? address) {
+  //   if (address == null) return 'Select Address';
+  //   final line1 = address['address_line1']?.toString() ?? address['address_line_1']?.toString() ?? '';
+  //   final line2 = address['address_line2']?.toString() ?? address['address_line_2']?.toString() ?? '';
+  //   final city = address['city']?.toString() ?? '';
+  //   final state = address['state']?.toString() ?? '';
+  //   final pincode = address['pincode']?.toString() ?? address['postal_code']?.toString() ?? '';
+  //   List<String> parts = [];
+  //   if (line1.isNotEmpty) parts.add(line1);
+  //   if (line2.isNotEmpty) parts.add(line2);
+  //   if (city.isNotEmpty) parts.add(city);
+  //   if (state.isNotEmpty) parts.add(state);
+  //   if (pincode.isNotEmpty) parts.add(pincode);
+  //   return parts.isEmpty ? 'Address Details Missing' : parts.join(', ');
+  // }
+
+  // Helper method to show address selection bottom sheet
+  void _showAddressSelectionSheet(BuildContext context) async {
+    // State for location fetching
+    bool isLocating = false;
+    String? locationError;
+
+    Future<void> _useCurrentLocation(StateSetter setSheetState) async {
+      setSheetState(() {
+        isLocating = true;
+        locationError = null;
+      });
+      try {
+        // 1. Get current position
+        final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        // 2. Call reverse geocode API with robust token management
+        final response = await AuthApi.authenticatedRequest(
+          () => Dio().post(
+            '${AppConfig.baseUrl}/reverse-geocode/',
+            data: {
+              'latitude': pos.latitude,
+              'longitude': pos.longitude,
+            },
+            options: Options(headers: {'Content-Type': 'application/json'}),
+          ),
+          onSessionExpired: () async {
+            await AuthStorage.clearAuthData();
+            if (mounted) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                (route) => false,
+              );
+            }
+          },
+        );
+
+        if (response?.statusCode == 200 && response?.data != null) {
+          final data = response?.data;
+          if (data != null && data is Map<String, dynamic>) {
+            setState(() {
+              globalCurrentAddress = data;
+              saveCurrentAddressId(data['id']?.toString());
+            });
+            Navigator.of(context).pop(); // Close the sheet
+            // Optionally, trigger delivery check
+            _checkDeliveryAvailability(
+              latitude: (data['latitude'] as num?)?.toDouble(),
+              longitude: (data['longitude'] as num?)?.toDouble(),
+              pincode: data['postal_code']?.toString(),
+            );
+            return;
+          } else {
+            locationError = 'Could not parse address.';
+          }
+        } else {
+          locationError = 'Failed to get address from location.';
+        }
+      } on PermissionDeniedException {
+        locationError = 'Location permission denied.';
+      } on LocationServiceDisabledException {
+        locationError = 'Location services are disabled.';
+      } catch (e) {
+        locationError = 'Error: ${e.toString()}';
+      }
+      setSheetState(() {
+        isLocating = false;
+      });
+    }
+
+     List<Map<String, dynamic>> savedAddresses = [];
+     bool isLoading = true;
+     String? fetchError;
+
+     // --- Fetch addresses when the sheet is opened ---
+     // Proactively refresh token before fetching addresses
+     await AuthApi.refreshToken();
+     if (globalCustomerId != null) {
+       try {
+           final dio = Dio();
+           final url = '${AppConfig.baseUrl}/$globalCustomerId/addresses/';
+           debugPrint('(Sheet) Fetching addresses from: $url');
+           final token = await AuthStorage.getToken();
+           debugPrint('(Sheet) Using token: ${token != null ? token.substring(0, token.length > 20 ? 20 : token.length) : 'null'}...');
+           if (token != null) {
+             // Decode JWT payload for debugging
+             try {
+               final parts = token.split('.');
+               if (parts.length == 3) {
+                 final payload = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
+                 debugPrint('(Sheet) JWT payload: $payload');
+               }
+             } catch (e) {
+               debugPrint('(Sheet) Error decoding JWT payload: $e');
+             }
+           }
+           final headers = {'Authorization': 'Bearer $token'};
+           debugPrint('(Sheet) Request headers: $headers');
+           try {
+             final response = await dio.get(url, options: Options(headers: headers));
+             debugPrint('(Sheet) Dio response headers: ${response.headers}');
+             debugPrint('(Sheet) Saved Addresses Response (${response.statusCode}): ${response.data}');
+            if (response.statusCode == 200 && response.data is List) {
+              savedAddresses = List<Map<String, dynamic>>.from(
+                (response.data as List).where((item) => item is Map).map((item) => Map<String, dynamic>.from(item))
+              );
+              debugPrint('(Sheet) Parsed savedAddresses: $savedAddresses');
+              // --- Auto-select default address if none selected ---
+              if (globalCurrentAddress == null && savedAddresses.isNotEmpty) {
+                Map<String, dynamic>? defaultAddr = savedAddresses.firstWhere(
+                  (addr) => addr['is_default'] == true,
+                  orElse: () => savedAddresses.first,
+                );
+                debugPrint('(Sheet) Setting globalCurrentAddress to: $defaultAddr');
+                globalCurrentAddress = defaultAddr;
+                saveCurrentAddressId(defaultAddr['id']?.toString());
+              }
+            } else {
+              fetchError = 'Failed to load addresses. Status: ${response.statusCode}';
+            }
+          } on DioException catch (e) {
+            fetchError = 'Error loading addresses: ${e.response?.data?['detail'] ?? e.message}';
+            debugPrint('(Sheet) DioError fetching saved addresses: $e');
+          } catch (e) {
+            fetchError = 'Could not load addresses.';
+            debugPrint('(Sheet) Fetch error: $e');
+          }
+       } catch (e) {
+           fetchError = 'Could not load addresses.';
+           debugPrint('(Sheet) Fetch error: $e');
+       }
+     } else {
+        fetchError = 'Not logged in.';
+     }
+     isLoading = false;
+     // --- End fetch ---
+
+     // Use a stateful builder to handle async loading within the sheet
+     showModalBottomSheet(
+        context: context,
+        isScrollControlled: true, // Allows sheet to take more height if needed
+        shape: const RoundedRectangleBorder(
+           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (sheetContext) {
+           // Use StatefulBuilder to manage loading/error state within the sheet
+           return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setSheetState) {
+                 // Function to refresh addresses within the sheet (e.g., after adding)
+                 Future<void> refreshAddresses() async {
+                      setSheetState(() { isLoading = true; fetchError = null; });
+                      // Re-run fetch logic
+                       if (globalCustomerId != null) {
+                         try {
+                            final dio = Dio();
+                            final url = '${AppConfig.baseUrl}/$globalCustomerId/addresses/';
+                            try {
+                              final response = await dio.get(url);
+                              debugPrint('(Sheet) Saved Addresses Response (${response.statusCode}): ${response.data}');
+                              if (response.statusCode == 200 && response.data is List) {
+                                savedAddresses = List<Map<String, dynamic>>.from(
+                                  (response.data as List).where((item) => item is Map).map((item) => Map<String, dynamic>.from(item))
+                                );
+                                debugPrint('(Sheet) Parsed savedAddresses: $savedAddresses');
+                              } else {
+                                fetchError = 'Failed to load addresses. Status: ${response.statusCode}';
+                              }
+                            } on DioException catch (e) {
+                              fetchError = 'Error loading addresses: ${e.response?.data?['detail'] ?? e.message}';
+                              debugPrint('(Sheet) DioError fetching saved addresses: $e');
+                            } catch (e) {
+                              fetchError = 'An unexpected error occurred loading addresses.';
+                              debugPrint('(Sheet) Error fetching saved addresses: $e');
+                            }
+                         } catch (e) {
+                            fetchError = 'Could not load addresses.';
+                            debugPrint('(Sheet) Fetch error: $e');
+                         }
+                       } else {
+                          fetchError = 'Not logged in.';
+                       }
+                       isLoading = false;
+                       // Crucially update the sheet's state
+                       setSheetState(() {}); 
+                 }
+
+                 // Function to navigate to add screen and refresh on return
+                 void goToAddAddress() async {
+                    Navigator.pop(sheetContext); // Close sheet first
+                    final result = await Navigator.push(
+                       context, 
+                       MaterialPageRoute(builder: (context) => const AddEditAddressScreen())
+                    );
+                    if (result == true) { // If address was added
+                       // Re-show the sheet and refresh its content (or just refresh HomeScreen)
+                       // Option 1: Just refresh HomeScreen (simpler)
+                       // setState((){}); // Trigger HomeScreen rebuild to show new address potentially
+                       // Option 2: Re-show sheet with updated data (better UX)
+                       _showAddressSelectionSheet(context);
+                    }
+                 }
+
+                 // Function to show pincode dialog and check delivery
+                 void checkDeliveryWithPincode() async {
+                    Navigator.pop(sheetContext); // Close sheet first
+                    await _askForPincode(); // Reuse existing pincode dialog logic
+                 }
+
+                 // --- Use Current Location Button ---
+                 final Widget useLocationButton = Padding(
+                   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                   child: OutlinedButton.icon(
+                     icon: const Icon(Icons.my_location, size: 20, color: Colors.orange),
+                     label: isLocating
+                         ? const SizedBox(
+                             width: 18,
+                             height: 18,
+                             child: CircularProgressIndicator(
+                               strokeWidth: 2,
+                               valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                             ),
+                           )
+                         : const Text('Use Current Location', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600)),
+                     style: OutlinedButton.styleFrom(
+                       foregroundColor: Colors.orange,
+                       side: BorderSide(color: Colors.orange.shade200, width: 1.5),
+                       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                       backgroundColor: Colors.white,
+                     ),
+                     onPressed: isLocating ? null : () => _useCurrentLocation(setSheetState),
+                   ),
+                 );
+
+                 // <<<--- ADD DEBUG PRINT HERE --->>
+                 debugPrint('(Sheet Builder) isLoading: $isLoading, fetchError: $fetchError, savedAddresses count: ${savedAddresses.length}');
+                 final bool shouldShowList = !isLoading && fetchError == null && savedAddresses.isNotEmpty;
+                 debugPrint('(Sheet Builder) Condition to show list (shouldShowList): $shouldShowList');
+                 // <<<--- END DEBUG PRINT --->>
+
+                 return Padding(
+                     padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom), // Adjust for keyboard
+                     child: Container(
+                       padding: const EdgeInsets.all(16),
+                       child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // --- Use Current Location Button ---
+                            useLocationButton,
+                            if (locationError != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text(
+                                  locationError!,
+                                  style: const TextStyle(color: Colors.red, fontSize: 13),
+                                ),
+                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('Select Delivery Address', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(sheetContext)),
+                              ],
+                            ),
+                            const Divider(height: 20),
+                            if (isLoading)
+                               const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator())),
+                            if (!isLoading && fetchError != null)
+                                Center(child: Padding(padding: const EdgeInsets.symmetric(vertical: 20.0), child: Text(fetchError!, style: TextStyle(color: Colors.red)))),
+                            if (!isLoading && fetchError == null && savedAddresses.isEmpty) ...[
+                               const SizedBox(height: 10),
+                               Center(
+                                  child: OutlinedButton.icon(
+                                     icon: const Icon(Icons.pin_drop_outlined, size: 16),
+                                     label: const Text('Check Delivery via Pincode'),
+                                     onPressed: checkDeliveryWithPincode,
+                                     style: OutlinedButton.styleFrom(
+                                        foregroundColor: Colors.orange,
+                                        side: BorderSide(color: Colors.orange.shade200),
+                                     ),
+                                  ),
+                               ),
+                            ],
+                            // Use the debugged condition here
+                            if (shouldShowList) // <<<--- Use the boolean variable
+                               LimitedBox(
+                                  maxHeight: MediaQuery.of(context).size.height * 0.35, // Increased height slightly
+                                  child: ListView.builder(
+                                     shrinkWrap: true,
+                                     itemCount: savedAddresses.length,
+                                     itemBuilder: (listContext, index) {
+                                        final address = savedAddresses[index];
+                                        final bool isCurrent = globalCurrentAddress?['id'] == address['id'];
+
+                                        // Log all keys for debugging
+                                        debugPrint('(Sheet ListTile Builder) Address keys: ${address.keys}');
+                                        // Try possible variants for address line 1
+                                        String addressLine1 = address['address_line_1']?.toString() ?? address['line1']?.toString() ?? address['address1']?.toString() ?? '';
+                                        debugPrint('(Sheet ListTile Builder) Index: $index, Address ID: ${address['id']}, value for title: "$addressLine1", isEmpty: ${addressLine1.isEmpty}');
+
+                                        return ListTile(
+                                           leading: Icon(
+                                              isCurrent ? Icons.check_circle : Icons.radio_button_unchecked,
+                                              color: isCurrent ? Colors.orange : Colors.grey,
+                                              size: 22,
+                                           ),
+                                           // Use the safe addressLine1 and provide placeholder if empty
+                                           title: Text(addressLine1.isNotEmpty ? addressLine1 : '(No Address Line 1)'),
+                                           subtitle: Text('${address['city'] ?? ''}, ${address['state'] ?? ''} ${address['postal_code'] ?? ''}'),
+                                           onTap: () {
+                                              // Set the global address
+                                              final selectedAddress = Map<String, dynamic>.from(address); // Create copy
+                                              setState(() { // Update HomeScreen's state
+                                                 globalCurrentAddress = selectedAddress;
+                                                 saveCurrentAddressId(selectedAddress['id']?.toString()); // Save preference
+                                              });
+                                              Navigator.pop(sheetContext); // Close the sheet
+                                              // Trigger delivery check with the NEWLY selected address details
+                                              _checkDeliveryAvailability(
+                                                  latitude: (selectedAddress['latitude'] as num?)?.toDouble(),
+                                                  longitude: (selectedAddress['longitude'] as num?)?.toDouble(),
+                                                  pincode: selectedAddress['postal_code']?.toString()
+                                              );
+                                           },
+                                        );
+                                     },
+                                  ),
+                               ),
+                            const Divider(height: 20),
+                            Row(
+                               mainAxisAlignment: MainAxisAlignment.center,
+                               children: [
+                                 TextButton.icon(
+                                   icon: const Icon(Icons.add_circle_outline, size: 16),
+                                   label: const Text('Add New Address'),
+                                   onPressed: goToAddAddress,
+                                 ),
+                                 const SizedBox(width: 10),
+                                 TextButton.icon(
+                                    icon: const Icon(Icons.settings_outlined, size: 16),
+                                    label: const Text('Manage All'),
+                                    onPressed: () {
+                                       Navigator.pop(sheetContext); // Close sheet first
+                                       Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+                                    },
+                                 ),
+                               ],
+                            ),
+                            // --- Option to Check Pincode (alternative place) ---
+                           if (!isLoading && fetchError == null) ...[
+                              const SizedBox(height: 10),
+                              Center(
+                                child: TextButton.icon(
+                                  icon: const Icon(Icons.pin_drop_outlined, size: 16),
+                                  label: const Text('Or Check Delivery via Pincode'),
+                                  onPressed: checkDeliveryWithPincode,
+                                  style: TextButton.styleFrom(foregroundColor: Colors.orange.shade700)
+                                ),
+                              ),
+                           ],
+                         ],
+                      ),
+                    ),
+                 );
+              },
+           );
+        },
+     );
+  }
+
+  // Helper method to build category image widgets
+  Widget _buildCategoryImage(String imageUrl) {
+    Uri? uri = Uri.tryParse(imageUrl);
+    bool isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+    bool isLocalAsset = imageUrl.startsWith('assets/');
+
+    // Handle relative paths from server
+    if (!isNetworkUrl && !isLocalAsset && imageUrl.startsWith('/')) {
+      imageUrl = '${AppConfig.baseUrl}$imageUrl';
+      uri = Uri.tryParse(imageUrl);
+      isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+    }
+
+    Widget placeholder = Icon(Icons.category_outlined, size: 30, color: Colors.grey.shade400);
+
+    if (imageUrl.isEmpty || (!isNetworkUrl && !isLocalAsset)) {
+      return placeholder;
+    }
+
+    if (isNetworkUrl) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) => placeholder,
+        loadingBuilder: (context, child, progress) {
+          if (progress == null) return child;
+          return Center(child: CircularProgressIndicator(value: progress.expectedTotalBytes != null ? progress.cumulativeBytesLoaded / progress.expectedTotalBytes! : null, strokeWidth: 2));
+        },
+      );
+    } else {
+      return Image.asset(
+        imageUrl,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) => placeholder,
+      );
+    }
+  }
+
+  // Helper Method to Show Food Details Dialog
+  void _showFoodDetailsDialog(BuildContext context, Map<String, dynamic> foodItem) {
+    final imageUrl = foodItem['image']?.toString() ?? '';
+    final description = foodItem['description']?.toString() ?? 'No description available.';
+    final rating = (foodItem['rating'] as num?)?.toDouble();
+    final priceValue = foodItem['price'];
+    final price = priceValue?.toString() ?? '';
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        contentPadding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                child: Container(
+                  height: 150,
+                  width: double.infinity,
+                  child: _buildDialogImage(imageUrl),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(foodItem['name'] ?? 'Food Item', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    if (price.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text('₹$price', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.orange.shade800)),
+                      ),
+                    if (rating != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Icon(Icons.star, color: Colors.amber.shade700, size: 16),
+                            const SizedBox(width: 4),
+                            Text(rating.toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.w500)),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 8),
+                    Text(description, style: const TextStyle(fontSize: 14, color: Colors.black54)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: const Text('Close'),
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.add_shopping_cart, size: 16),
+            label: const Text('Add to Cart'),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
+            onPressed: () {
+              if (foodItem['id'] != null && priceValue != null) {
+                final cartItem = Map<String, dynamic>.from(foodItem);
+                cartItem['price'] = (priceValue is num) ? priceValue : (double.tryParse(price) ?? 0.0);
+                Provider.of<CartProvider>(context, listen: false).addToCart(cartItem);
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Added "${cartItem['name'] ?? 'Item'}" to cart!'), duration: Duration(seconds: 1)),
+                );
+              } else {
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not add item: Missing details.'), duration: Duration(seconds: 2), backgroundColor: Colors.red),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper to build image for the dialog
+  Widget _buildDialogImage(String imageUrl) {
+    Uri? uri = Uri.tryParse(imageUrl);
+    bool isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+    bool isLocalAsset = imageUrl.startsWith('assets/');
+
+    if (!isNetworkUrl && !isLocalAsset && imageUrl.startsWith('/')) {
+      imageUrl = '${AppConfig.baseUrl}$imageUrl';
+      uri = Uri.tryParse(imageUrl);
+      isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+    }
+
+    Widget placeholder = const FittedBox(
+      fit: BoxFit.contain,
+      child: Icon(Icons.fastfood, size: 60, color: Colors.grey),
+    );
+
+    if (imageUrl.isEmpty || (!isNetworkUrl && !isLocalAsset)) {
+      return placeholder;
+    }
+
+    if (isNetworkUrl) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => placeholder,
+        loadingBuilder: (context, child, progress) {
+          if (progress == null) return child;
+          return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+        },
+      );
+    } else {
+      return Image.asset(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => placeholder,
+      );
+    }
+  }
+
+  Future<void> _checkAuthenticationStatus() async {
+    if (mounted) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final isAuthenticated = await authProvider.isAuthenticated();
+      
+      if (!isAuthenticated) {
+        // Try to load customer ID from storage again
+        final customerId = await AuthStorage.getCustomerId();
+        if (customerId != null && customerId.isNotEmpty) {
+          globalCustomerId = customerId;
+          // Also make sure we have a token
+          final token = await AuthStorage.getToken();
+          if (token == null || token.isEmpty) {
+            _redirectToLogin();
+          }
+        } else {
+          _redirectToLogin();
+        }
+      }
+    }
+  }
+
+
+  // Helper function to format address for display
+  // String _formatDisplayAddress(Map<String, dynamic>? address) {
+  //   if (address == null) return 'Select Address';
+  //   final line1 = address['address_line1']?.toString() ?? address['address_line_1']?.toString() ?? '';
+  //   final line2 = address['address_line2']?.toString() ?? address['address_line_2']?.toString() ?? '';
+  //   final city = address['city']?.toString() ?? '';
+  //   final state = address['state']?.toString() ?? '';
+  //   final pincode = address['pincode']?.toString() ?? address['postal_code']?.toString() ?? '';
+  //   List<String> parts = [];
+  //   if (line1.isNotEmpty) parts.add(line1);
+  //   if (line2.isNotEmpty) parts.add(line2);
+  //   if (city.isNotEmpty) parts.add(city);
+  //   if (state.isNotEmpty) parts.add(state);
+  //   if (pincode.isNotEmpty) parts.add(pincode);
+  //   return parts.isEmpty ? 'Address Details Missing' : parts.join(', ');
+  // }
+
+  // Helper widget to show persistent Track Order bar
+  Widget _buildTrackOrderBar(BuildContext context, Map<String, dynamic> order) {
+    final orderNumber = order['order_id'] ?? order['order_number'] ?? order['id'] ?? 'Unknown';
+    final vendorName = order['vendor']?['name'] ?? 'Vendor';
+    final total = order['total_amount'] ?? order['total'] ?? 0.0;
+    return Material(
+      color: Colors.orange.shade700,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => OrderTrackingScreen(orderNumber: orderNumber.toString()),
+            ),
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          child: Row(
+            children: [
+              const Icon(Icons.delivery_dining, color: Colors.white),
+              const SizedBox(width: 12),
+              Expanded(child: Text('Track Order #$orderNumber at $vendorName (₹${total.toStringAsFixed(2)})', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600))),
+              const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  String? _enteredPincode;
   late Position _currentPosition;
   bool _isDeliveryAvailable = false;
   bool _locationPermissionDenied = false;
@@ -325,6 +967,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     if (pincode != null && pincode.isNotEmpty) {
+      setState(() {
+        _enteredPincode = pincode;
+        globalCurrentAddress = null; // Clear address if using pincode
+      });
       print('Pincode entered: $pincode'); // Debug log
       await _checkDeliveryAvailability(pincode: pincode);
     } else {
@@ -460,11 +1106,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                crossAxisAlignment: CrossAxisAlignment.start,
                                children: [
                                  const Text('Delivering To', style: TextStyle(fontSize: 11, color: Colors.grey)),
-                                 Text(
-                                    // Combine address line 1 and city if available
+                                 Builder(
+                                   builder: (context) {
+                                     if (globalCurrentAddress != null) {
+                                       return Text(
                                     _formatDisplayAddress(globalCurrentAddress),
                                     style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-                                    overflow: TextOverflow.ellipsis,
+                                    overflow: TextOverflow.ellipsis, 
+                                    );
+                                     } else if (_enteredPincode != null && _enteredPincode!.isNotEmpty) {
+                                       return Text(
+                                         'Delivering to pincode $_enteredPincode',
+                                         style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+                                         overflow: TextOverflow.ellipsis,
+                                       );
+                                     } else {
+                                       return Text(
+                                         'Select Address',
+                                         style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+                                         overflow: TextOverflow.ellipsis,
+                                       );
+                                     }
+                                   },
                                  ),
                                ],
                              ),
@@ -703,7 +1366,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
     }
-
+    return Consumer<OrderProvider>(
+      builder: (context, orderProvider, child) {
+        final inProgressOrder = orderProvider.latestInProgressOrder;
+        
     return Scaffold(
       appBar: AppBar(
         title: const Text('Food Delivery App'),
@@ -719,7 +1385,8 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-          Stack(
+          
+              Stack(
             alignment: Alignment.center,
             children: [
               IconButton(
@@ -755,7 +1422,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-            ],
+             ],
           ),
           IconButton(
             icon: const Icon(Icons.person_outline),
@@ -769,578 +1436,586 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: bodyContent, // Use the determined body content
-    );
-  }
-
-  // Helper function to format address for display
-  String _formatDisplayAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Select Address';
-    
-    final line1 = address['address_line1']?.toString() ?? '';
-    final city = address['city']?.toString() ?? '';
-    final state = address['state']?.toString() ?? '';
-    
-    // Improved formatting logic
-    List<String> parts = [];
-    if (line1.isNotEmpty) parts.add(line1);
-    if (city.isNotEmpty) parts.add(city);
-    if (state.isNotEmpty) parts.add(state);
-
-    if (parts.isEmpty) {
-       return 'Address Details Missing';
-    } else {
-       return parts.join(', '); // Join parts with comma and space
-    }
-  }
-
-  // Helper method to show address selection bottom sheet
-  void _showAddressSelectionSheet(BuildContext context) async {
-    // State for location fetching
-    bool isLocating = false;
-    String? locationError;
-
-    Future<void> _useCurrentLocation(StateSetter setSheetState) async {
-      setSheetState(() {
-        isLocating = true;
-        locationError = null;
-      });
-      try {
-        // 1. Get current position
-        final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        // 2. Call reverse geocode API with robust token management
-        final response = await AuthApi.authenticatedRequest(
-          () => Dio().post(
-            '${AppConfig.baseUrl}/reverse-geocode/',
-            data: {
-              'latitude': pos.latitude,
-              'longitude': pos.longitude,
-            },
-            options: Options(headers: {'Content-Type': 'application/json'}),
-          ),
-          onSessionExpired: () async {
-            await AuthStorage.clearAuthData();
-            if (mounted) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-                (route) => false,
-              );
-            }
-          },
-        );
-
-        if (response?.statusCode == 200 && response?.data != null) {
-          final data = response?.data;
-          if (data != null && data is Map<String, dynamic>) {
-            setState(() {
-              globalCurrentAddress = data;
-              saveCurrentAddressId(data['id']?.toString());
-            });
-            Navigator.of(context).pop(); // Close the sheet
-            // Optionally, trigger delivery check
-            _checkDeliveryAvailability(
-              latitude: (data['latitude'] as num?)?.toDouble(),
-              longitude: (data['longitude'] as num?)?.toDouble(),
-              pincode: data['postal_code']?.toString(),
-            );
-            return;
-          } else {
-            locationError = 'Could not parse address.';
-          }
-        } else {
-          locationError = 'Failed to get address from location.';
-        }
-      } on PermissionDeniedException {
-        locationError = 'Location permission denied.';
-      } on LocationServiceDisabledException {
-        locationError = 'Location services are disabled.';
-      } catch (e) {
-        locationError = 'Error: ${e.toString()}';
-      }
-      setSheetState(() {
-        isLocating = false;
-      });
-    }
-
-     List<Map<String, dynamic>> savedAddresses = [];
-     bool isLoading = true;
-     String? fetchError;
-
-     // --- Fetch addresses when the sheet is opened ---
-     // Proactively refresh token before fetching addresses
-     await AuthApi.refreshToken();
-     if (globalCustomerId != null) {
-       try {
-          final dio = Dio();
-          final url = '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/';
-          debugPrint('(Sheet) Fetching addresses from: $url');
-          try {
-            final response = await dio.get(url);
-            debugPrint('(Sheet) Saved Addresses Response (${response.statusCode}): ${response.data}');
-            if (response.statusCode == 200 && response.data is List) {
-              savedAddresses = List<Map<String, dynamic>>.from(
-                (response.data as List).where((item) => item is Map).map((item) => Map<String, dynamic>.from(item))
-              );
-              debugPrint('(Sheet) Parsed savedAddresses: $savedAddresses');
-              // --- Auto-select default address if none selected ---
-              if (globalCurrentAddress == null && savedAddresses.isNotEmpty) {
-                Map<String, dynamic>? defaultAddr = savedAddresses.firstWhere(
-                  (addr) => addr['is_default'] == true,
-                  orElse: () => savedAddresses.first,
-                );
-                debugPrint('(Sheet) Setting globalCurrentAddress to: $defaultAddr');
-                globalCurrentAddress = defaultAddr;
-                saveCurrentAddressId(defaultAddr['id']?.toString());
-              }
-            } else {
-              fetchError = 'Failed to load addresses. Status: ${response.statusCode}';
-            }
-          } on DioException catch (e) {
-            fetchError = 'Error loading addresses: ${e.response?.data?['detail'] ?? e.message}';
-            debugPrint('(Sheet) DioError fetching saved addresses: $e');
-          } catch (e) {
-            fetchError = 'Could not load addresses.';
-            debugPrint('(Sheet) Fetch error: $e');
-          }
-       } catch (e) {
-           fetchError = 'Could not load addresses.';
-           debugPrint('(Sheet) Fetch error: $e');
-       }
-     } else {
-        fetchError = 'Not logged in.';
-     }
-     isLoading = false;
-     // --- End fetch ---
-
-     // Use a stateful builder to handle async loading within the sheet
-     showModalBottomSheet(
-        context: context,
-        isScrollControlled: true, // Allows sheet to take more height if needed
-        shape: const RoundedRectangleBorder(
-           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        builder: (sheetContext) {
-           // Use StatefulBuilder to manage loading/error state within the sheet
-           return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setSheetState) {
-                 // Function to refresh addresses within the sheet (e.g., after adding)
-                 Future<void> refreshAddresses() async {
-                      setSheetState(() { isLoading = true; fetchError = null; });
-                      // Re-run fetch logic
-                       if (globalCustomerId != null) {
-                         try {
-                            final dio = Dio();
-                            final url = '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/';
-                            try {
-                              final response = await dio.get(url);
-                              debugPrint('(Sheet) Saved Addresses Response (${response.statusCode}): ${response.data}');
-                              if (response.statusCode == 200 && response.data is List) {
-                                savedAddresses = List<Map<String, dynamic>>.from(
-                                  (response.data as List).where((item) => item is Map).map((item) => Map<String, dynamic>.from(item))
-                                );
-                                debugPrint('(Sheet) Parsed savedAddresses: $savedAddresses');
-                              } else {
-                                fetchError = 'Failed to load addresses. Status: ${response.statusCode}';
-                              }
-                            } on DioException catch (e) {
-                              fetchError = 'Error loading addresses: ${e.response?.data?['detail'] ?? e.message}';
-                              debugPrint('(Sheet) DioError fetching saved addresses: $e');
-                            } catch (e) {
-                              fetchError = 'An unexpected error occurred loading addresses.';
-                              debugPrint('(Sheet) Error fetching saved addresses: $e');
-                            }
-                         } catch (e) {
-                            fetchError = 'Could not load addresses.';
-                            debugPrint('(Sheet) Fetch error: $e');
-                         }
-                       } else {
-                          fetchError = 'Not logged in.';
-                       }
-                       isLoading = false;
-                       // Crucially update the sheet's state
-                       setSheetState(() {}); 
-                 }
-
-                 // Function to navigate to add screen and refresh on return
-                 void goToAddAddress() async {
-                    Navigator.pop(sheetContext); // Close sheet first
-                    final result = await Navigator.push(
-                       context, 
-                       MaterialPageRoute(builder: (context) => const AddEditAddressScreen())
-                    );
-                    if (result == true) { // If address was added
-                       // Re-show the sheet and refresh its content (or just refresh HomeScreen)
-                       // Option 1: Just refresh HomeScreen (simpler)
-                       // setState((){}); // Trigger HomeScreen rebuild to show new address potentially
-                       // Option 2: Re-show sheet with updated data (better UX)
-                       _showAddressSelectionSheet(context);
-                    }
-                 }
-
-                 // Function to show pincode dialog and check delivery
-                 void checkDeliveryWithPincode() async {
-                    Navigator.pop(sheetContext); // Close sheet first
-                    await _askForPincode(); // Reuse existing pincode dialog logic
-                 }
-
-                 // --- Use Current Location Button ---
-                 final Widget useLocationButton = Padding(
-                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                   child: OutlinedButton.icon(
-                     icon: const Icon(Icons.my_location, size: 20, color: Colors.orange),
-                     label: isLocating
-                         ? const SizedBox(
-                             width: 18,
-                             height: 18,
-                             child: CircularProgressIndicator(
-                               strokeWidth: 2,
-                               valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
-                             ),
-                           )
-                         : const Text('Use Current Location', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600)),
-                     style: OutlinedButton.styleFrom(
-                       foregroundColor: Colors.orange,
-                       side: BorderSide(color: Colors.orange.shade200, width: 1.5),
-                       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                       backgroundColor: Colors.white,
-                     ),
-                     onPressed: isLocating ? null : () => _useCurrentLocation(setSheetState),
-                   ),
-                 );
-
-                 // <<<--- ADD DEBUG PRINT HERE --->>
-                 debugPrint('(Sheet Builder) isLoading: $isLoading, fetchError: $fetchError, savedAddresses count: ${savedAddresses.length}');
-                 final bool shouldShowList = !isLoading && fetchError == null && savedAddresses.isNotEmpty;
-                 debugPrint('(Sheet Builder) Condition to show list (shouldShowList): $shouldShowList');
-                 // <<<--- END DEBUG PRINT --->>
-
-                 return Padding(
-                     padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom), // Adjust for keyboard
-                     child: Container(
-                       padding: const EdgeInsets.all(16),
-                       child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // --- Use Current Location Button ---
-                            useLocationButton,
-                            if (locationError != null)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text(
-                                  locationError!,
-                                  style: const TextStyle(color: Colors.red, fontSize: 13),
-                                ),
-                              ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Select Delivery Address', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(sheetContext)),
-                              ],
-                            ),
-                            const Divider(height: 20),
-                            if (isLoading)
-                               const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator())),
-                            if (!isLoading && fetchError != null)
-                                Center(child: Padding(padding: const EdgeInsets.symmetric(vertical: 20.0), child: Text(fetchError!, style: TextStyle(color: Colors.red)))),
-                            if (!isLoading && fetchError == null && savedAddresses.isEmpty) ...[
-                               const SizedBox(height: 10),
-                               Center(
-                                  child: OutlinedButton.icon(
-                                     icon: const Icon(Icons.pin_drop_outlined, size: 16),
-                                     label: const Text('Check Delivery via Pincode'),
-                                     onPressed: checkDeliveryWithPincode,
-                                     style: OutlinedButton.styleFrom(
-                                        foregroundColor: Colors.orange,
-                                        side: BorderSide(color: Colors.orange.shade200),
-                                     ),
-                                  ),
-                               ),
-                            ],
-                            // Use the debugged condition here
-                            if (shouldShowList) // <<<--- Use the boolean variable
-                               LimitedBox(
-                                  maxHeight: MediaQuery.of(context).size.height * 0.35, // Increased height slightly
-                                  child: ListView.builder(
-                                     shrinkWrap: true,
-                                     itemCount: savedAddresses.length,
-                                     itemBuilder: (listContext, index) {
-                                        final address = savedAddresses[index];
-                                        final bool isCurrent = globalCurrentAddress?['id'] == address['id'];
-
-                                        // Log all keys for debugging
-                                        debugPrint('(Sheet ListTile Builder) Address keys: ${address.keys}');
-                                        // Try possible variants for address line 1
-                                        String addressLine1 = address['address_line_1']?.toString() ?? address['line1']?.toString() ?? address['address1']?.toString() ?? '';
-                                        debugPrint('(Sheet ListTile Builder) Index: $index, Address ID: ${address['id']}, value for title: "$addressLine1", isEmpty: ${addressLine1.isEmpty}');
-
-                                        return ListTile(
-                                           leading: Icon(
-                                              isCurrent ? Icons.check_circle : Icons.radio_button_unchecked,
-                                              color: isCurrent ? Colors.orange : Colors.grey,
-                                              size: 22,
-                                           ),
-                                           // Use the safe addressLine1 and provide placeholder if empty
-                                           title: Text(addressLine1.isNotEmpty ? addressLine1 : '(No Address Line 1)'),
-                                           subtitle: Text('${address['city'] ?? ''}, ${address['state'] ?? ''} ${address['postal_code'] ?? ''}'),
-                                           onTap: () {
-                                              // Set the global address
-                                              final selectedAddress = Map<String, dynamic>.from(address); // Create copy
-                                              setState(() { // Update HomeScreen's state
-                                                 globalCurrentAddress = selectedAddress;
-                                                 saveCurrentAddressId(selectedAddress['id']?.toString()); // Save preference
-                                              });
-                                              Navigator.pop(sheetContext); // Close the sheet
-                                              // Trigger delivery check with the NEWLY selected address details
-                                              _checkDeliveryAvailability(
-                                                  latitude: (selectedAddress['latitude'] as num?)?.toDouble(),
-                                                  longitude: (selectedAddress['longitude'] as num?)?.toDouble(),
-                                                  pincode: selectedAddress['postal_code']?.toString()
-                                              );
-                                           },
-                                        );
-                                     },
-                                  ),
-                               ),
-                            const Divider(height: 20),
-                            Row(
-                               mainAxisAlignment: MainAxisAlignment.center,
-                               children: [
-                                 TextButton.icon(
-                                   icon: const Icon(Icons.add_circle_outline, size: 16),
-                                   label: const Text('Add New Address'),
-                                   onPressed: goToAddAddress,
-                                 ),
-                                 const SizedBox(width: 10),
-                                 TextButton.icon(
-                                    icon: const Icon(Icons.settings_outlined, size: 16),
-                                    label: const Text('Manage All'),
-                                    onPressed: () {
-                                       Navigator.pop(sheetContext); // Close sheet first
-                                       Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
-                                    },
-                                 ),
-                               ],
-                            ),
-                            // --- Option to Check Pincode (alternative place) ---
-                           if (!isLoading && fetchError == null) ...[
-                              const SizedBox(height: 10),
-                              Center(
-                                child: TextButton.icon(
-                                  icon: const Icon(Icons.pin_drop_outlined, size: 16),
-                                  label: const Text('Or Check Delivery via Pincode'),
-                                  onPressed: checkDeliveryWithPincode,
-                                  style: TextButton.styleFrom(foregroundColor: Colors.orange.shade700)
-                                ),
-                              ),
-                           ],
-                         ],
-                      ),
-                    ),
-                 );
-              },
-           );
-        },
-     );
-  }
-
-  // Helper method to build category image widgets
-  Widget _buildCategoryImage(String imageUrl) {
-    // Use similar logic as _buildCartItemImage or FoodCard._buildImage
-    Uri? uri = Uri.tryParse(imageUrl);
-    bool isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
-    bool isLocalAsset = imageUrl.startsWith('assets/');
-
-    // Handle relative paths from server
-    if (!isNetworkUrl && !isLocalAsset && imageUrl.startsWith('/')) {
-      imageUrl = '${AppConfig.baseUrl}$imageUrl';
-      uri = Uri.tryParse(imageUrl);
-      isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
-    }
-
-    Widget placeholder = Icon(Icons.category_outlined, size: 30, color: Colors.grey.shade400);
-
-    if (imageUrl.isEmpty || (!isNetworkUrl && !isLocalAsset)) {
-      return placeholder;
-    }
-
-    if (isNetworkUrl) {
-      return Image.network(
-        imageUrl,
-        fit: BoxFit.contain, // Contain might be better than cover here
-        errorBuilder: (context, error, stackTrace) => placeholder,
-        loadingBuilder: (context, child, progress) {
-          if (progress == null) return child;
-          // Simple progress indicator
-          return Center(child: CircularProgressIndicator(value: progress.expectedTotalBytes != null ? progress.cumulativeBytesLoaded / progress.expectedTotalBytes! : null, strokeWidth: 2));
-        },
-      );
-    } else { // isLocalAsset
-      return Image.asset(
-        imageUrl,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) => placeholder,
-      );
-    }
-  }
-
-  // --- Copied Helper Method to Show Food Details Dialog --- (From MenuScreen)
-  void _showFoodDetailsDialog(BuildContext context, Map<String, dynamic> foodItem) {
-    final imageUrl = foodItem['image']?.toString() ?? '';
-    final description = foodItem['description']?.toString() ?? 'No description available.';
-    final rating = (foodItem['rating'] as num?)?.toDouble(); // Can be null
-    final priceValue = foodItem['price'];
-    final price = priceValue?.toString() ?? ''; // Get price for display
-
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        contentPadding: EdgeInsets.zero, // Remove default padding
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        content: SingleChildScrollView(
-          child: Column(
+      body: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Image Header
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-                child: Container(
-                  height: 150,
-                  width: double.infinity,
-                  child: _buildDialogImage(imageUrl), // Use helper
-                ),
-              ),
-              // Details Padding
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(foodItem['name'] ?? 'Food Item', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    // Display Price
-                    if (price.isNotEmpty) 
-                       Padding(
-                          padding: const EdgeInsets.only(top: 4.0),
-                          child: Text('₹$price', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.orange.shade800)),
-                       ),
-                    // Display Rating
-                    if (rating != null)
-                       Padding(
-                         padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
-                         child: Row(
-                            children: [
-                               Icon(Icons.star, color: Colors.amber.shade700, size: 16),
-                               const SizedBox(width: 4),
-                               Text(rating.toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.w500)),
-                            ],
-                         ),
-                       ),
-                    const SizedBox(height: 8),
-                    Text(description, style: const TextStyle(fontSize: 14, color: Colors.black54)),
-                  ],
-                ),
-              ),
+              if (inProgressOrder != null)
+                _buildTrackOrderBar(context, inProgressOrder),
+              Expanded(child: bodyContent),
             ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            child: const Text('Close'),
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
-          // Add to Cart button in dialog
-          ElevatedButton.icon(
-             icon: const Icon(Icons.add_shopping_cart, size: 16),
-             label: const Text('Add to Cart'),
-             style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
-             onPressed: () {
-               // Ensure item has necessary info before adding
-               if (foodItem['id'] != null && priceValue != null) {
-                   final cartItem = Map<String, dynamic>.from(foodItem);
-                   cartItem['price'] = (priceValue is num) ? priceValue : (double.tryParse(price) ?? 0.0);
-                   Provider.of<CartProvider>(context, listen: false).addToCart(cartItem);
-                   Navigator.of(ctx).pop(); // Close dialog
-                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Added "${cartItem['name'] ?? 'Item'}" to cart!'), duration: Duration(seconds: 1))
-                   );
-               } else {
-                  Navigator.of(ctx).pop(); // Close dialog
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Could not add item: Missing details.'), duration: Duration(seconds: 2), backgroundColor: Colors.red)
-                  );
-               }
-             },
-          )
-        ],
-      ),
-    );
-  }
-
-  // --- Copied Helper to build image for the dialog --- (From MenuScreen)
-   Widget _buildDialogImage(String imageUrl) {
-    Uri? uri = Uri.tryParse(imageUrl);
-    bool isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
-    bool isLocalAsset = imageUrl.startsWith('assets/');
-
-    if (!isNetworkUrl && !isLocalAsset && imageUrl.startsWith('/')) {
-      imageUrl = '${AppConfig.baseUrl}$imageUrl';
-      uri = Uri.tryParse(imageUrl);
-      isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+          ), // Use the determined body content
+        ); // Return should end here
     }
-
-    Widget placeholder = const FittedBox(
-      fit: BoxFit.contain,
-      child: Icon(Icons.fastfood, size: 60, color: Colors.grey),
     );
 
-    if (imageUrl.isEmpty || (!isNetworkUrl && !isLocalAsset)) {
-      return placeholder;
-    }
+  // // Helper function to format address for display
+  // String _formatDisplayAddress(Map<String, dynamic>? address) {
+  //   if (address == null) return 'Select Address';
+    
+  //   final line1 = address['address_line1']?.toString() ?? '';
+  //   final city = address['city']?.toString() ?? '';
+  //   final state = address['state']?.toString() ?? '';
+    
+  //   // Improved formatting logic
+  //   List<String> parts = [];
+  //   if (line1.isNotEmpty) parts.add(line1);
+  //   if (city.isNotEmpty) parts.add(city);
+  //   if (state.isNotEmpty) parts.add(state);
 
-    if (isNetworkUrl) {
-      return Image.network(
-        imageUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => placeholder,
-        loadingBuilder: (context, child, progress) {
-          if (progress == null) return child;
-          return const Center(child: CircularProgressIndicator(strokeWidth: 2));
-        },
-      );
-    } else { // isLocalAsset
-      return Image.asset(
-        imageUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => placeholder,
-      );
-    }
-  }
+  //   if (parts.isEmpty) {
+  //      return 'Address Details Missing';
+  //   } else {
+  //      return parts.join(', '); // Join parts with comma and space
+  //   }
+  // }
 
-  Future<void> _checkAuthenticationStatus() async {
-    if (mounted) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final isAuthenticated = await authProvider.isAuthenticated();
+  // // Helper method to show address selection bottom sheet
+  // void _showAddressSelectionSheet(BuildContext context) async {
+  //   // State for location fetching
+  //   bool isLocating = false;
+  //   String? locationError;
+
+  //   Future<void> _useCurrentLocation(StateSetter setSheetState) async {
+  //     setSheetState(() {
+  //       isLocating = true;
+  //       locationError = null;
+  //     });
+  //     try {
+  //       // 1. Get current position
+  //       final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  //       // 2. Call reverse geocode API with robust token management
+  //       final response = await AuthApi.authenticatedRequest(
+  //         () => Dio().post(
+  //           '${AppConfig.baseUrl}/reverse-geocode/',
+  //           data: {
+  //             'latitude': pos.latitude,
+  //             'longitude': pos.longitude,
+  //           },
+  //           options: Options(headers: {'Content-Type': 'application/json'}),
+  //         ),
+  //         onSessionExpired: () async {
+  //           await AuthStorage.clearAuthData();
+  //           if (mounted) {
+  //             Navigator.of(context).pushAndRemoveUntil(
+  //               MaterialPageRoute(builder: (context) => const LoginScreen()),
+  //               (route) => false,
+  //             );
+  //           }
+  //         },
+  //       );
+
+  //       if (response?.statusCode == 200 && response?.data != null) {
+  //         final data = response?.data;
+  //         if (data != null && data is Map<String, dynamic>) {
+  //           setState(() {
+  //             globalCurrentAddress = data;
+  //             saveCurrentAddressId(data['id']?.toString());
+  //           });
+  //           Navigator.of(context).pop(); // Close the sheet
+  //           // Optionally, trigger delivery check
+  //           _checkDeliveryAvailability(
+  //             latitude: (data['latitude'] as num?)?.toDouble(),
+  //             longitude: (data['longitude'] as num?)?.toDouble(),
+  //             pincode: data['postal_code']?.toString(),
+  //           );
+  //           return;
+  //         } else {
+  //           locationError = 'Could not parse address.';
+  //         }
+  //       } else {
+  //         locationError = 'Failed to get address from location.';
+  //       }
+  //     } on PermissionDeniedException {
+  //       locationError = 'Location permission denied.';
+  //     } on LocationServiceDisabledException {
+  //       locationError = 'Location services are disabled.';
+  //     } catch (e) {
+  //       locationError = 'Error: ${e.toString()}';
+  //     }
+  //     setSheetState(() {
+  //       isLocating = false;
+  //     });
+  //   }
+
+  //    List<Map<String, dynamic>> savedAddresses = [];
+  //    bool isLoading = true;
+  //    String? fetchError;
+
+  //    // --- Fetch addresses when the sheet is opened ---
+  //    // Proactively refresh token before fetching addresses
+  //    await AuthApi.refreshToken();
+  //    if (globalCustomerId != null) {
+  //      try {
+  //         final dio = Dio();
+  //         final url = '${AppConfig.baseUrl}/$globalCustomerId/addresses/';
+  //         debugPrint('(Sheet) Fetching addresses from: $url');
+  //         try {
+  //           final response = await dio.get(url);
+  //           debugPrint('(Sheet) Saved Addresses Response (${response.statusCode}): ${response.data}');
+  //           if (response.statusCode == 200 && response.data is List) {
+  //             savedAddresses = List<Map<String, dynamic>>.from(
+  //               (response.data as List).where((item) => item is Map).map((item) => Map<String, dynamic>.from(item))
+  //             );
+  //             debugPrint('(Sheet) Parsed savedAddresses: $savedAddresses');
+  //             // --- Auto-select default address if none selected ---
+  //             if (globalCurrentAddress == null && savedAddresses.isNotEmpty) {
+  //               Map<String, dynamic>? defaultAddr = savedAddresses.firstWhere(
+  //                 (addr) => addr['is_default'] == true,
+  //                 orElse: () => savedAddresses.first,
+  //               );
+  //               debugPrint('(Sheet) Setting globalCurrentAddress to: $defaultAddr');
+  //               globalCurrentAddress = defaultAddr;
+  //               saveCurrentAddressId(defaultAddr['id']?.toString());
+  //             }
+  //           } else {
+  //             fetchError = 'Failed to load addresses. Status: ${response.statusCode}';
+  //           }
+  //         } on DioException catch (e) {
+  //           fetchError = 'Error loading addresses: ${e.response?.data?['detail'] ?? e.message}';
+  //           debugPrint('(Sheet) DioError fetching saved addresses: $e');
+  //         } catch (e) {
+  //           fetchError = 'Could not load addresses.';
+  //           debugPrint('(Sheet) Fetch error: $e');
+  //         }
+  //      } catch (e) {
+  //          fetchError = 'Could not load addresses.';
+  //          debugPrint('(Sheet) Fetch error: $e');
+  //      }
+  //    } else {
+  //       fetchError = 'Not logged in.';
+  //    }
+  //    isLoading = false;
+  //    // --- End fetch ---
+
+  //    // Use a stateful builder to handle async loading within the sheet
+  //    showModalBottomSheet(
+  //       context: context,
+  //       isScrollControlled: true, // Allows sheet to take more height if needed
+  //       shape: const RoundedRectangleBorder(
+  //          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //       ),
+  //       builder: (sheetContext) {
+  //          // Use StatefulBuilder to manage loading/error state within the sheet
+  //          return StatefulBuilder(
+  //             builder: (BuildContext context, StateSetter setSheetState) {
+  //                // Function to refresh addresses within the sheet (e.g., after adding)
+  //                Future<void> refreshAddresses() async {
+  //                     setSheetState(() { isLoading = true; fetchError = null; });
+  //                     // Re-run fetch logic
+  //                      if (globalCustomerId != null) {
+  //                        try {
+  //                           final dio = Dio();
+  //                           final url = '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/';
+  //                           try {
+  //                             final response = await dio.get(url);
+  //                             debugPrint('(Sheet) Saved Addresses Response (${response.statusCode}): ${response.data}');
+  //                             if (response.statusCode == 200 && response.data is List) {
+  //                               savedAddresses = List<Map<String, dynamic>>.from(
+  //                                 (response.data as List).where((item) => item is Map).map((item) => Map<String, dynamic>.from(item))
+  //                               );
+  //                               debugPrint('(Sheet) Parsed savedAddresses: $savedAddresses');
+  //                             } else {
+  //                               fetchError = 'Failed to load addresses. Status: ${response.statusCode}';
+  //                             }
+  //                           } on DioException catch (e) {
+  //                             fetchError = 'Error loading addresses: ${e.response?.data?['detail'] ?? e.message}';
+  //                             debugPrint('(Sheet) DioError fetching saved addresses: $e');
+  //                           } catch (e) {
+  //                             fetchError = 'An unexpected error occurred loading addresses.';
+  //                             debugPrint('(Sheet) Error fetching saved addresses: $e');
+  //                           }
+  //                        } catch (e) {
+  //                           fetchError = 'Could not load addresses.';
+  //                           debugPrint('(Sheet) Fetch error: $e');
+  //                        }
+  //                      } else {
+  //                         fetchError = 'Not logged in.';
+  //                      }
+  //                      isLoading = false;
+  //                      // Crucially update the sheet's state
+  //                      setSheetState(() {}); 
+  //                }
+
+  //                // Function to navigate to add screen and refresh on return
+  //                void goToAddAddress() async {
+  //                   Navigator.pop(sheetContext); // Close sheet first
+  //                   final result = await Navigator.push(
+  //                      context, 
+  //                      MaterialPageRoute(builder: (context) => const AddEditAddressScreen())
+  //                   );
+  //                   if (result == true) { // If address was added
+  //                      // Re-show the sheet and refresh its content (or just refresh HomeScreen)
+  //                      // Option 1: Just refresh HomeScreen (simpler)
+  //                      // setState((){}); // Trigger HomeScreen rebuild to show new address potentially
+  //                      // Option 2: Re-show sheet with updated data (better UX)
+  //                      _showAddressSelectionSheet(context);
+  //                   }
+  //                }
+
+  //                // Function to show pincode dialog and check delivery
+  //                void checkDeliveryWithPincode() async {
+  //                   Navigator.pop(sheetContext); // Close sheet first
+  //                   await _askForPincode(); // Reuse existing pincode dialog logic
+  //                }
+
+  //                // --- Use Current Location Button ---
+  //                final Widget useLocationButton = Padding(
+  //                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //                  child: OutlinedButton.icon(
+  //                    icon: const Icon(Icons.my_location, size: 20, color: Colors.orange),
+  //                    label: isLocating
+  //                        ? const SizedBox(
+  //                            width: 18,
+  //                            height: 18,
+  //                            child: CircularProgressIndicator(
+  //                              strokeWidth: 2,
+  //                              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+  //                            ),
+  //                          )
+  //                        : const Text('Use Current Location', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600)),
+  //                    style: OutlinedButton.styleFrom(
+  //                      foregroundColor: Colors.orange,
+  //                      side: BorderSide(color: Colors.orange.shade200, width: 1.5),
+  //                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+  //                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+  //                      backgroundColor: Colors.white,
+  //                    ),
+  //                    onPressed: isLocating ? null : () => _useCurrentLocation(setSheetState),
+  //                  ),
+  //                );
+
+  //                // <<<--- ADD DEBUG PRINT HERE --->>
+  //                debugPrint('(Sheet Builder) isLoading: $isLoading, fetchError: $fetchError, savedAddresses count: ${savedAddresses.length}');
+  //                final bool shouldShowList = !isLoading && fetchError == null && savedAddresses.isNotEmpty;
+  //                debugPrint('(Sheet Builder) Condition to show list (shouldShowList): $shouldShowList');
+  //                // <<<--- END DEBUG PRINT --->>
+
+  //                return Padding(
+  //                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom), // Adjust for keyboard
+  //                    child: Container(
+  //                      padding: const EdgeInsets.all(16),
+  //                      child: Column(
+  //                         mainAxisSize: MainAxisSize.min,
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           // --- Use Current Location Button ---
+  //                           useLocationButton,
+  //                           if (locationError != null)
+  //                             Padding(
+  //                               padding: const EdgeInsets.only(bottom: 8.0),
+  //                               child: Text(
+  //                                 locationError!,
+  //                                 style: const TextStyle(color: Colors.red, fontSize: 13),
+  //                               ),
+  //                             ),
+  //                           Row(
+  //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                             children: [
+  //                               const Text('Select Delivery Address', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+  //                               IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(sheetContext)),
+  //                             ],
+  //                           ),
+  //                           const Divider(height: 20),
+  //                           if (isLoading)
+  //                              const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator())),
+  //                           if (!isLoading && fetchError != null)
+  //                               Center(child: Padding(padding: const EdgeInsets.symmetric(vertical: 20.0), child: Text(fetchError!, style: TextStyle(color: Colors.red)))),
+  //                           if (!isLoading && fetchError == null && savedAddresses.isEmpty) ...[
+  //                              const SizedBox(height: 10),
+  //                              Center(
+  //                                 child: OutlinedButton.icon(
+  //                                    icon: const Icon(Icons.pin_drop_outlined, size: 16),
+  //                                    label: const Text('Check Delivery via Pincode'),
+  //                                    onPressed: checkDeliveryWithPincode,
+  //                                    style: OutlinedButton.styleFrom(
+  //                                       foregroundColor: Colors.orange,
+  //                                       side: BorderSide(color: Colors.orange.shade200),
+  //                                    ),
+  //                                 ),
+  //                              ),
+  //                           ],
+  //                           // Use the debugged condition here
+  //                           if (shouldShowList) // <<<--- Use the boolean variable
+  //                              LimitedBox(
+  //                                 maxHeight: MediaQuery.of(context).size.height * 0.35, // Increased height slightly
+  //                                 child: ListView.builder(
+  //                                    shrinkWrap: true,
+  //                                    itemCount: savedAddresses.length,
+  //                                    itemBuilder: (listContext, index) {
+  //                                       final address = savedAddresses[index];
+  //                                       final bool isCurrent = globalCurrentAddress?['id'] == address['id'];
+
+  //                                       // Log all keys for debugging
+  //                                       debugPrint('(Sheet ListTile Builder) Address keys: ${address.keys}');
+  //                                       // Try possible variants for address line 1
+  //                                       String addressLine1 = address['address_line_1']?.toString() ?? address['line1']?.toString() ?? address['address1']?.toString() ?? '';
+  //                                       debugPrint('(Sheet ListTile Builder) Index: $index, Address ID: ${address['id']}, value for title: "$addressLine1", isEmpty: ${addressLine1.isEmpty}');
+
+  //                                       return ListTile(
+  //                                          leading: Icon(
+  //                                             isCurrent ? Icons.check_circle : Icons.radio_button_unchecked,
+  //                                             color: isCurrent ? Colors.orange : Colors.grey,
+  //                                             size: 22,
+  //                                          ),
+  //                                          // Use the safe addressLine1 and provide placeholder if empty
+  //                                          title: Text(addressLine1.isNotEmpty ? addressLine1 : '(No Address Line 1)'),
+  //                                          subtitle: Text('${address['city'] ?? ''}, ${address['state'] ?? ''} ${address['postal_code'] ?? ''}'),
+  //                                          onTap: () {
+  //                                             // Set the global address
+  //                                             final selectedAddress = Map<String, dynamic>.from(address); // Create copy
+  //                                             setState(() { // Update HomeScreen's state
+  //                                                globalCurrentAddress = selectedAddress;
+  //                                                saveCurrentAddressId(selectedAddress['id']?.toString()); // Save preference
+  //                                             });
+  //                                             Navigator.pop(sheetContext); // Close the sheet
+  //                                             // Trigger delivery check with the NEWLY selected address details
+  //                                             _checkDeliveryAvailability(
+  //                                                 latitude: (selectedAddress['latitude'] as num?)?.toDouble(),
+  //                                                 longitude: (selectedAddress['longitude'] as num?)?.toDouble(),
+  //                                                 pincode: selectedAddress['postal_code']?.toString()
+  //                                             );
+  //                                          },
+  //                                       );
+  //                                    },
+  //                                 ),
+  //                              ),
+  //                           const Divider(height: 20),
+  //                           Row(
+  //                              mainAxisAlignment: MainAxisAlignment.center,
+  //                              children: [
+  //                                TextButton.icon(
+  //                                  icon: const Icon(Icons.add_circle_outline, size: 16),
+  //                                  label: const Text('Add New Address'),
+  //                                  onPressed: goToAddAddress,
+  //                                ),
+  //                                const SizedBox(width: 10),
+  //                                TextButton.icon(
+  //                                   icon: const Icon(Icons.settings_outlined, size: 16),
+  //                                   label: const Text('Manage All'),
+  //                                   onPressed: () {
+  //                                      Navigator.pop(sheetContext); // Close sheet first
+  //                                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+  //                                   },
+  //                                ),
+  //                              ],
+  //                           ),
+  //                           // --- Option to Check Pincode (alternative place) ---
+  //                          if (!isLoading && fetchError == null) ...[
+  //                             const SizedBox(height: 10),
+  //                             Center(
+  //                               child: TextButton.icon(
+  //                                 icon: const Icon(Icons.pin_drop_outlined, size: 16),
+  //                                 label: const Text('Or Check Delivery via Pincode'),
+  //                                 onPressed: checkDeliveryWithPincode,
+  //                                 style: TextButton.styleFrom(foregroundColor: Colors.orange.shade700)
+  //                               ),
+  //                             ),
+  //                          ],
+  //                        ],
+  //                     ),
+  //                   ),
+  //                );
+  //             },
+  //          );
+  //       },
+  //    );
+  // }
+
+  // // Helper method to build category image widgets
+  // Widget _buildCategoryImage(String imageUrl) {
+  //   // Use similar logic as _buildCartItemImage or FoodCard._buildImage
+  //   Uri? uri = Uri.tryParse(imageUrl);
+  //   bool isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+  //   bool isLocalAsset = imageUrl.startsWith('assets/');
+
+  //   // Handle relative paths from server
+  //   if (!isNetworkUrl && !isLocalAsset && imageUrl.startsWith('/')) {
+  //     imageUrl = '${AppConfig.baseUrl}$imageUrl';
+  //     uri = Uri.tryParse(imageUrl);
+  //     isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+  //   }
+
+  //   Widget placeholder = Icon(Icons.category_outlined, size: 30, color: Colors.grey.shade400);
+
+  //   if (imageUrl.isEmpty || (!isNetworkUrl && !isLocalAsset)) {
+  //     return placeholder;
+  //   }
+
+  //   if (isNetworkUrl) {
+  //     return Image.network(
+  //       imageUrl,
+  //       fit: BoxFit.contain, // Contain might be better than cover here
+  //       errorBuilder: (context, error, stackTrace) => placeholder,
+  //       loadingBuilder: (context, child, progress) {
+  //         if (progress == null) return child;
+  //         // Simple progress indicator
+  //         return Center(child: CircularProgressIndicator(value: progress.expectedTotalBytes != null ? progress.cumulativeBytesLoaded / progress.expectedTotalBytes! : null, strokeWidth: 2));
+  //       },
+  //     );
+  //   } else { // isLocalAsset
+  //     return Image.asset(
+  //       imageUrl,
+  //       fit: BoxFit.contain,
+  //       errorBuilder: (context, error, stackTrace) => placeholder,
+  //     );
+  //   }
+  // }
+
+  // // --- Copied Helper Method to Show Food Details Dialog --- (From MenuScreen)
+  // void _showFoodDetailsDialog(BuildContext context, Map<String, dynamic> foodItem) {
+  //   final imageUrl = foodItem['image']?.toString() ?? '';
+  //   final description = foodItem['description']?.toString() ?? 'No description available.';
+  //   final rating = (foodItem['rating'] as num?)?.toDouble(); // Can be null
+  //   final priceValue = foodItem['price'];
+  //   final price = priceValue?.toString() ?? ''; // Get price for display
+
+  //   showDialog(
+  //     context: context,
+  //     builder: (ctx) => AlertDialog(
+  //       contentPadding: EdgeInsets.zero, // Remove default padding
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+  //       content: SingleChildScrollView(
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             // Image Header
+  //             ClipRRect(
+  //               borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+  //               child: Container(
+  //                 height: 150,
+  //                 width: double.infinity,
+  //                 child: _buildDialogImage(imageUrl), // Use helper
+  //               ),
+  //             ),
+  //             // Details Padding
+  //             Padding(
+  //               padding: const EdgeInsets.all(16.0),
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Text(foodItem['name'] ?? 'Food Item', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+  //                   // Display Price
+  //                   if (price.isNotEmpty) 
+  //                      Padding(
+  //                         padding: const EdgeInsets.only(top: 4.0),
+  //                         child: Text('₹$price', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.orange.shade800)),
+  //                      ),
+  //                   // Display Rating
+  //                   if (rating != null)
+  //                      Padding(
+  //                        padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+  //                        child: Row(
+  //                           children: [
+  //                              Icon(Icons.star, color: Colors.amber.shade700, size: 16),
+  //                              const SizedBox(width: 4),
+  //                              Text(rating.toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.w500)),
+  //                           ],
+  //                        ),
+  //                      ),
+  //                   const SizedBox(height: 8),
+  //                   Text(description, style: const TextStyle(fontSize: 14, color: Colors.black54)),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       actions: [
+  //         TextButton(
+  //           child: const Text('Close'),
+  //           onPressed: () => Navigator.of(ctx).pop(),
+  //         ),
+  //         // Add to Cart button in dialog
+  //         ElevatedButton.icon(
+  //            icon: const Icon(Icons.add_shopping_cart, size: 16),
+  //            label: const Text('Add to Cart'),
+  //            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
+  //            onPressed: () {
+  //              // Ensure item has necessary info before adding
+  //              if (foodItem['id'] != null && priceValue != null) {
+  //                  final cartItem = Map<String, dynamic>.from(foodItem);
+  //                  cartItem['price'] = (priceValue is num) ? priceValue : (double.tryParse(price) ?? 0.0);
+  //                  Provider.of<CartProvider>(context, listen: false).addToCart(cartItem);
+  //                  Navigator.of(ctx).pop(); // Close dialog
+  //                  ScaffoldMessenger.of(context).showSnackBar(
+  //                     SnackBar(content: Text('Added "${cartItem['name'] ?? 'Item'}" to cart!'), duration: Duration(seconds: 1))
+  //                  );
+  //              } else {
+  //                 Navigator.of(ctx).pop(); // Close dialog
+  //                 ScaffoldMessenger.of(context).showSnackBar(
+  //                     const SnackBar(content: Text('Could not add item: Missing details.'), duration: Duration(seconds: 2), backgroundColor: Colors.red)
+  //                 );
+  //              }
+  //            },
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // // --- Copied Helper to build image for the dialog --- (From MenuScreen)
+  //  Widget _buildDialogImage(String imageUrl) {
+  //   Uri? uri = Uri.tryParse(imageUrl);
+  //   bool isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+  //   bool isLocalAsset = imageUrl.startsWith('assets/');
+
+  //   if (!isNetworkUrl && !isLocalAsset && imageUrl.startsWith('/')) {
+  //     imageUrl = '${AppConfig.baseUrl}$imageUrl';
+  //     uri = Uri.tryParse(imageUrl);
+  //     isNetworkUrl = uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https');
+  //   }
+
+  //   Widget placeholder = const FittedBox(
+  //     fit: BoxFit.contain,
+  //     child: Icon(Icons.fastfood, size: 60, color: Colors.grey),
+  //   );
+
+  //   if (imageUrl.isEmpty || (!isNetworkUrl && !isLocalAsset)) {
+  //     return placeholder;
+  //   }
+
+  //   if (isNetworkUrl) {
+  //     return Image.network(
+  //       imageUrl,
+  //       fit: BoxFit.cover,
+  //       errorBuilder: (context, error, stackTrace) => placeholder,
+  //       loadingBuilder: (context, child, progress) {
+  //         if (progress == null) return child;
+  //         return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+  //       },
+  //     );
+  //   } else { // isLocalAsset
+  //     return Image.asset(
+  //       imageUrl,
+  //       fit: BoxFit.cover,
+  //       errorBuilder: (context, error, stackTrace) => placeholder,
+  //     );
+  //   }
+  // }
+
+  // Future<void> _checkAuthenticationStatus() async {
+  //   if (mounted) {
+  //     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  //     final isAuthenticated = await authProvider.isAuthenticated();
       
-      if (!isAuthenticated) {
-        // Try to load customer ID from storage again
-        final customerId = await AuthStorage.getCustomerId();
-        if (customerId != null && customerId.isNotEmpty) {
-          globalCustomerId = customerId;
-          // Also make sure we have a token
-          final token = await AuthStorage.getToken();
-          if (token == null || token.isEmpty) {
-            _redirectToLogin();
-          }
-        } else {
-          _redirectToLogin();
-        }
-      }
-    }
-  }
+  //     if (!isAuthenticated) {
+  //       // Try to load customer ID from storage again
+  //       final customerId = await AuthStorage.getCustomerId();
+  //       if (customerId != null && customerId.isNotEmpty) {
+  //         globalCustomerId = customerId;
+  //         // Also make sure we have a token
+  //         final token = await AuthStorage.getToken();
+  //         if (token == null || token.isEmpty) {
+  //           _redirectToLogin();
+  //         }
+  //       } else {
+  //         _redirectToLogin();
+  //       }
+  //     }
+  //   }
+  // }
 }
-
+}
 class RestaurantCard extends StatelessWidget {
   final Map<String, dynamic> restaurant;
 

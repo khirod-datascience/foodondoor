@@ -291,3 +291,90 @@ INFO 2025-05-07 23:59:33,150 views 15060 7720 Retrieved 24 orders for vendor V00
 INFO 2025-05-08 06:51:08,929 views 2108 8260 OTP for 8908168688: 950844
 INFO 2025-05-08 06:52:34,781 views 9664 6384 OTP for 8908168688: 310193
 INFO 2025-05-08 06:53:38,272 views 9664 14620 Retrieved 24 orders for vendor V001
+INFO 2025-05-18 10:10:57,075 views 2348 11984 OTP for 8908168688: 361125
+INFO 2025-05-18 10:11:10,276 views 2348 1204 Retrieved 32 orders for vendor V001
+INFO 2025-05-18 10:11:26,889 views 2348 3020 Retrieved 32 orders for vendor V001
+INFO 2025-05-18 12:22:38,340 views 1420 11920 OTP for 8908168688: 961220
+INFO 2025-05-18 12:30:42,153 views 1420 8824 OTP for 8908168688: 385715
+INFO 2025-05-18 12:31:01,818 views 1420 7848 Retrieved 32 orders for vendor V001
+INFO 2025-05-18 12:50:12,032 views 1420 1712 OTP for 8908168688: 663316
+INFO 2025-05-18 13:02:33,603 views 1420 12596 OTP for 8908168688: 134094
+INFO 2025-05-18 13:38:30,332 views 10808 5664 OTP for 8908168688: 846214
+INFO 2025-05-18 13:43:17,292 views 10808 4024 OTP for 8908168688: 400376
+INFO 2025-05-18 13:43:29,609 views 10808 6608 FCM token updated for vendor_id: V001
+INFO 2025-05-18 14:47:26,968 views 8716 9188 OTP for 8908168688: 735893
+INFO 2025-05-18 17:11:05,890 views 7480 13772 OTP for 8908168688: 835303
+INFO 2025-05-18 17:11:05,929 views 7480 13424 OTP for 8908168688: 761631
+INFO 2025-05-18 17:11:24,637 views 7480 7156 FCM token updated for vendor_id: V001
+INFO 2025-05-18 17:18:52,084 views 7480 10936 OTP for 8908168688: 208254
+INFO 2025-05-18 17:19:03,136 views 7480 12524 FCM token updated for vendor_id: V001
+INFO 2025-05-18 17:52:28,163 views 7480 9324 OTP for 8908168688: 396823
+INFO 2025-05-18 17:52:42,367 views 7480 4812 FCM token updated for vendor_id: V001
+INFO 2025-05-18 18:43:02,342 views 3084 12052 OTP for 8908168688: 365934
+INFO 2025-05-18 18:43:02,391 views 3084 8216 OTP for 8908168688: 662731
+ERROR 2025-05-18 18:43:21,937 views 3084 1704 Error in VerifyOTP: 'Vendor' object has no attribute 'customer_id'
+ERROR 2025-05-18 18:43:36,679 views 3084 1864 Error in VerifyOTP: 'Vendor' object has no attribute 'customer_id'
+INFO 2025-05-18 18:44:49,115 views 3084 6816 OTP for 8908168688: 771778
+ERROR 2025-05-18 21:46:43,710 utils 4988 10052 Error generating OTP: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+INFO 2025-05-18 21:47:13,687 views 4988 10852 OTP for 8908168688: 550181
+ERROR 2025-05-18 21:47:31,467 views 4988 10052 Error in VerifyOTP: 'Vendor' object has no attribute 'customer_id'
+INFO 2025-05-18 22:32:33,318 views 5860 10676 OTP for 8908168688: 831793
+INFO 2025-05-18 22:32:41,591 views 5860 10020 FCM token updated for vendor_id: V001
+INFO 2025-05-18 22:45:26,138 views 6328 8128 OTP for 8908168688: 968004
+INFO 2025-05-18 22:45:33,942 views 6328 10740 FCM token updated for vendor_id: V001
+INFO 2025-05-18 22:54:02,311 views 11116 8164 OTP for 8908168688: 508962
+INFO 2025-05-18 22:54:12,699 views 11116 10024 FCM token updated for vendor_id: V001
+INFO 2025-05-18 23:00:28,258 views 3364 10448 OTP for 8908168688: 544837
+INFO 2025-05-18 23:06:15,794 views 3364 4064 OTP for 8908168688: 363388
+INFO 2025-05-18 23:06:26,187 views 3364 9612 FCM token updated for vendor_id: V001
+INFO 2025-05-18 23:11:19,666 views 3364 3832 OTP for 8908168688: 987067
+INFO 2025-05-18 23:11:38,341 views 3364 10084 FCM token updated for vendor_id: V001
+INFO 2025-05-18 23:24:19,551 views 3364 11160 OTP for 8908168688: 861533
+INFO 2025-05-18 23:24:28,954 views 3364 3196 FCM token updated for vendor_id: V001
+INFO 2025-05-18 23:34:29,630 views 3364 9352 OTP for 8908168688: 421813
+INFO 2025-05-18 23:34:46,642 views 3364 8448 FCM token updated for vendor_id: V001
+INFO 2025-05-18 23:40:13,859 views 3364 10488 OTP for 8908168688: 966080
+INFO 2025-05-18 23:40:26,447 views 3364 8012 FCM token updated for vendor_id: V001
+INFO 2025-05-18 23:44:16,451 views 3364 5292 OTP for 8908168688: 322994
+INFO 2025-05-18 23:44:25,862 views 3364 5332 FCM token updated for vendor_id: V001
+INFO 2025-05-18 23:56:22,314 views 3364 11056 OTP for 8908168688: 645456
+INFO 2025-05-18 23:56:35,888 views 3364 10660 FCM token updated for vendor_id: V001
+INFO 2025-05-18 23:56:38,707 views 3364 9040 FCM token updated for vendor_id: V001
+INFO 2025-05-18 23:57:00,581 views 3364 10956 Retrieved 32 orders for vendor V001
+INFO 2025-05-18 23:57:11,081 views 3364 6396 FCM token updated for vendor_id: V001
+INFO 2025-05-19 00:12:43,957 views 3364 10408 FCM token updated for vendor_id: V001
+INFO 2025-05-19 00:13:24,047 views 3364 10988 FCM token updated for vendor_id: V001
+INFO 2025-05-19 00:20:28,630 views 3364 1688 FCM token updated for vendor_id: V001
+INFO 2025-05-19 00:20:34,430 views 3364 1880 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:21:04,273 views 3364 1412 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:21:34,271 views 3364 3304 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:22:11,381 views 3364 5408 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:22:34,243 views 3364 4072 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:23:04,311 views 3364 8188 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:23:34,204 views 3364 6708 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:24:05,242 views 3364 7332 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:24:34,210 views 3364 6304 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:25:11,287 views 3364 6016 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:25:41,221 views 3364 8440 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:26:04,241 views 3364 2336 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:27:06,505 views 3364 7284 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:27:34,275 views 3364 748 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:28:57,402 views 3364 10692 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:29:04,245 views 3364 6876 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:29:56,626 views 3364 10148 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:30:04,188 views 3364 10988 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:31:51,550 views 3364 11120 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:32:05,268 views 3364 9296 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:32:34,170 views 3364 3460 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:33:05,687 views 3364 1264 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:33:34,162 views 3364 10760 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:34:05,194 views 3364 10312 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 00:46:11,488 views 3364 32 FCM token updated for vendor_id: V001
+INFO 2025-05-19 00:46:38,137 views 3364 11100 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 01:03:09,224 views 3364 9412 FCM token updated for vendor_id: V001
+INFO 2025-05-19 01:03:13,578 views 3364 5832 Retrieved 32 orders for vendor V001
+INFO 2025-05-19 01:04:53,716 views 3364 3324 Received POST data for food listing creation: {'name': 'khichdi ', 'description': 'odia food', 'quantity': 150, 'price': 50.0, 'unit': 'gms', 'images': ['/media/vendor_images/V001/20250519_010448_scaled_scaled_1000429047.jpg']}
+INFO 2025-05-19 01:06:59,859 views 3364 3828 FCM token updated for vendor_id: V001
+INFO 2025-05-19 01:12:53,749 views 3364 7828 Retrieved 33 orders for vendor V001
+INFO 2025-05-19 10:24:32,365 views 3364 10996 FCM token updated for vendor_id: V001
+INFO 2025-05-19 22:33:22,103 views 8820 10952 FCM token updated for vendor_id: V001

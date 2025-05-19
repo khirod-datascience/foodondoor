@@ -28,7 +28,7 @@ class DeliveryUserSerializer(serializers.ModelSerializer):
     """Serializer for displaying DeliveryUser details"""
     class Meta:
         model = DeliveryUser
-        fields = ['id', 'phone_number', 'name', 'email', 'profile_picture_url', 'is_active', 'is_registered', 'created_at']
+        fields = ['id', 'phone_number', 'name', 'email', 'profile_picture_url', 'fcm_token', 'is_active', 'is_registered', 'created_at']
         read_only_fields = ['id', 'is_active', 'is_registered', 'created_at']
 
 class RegisterSerializer(serializers.ModelSerializer):

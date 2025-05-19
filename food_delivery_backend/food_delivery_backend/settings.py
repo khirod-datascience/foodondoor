@@ -222,7 +222,7 @@ AUTH_USER_MODEL = 'customer_app.Customer'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
         # Keep others if needed, e.g., for admin panel:
         # 'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.TokenAuthentication', # Can remove if only using JWT

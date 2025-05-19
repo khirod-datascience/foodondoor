@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-print("--- Loading food_delivery_backend/urls.py ---") # DEBUG
+# print("--- Loading food_delivery_backend/urls.py ---") # DEBUG
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,7 +28,7 @@ urlpatterns = [
     path('api/delivery/', include('delivery_auth.urls')),
 ]
 
-print(f"--- food_delivery_backend urlpatterns: {urlpatterns} ---") # DEBUG
+# print(f"--- food_delivery_backend urlpatterns: {urlpatterns} ---") # DEBUG
 
 # Serve general media files
 if settings.DEBUG:

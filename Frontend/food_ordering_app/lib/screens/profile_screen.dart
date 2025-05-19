@@ -11,7 +11,7 @@ import 'add_edit_address_screen.dart'; // Import the new screen (we'll create th
 import 'orders_screen.dart'; // Import the OrdersScreen
 import '../utils/auth_storage.dart'; // Import AuthStorage
 import '../utils/auth_utils.dart'; // Import the refresh utility
-
+import '../services/api_client.dart';
 // Purpose: Displays user profile details and manages saved addresses.
 
 class ProfileScreen extends StatefulWidget {
@@ -121,9 +121,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     if (mounted) setState(() { _isLoadingAddresses = true; _errorAddresses = null; });
     try {
-       final dio = Dio();
-       final url = '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/'; 
+       final dio = ApiClient().dio;
+       final url = '${AppConfig.baseUrl}/customer/$globalCustomerId/addresses/';
+       final token = await AuthStorage.getToken();
        debugPrint('(ProfileScreen) Fetching saved addresses from: $url');
+       debugPrint('(ProfileScreen) Using token: ' + (token != null ? token.substring(0, 12) + '...' : 'NULL'));
        final response = await dio.get(url);
        debugPrint('(ProfileScreen) Saved Addresses Response (${response.statusCode}): ${response.data}');
 

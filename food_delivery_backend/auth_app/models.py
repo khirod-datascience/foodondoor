@@ -90,7 +90,19 @@ class Order(models.Model):
     order_number = models.CharField(max_length=20, unique=True)
     items = models.JSONField()  # List of items with quantity and price
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=50, choices=[('Pending', 'Pending'), ('Fulfilled', 'Fulfilled'), ('Paid', 'Paid')])
+    status = models.CharField(max_length=50, choices=[
+        ('Pending', 'Pending'),
+        ('Accepted', 'Accepted'),
+        ('Preparing', 'Preparing'),
+        ('Ready for Pickup', 'Ready for Pickup'),
+        ('Out for Delivery', 'Out for Delivery'),
+        ('Delivered', 'Delivered'),
+        ('Cancelled', 'Cancelled'),
+        ('Fulfilled', 'Fulfilled'),
+        ('Paid', 'Paid'),
+    ], default='Pending')
+    delivery_lat = models.FloatField(null=True, blank=True, help_text="Current latitude of delivery agent")
+    delivery_lng = models.FloatField(null=True, blank=True, help_text="Current longitude of delivery agent")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
